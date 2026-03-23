@@ -93,9 +93,28 @@
 <div class="w-2 bg-primary/30 rounded-t h-[55%]"></div>
 </div>
 <!-- SVG Line Overlay Simulation -->
-<svg class="absolute inset-0 h-64 w-full overflow-hidden" preserveaspectratio="none">
-<path d="M0 180 Q 50 140, 100 160 T 200 100 T 300 130 T 400 80 T 500 110 T 600 50 T 700 90 T 800 40" fill="none" stroke="#002045" stroke-linecap="round" stroke-width="3"></path>
-<path d="M0 220 Q 50 190, 100 210 T 200 160 T 300 190 T 400 140 T 500 170 T 600 110 T 700 150 T 800 100" fill="none" stroke="#00b47d" stroke-dasharray="4" stroke-linecap="round" stroke-width="2"></path>
+<svg 
+  viewBox="0 0 800 256" 
+  class="absolute inset-0 h-64 w-full" 
+  preserveAspectRatio="none"
+  style="overflow: visible;"
+>
+  <path 
+    d="M0 180 Q 50 150, 100 165 T 200 130 T 300 150 T 400 115 T 500 140 T 600 90 T 700 120 T 800 85" 
+    fill="none" 
+    stroke="#002045" 
+    stroke-linecap="round" 
+    stroke-width="3"
+  ></path>
+  
+  <path 
+    d="M0 210 Q 50 190, 100 200 T 200 165 T 300 195 T 400 150 T 500 180 T 600 110 T 700 140 T 800 60" 
+    fill="none" 
+    stroke="#00b47d" 
+    stroke-dasharray="4" 
+    stroke-linecap="round" 
+    stroke-width="2"
+  ></path>
 </svg>
 </div>
 </div>
@@ -105,7 +124,7 @@
 <span class="text-xs font-bold text-slate-600">Doanh thu (VNĐ)</span>
 </div>
 <div class="flex items-center">
-<span class="w-3 h-3 bg-on-tertiary-container rounded-full mr-2"></span>
+<span class="w-3 h-3 rounded-full mr-2" style="background-color: #00b47d;"></span>
 <span class="text-xs font-bold text-slate-600">Lượt đặt phòng</span>
 </div>
 </div>

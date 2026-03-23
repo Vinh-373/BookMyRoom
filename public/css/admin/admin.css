@@ -9,10 +9,10 @@ body {
 .main-content {
     flex: 1;
     margin-left: 240px;   /* bằng chiều rộng sidebar */
-    margin-top: 70px;     /* bằng chiều cao header */
+    margin-top: 50px;     /* bằng chiều cao header */
     padding: 20px;
     background-color: #612f2f;
-    min-height: calc(100vh - 70px);
+    min-height: calc(100vh - 50px);
     box-sizing: border-box;
     overflow-y: auto;
 }
