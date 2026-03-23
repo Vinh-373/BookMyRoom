@@ -1,5 +1,3 @@
-<link rel="stylesheet" href="public/css/admin/admin.css">
-
 <aside class="sidebar" id="sidebar">
     <div class="sidebar-header">
         <div class="logo-container">
@@ -29,7 +27,7 @@
     </div>
 
     <nav class="sidebar-nav">
-        <a href="#home" class="nav-item active" data-page="home">
+        <a href="#dashboard" class="nav-item active" data-page="dashboard">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
                  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <rect x="3" y="3" width="7" height="7"></rect>

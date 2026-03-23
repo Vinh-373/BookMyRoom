@@ -4,9 +4,13 @@ use Controller;
 
 class Dashboard extends Controller {
     public function index() {
-        $viewFile = './app/views/admin/home.php';
-        $this->view('layout/admin/admin', [ // gọi đúng layout
-            'viewFile' => $viewFile
+        if (isset($_GET['partial']) && $_GET['partial'] == '1') {
+            $this->view('admin/dashboard');
+            return;
+        }
+
+        $this->view('layout/admin/admin', [
+            'viewFile' => './app/views/admin/dashboard.php'
         ]);
     }
 }
