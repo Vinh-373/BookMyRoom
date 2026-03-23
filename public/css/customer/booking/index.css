@@ -1,0 +1,256 @@
+:root {
+    --primary-blue: #003580;
+    --accent-blue: #006ce4;
+    --yellow-gold: #ffb700;
+    --bg-gray: #f5f5f5;
+    --text-main: #1a1a1a;
+    --text-sub: #6b6b6b;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    background: white;
+    color: var(--text-main);
+    line-height: 1.5;
+}
+
+.section-container {
+    padding: 40px 4%;
+    max-width: 100%;
+    margin: 0;
+}
+
+.section-title {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.section-subtitle {
+    color: var(--text-sub);
+    font-size: 16px;
+    margin-bottom: 24px;
+}
+
+/* ===== 1. TRENDING DESTINATIONS ===== */
+.trending-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 16px;
+    margin-bottom: 60px;
+}
+
+.dest-card {
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    height: 270px;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.dest-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.dest-card:hover img {
+    transform: scale(1.05);
+}
+
+.dest-card.large {
+    grid-column: span 3;
+}
+
+.dest-card.small {
+    grid-column: span 2;
+}
+
+.dest-label {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    color: white;
+    font-size: 22px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+}
+
+.dest-label img.flag {
+    width: 24px;
+    height: auto;
+    border-radius: 2px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+/* ===== 2. HOTEL SLIDER ===== */
+.slider-wrapper {
+    position: relative;
+}
+
+.slider-container {
+    position: relative;
+    overflow: hidden;
+}
+
+.unique-grid {
+    display: flex;
+    gap: 16px;
+    transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.prop-card {
+    min-width: calc((100% - 48px) / 4);
+    /* 4 cards view */
+    flex: 0 0 auto;
+    border: 1px solid #e7e7e7;
+    border-radius: 8px;
+    overflow: hidden;
+    background: white;
+    display: flex;
+    flex-direction: column;
+    transition: 0.3s;
+}
+
+.prop-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.prop-img-wrapper {
+    height: 200px;
+}
+
+.prop-img-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.prop-content {
+    padding: 12px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.prop-title {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 4px;
+    color: var(--primary-blue);
+}
+
+.prop-location {
+    font-size: 14px;
+    color: var(--text-sub);
+    margin-bottom: 12px;
+}
+
+.prop-rating {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 15px;
+}
+
+.score {
+    background: var(--primary-blue);
+    color: white;
+    padding: 4px 6px;
+    border-radius: 6px 6px 6px 0;
+    font-weight: 600;
+    font-size: 13px;
+}
+
+.rating-text {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.prop-price {
+    margin-top: auto;
+    font-size: 13px;
+    text-align: right;
+}
+
+.prop-price strong {
+    font-size: 16px;
+    font-weight: 700;
+}
+
+/* Navigation Buttons */
+.slider-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: white;
+    border: 1px solid #e7e7e7;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+}
+
+.prev {
+    left: -20px;
+}
+
+.next {
+    right: -20px;
+}
+
+.slider-arrow:hover {
+    background: #f0f0f0;
+}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width: 992px) {
+    .prop-card {
+        min-width: calc((100% - 16px) / 2);
+    }
+
+    .dest-card.large,
+    .dest-card.small {
+        grid-column: span 3;
+    }
+}    
+
+@media(max-width: 600px) {
+    .trending-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .dest-card.large,
+    .dest-card.small {
+        grid-column: span 1;
+        height: 200px;
+    }
+
+    .prop-card {
+        min-width: 100%;
+    }
+
+    .prev {
+        left: 5px;
+    }
+
+    .next {
+        right: 5px;
+    }
+}

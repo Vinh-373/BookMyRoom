@@ -3,9 +3,19 @@ namespace Controllers\customer;
 use Controller;
 class Booking extends Controller {
     public function index() {
-        $this->view('customer/booking/index');
+        $viewFile = './app/views/customer/booking/index.php';
+        // $this->view('customer/booking/index');
+         $this->view('layout/customer/client',[
+            'viewFile' => $viewFile
+         ]);
+
     }
     public function hotels() {
-        $this->view('customer/booking/hotels');
+        
+        $viewFile = './app/views/customer/booking/hotels.php';
+        // $this->view('customer/booking/index');
+         $this->view('layout/customer/client',[
+            'viewFile' => $viewFile
+         ]);
     }   
 }

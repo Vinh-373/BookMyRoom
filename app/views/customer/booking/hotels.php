@@ -163,35 +163,7 @@
 </head>
 <body>
 
-    <header class="navbar">
-        <div class="logo"><strong>Nationwide</strong></div>
-        <div class="nav-links">
-            <a href="#">Hotels</a>
-            <a href="#">Promotions</a>
-            <a href="#">For Partners</a>
-            <button class="btn-login"><i class="fa-regular fa-circle-user"></i> Login</button>
-        </div>
-    </header>
-
-    <section class="hero">
-        <h1>Nationwide Deals - Up to 40% Off</h1>
-        <p><i class="fa-solid fa-certificate"></i> Flexible Cancellation</p>
-    </section>
-
-    <div class="search-wrapper">
-        <div class="search-box">
-            <label>Where are you going?</label>
-            <input type="text" value="Nationwide" placeholder="Search destinations...">
-        </div>
-        <div class="search-box">
-            <label>Dates</label>
-            <input type="text" value="Oct 15 - Oct 17">
-        </div>
-        <div class="search-box" style="border:none">
-            <label>Guests</label>
-            <input type="text" value="2 Adults">
-        </div>
-    </div>
+    
 
     <main class="main-content">
         <aside class="sidebar">
