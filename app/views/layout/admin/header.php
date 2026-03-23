@@ -1,5 +1,6 @@
-<link rel="stylesheet" href="../../../public/css/admin/admin.css">
-
+<head>
+    <link rel="stylesheet" href="../../../public/css/admin/admin.css">
+</head>
 <header class="header">
     <div class="header-content">
         <!-- Ô tìm kiếm -->
