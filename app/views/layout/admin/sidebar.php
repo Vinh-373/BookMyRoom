@@ -102,6 +102,15 @@
             <span>Tài khoản đối tác</span>
         </a>
 
+        <a href="#review-partners" class="nav-item" data-page="review_partners">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 11l3 3L22 4"></path>
+                <path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <span>Duyệt đối tác</span>
+        </a>
+
         <a href="#payments" class="nav-item" data-page="payments">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">

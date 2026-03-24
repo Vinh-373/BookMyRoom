@@ -205,7 +205,7 @@
 <td class="px-6 py-4 text-sm text-slate-600">Deluxe Sea View</td>
 <td class="px-6 py-4 text-sm text-slate-600">12/11/2023</td>
 <td class="px-6 py-4">
-<span class="px-3 py-1 bg-on-tertiary-container/10 text-on-tertiary-container rounded-full text-[10px] font-bold">ĐÃ XÁC NHẬN</span>
+<span class="px-3 py-1 bg-emerald-500 text-on-tertiary-container rounded-full text-[10px] font-bold">ĐÃ XÁC NHẬN</span>
 </td>
 <td class="px-6 py-4 text-right text-sm font-bold text-primary">4.250.000đ</td>
 </tr>
@@ -233,7 +233,7 @@
 <td class="px-6 py-4 text-sm text-slate-600">Standard King</td>
 <td class="px-6 py-4 text-sm text-slate-600">15/11/2023</td>
 <td class="px-6 py-4">
-<span class="px-3 py-1 bg-on-tertiary-container/10 text-on-tertiary-container rounded-full text-[10px] font-bold">ĐÃ XÁC NHẬN</span>
+<span class="px-3 py-1 bg-emerald-500 text-on-tertiary-container rounded-full text-[10px] font-bold">ĐÃ XÁC NHẬN</span>
 </td>
 <td class="px-6 py-4 text-right text-sm font-bold text-primary">2.100.000đ</td>
 </tr>
