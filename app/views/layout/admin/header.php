@@ -1,5 +1,3 @@
-<link rel="stylesheet" href="../../../public/css/admin/admin.css">
-
 <header class="header">
     <div class="header-content">
         <!-- Ô tìm kiếm -->

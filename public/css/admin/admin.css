@@ -9,10 +9,10 @@ body {
 .main-content {
     flex: 1;
     margin-left: 240px;   /* bằng chiều rộng sidebar */
-    margin-top: 70px;     /* bằng chiều cao header */
+    margin-top: 50px;     /* bằng chiều cao header */
     padding: 20px;
-    background-color: #ffffff;
-    min-height: calc(100vh - 70px);
+    background-color: #612f2f;
+    min-height: calc(100vh - 50px);
     box-sizing: border-box;
     overflow-y: auto;
 }
@@ -260,4 +260,145 @@ body {
 
 .sidebar.collapsed ~ .main-content {
     margin-left: 60px;
+}
+
+/* Style cho nội dung chính */
+.main-content {
+    background-color: #f8f9fa; /* Màu nền sáng hơn */
+    color: #333;
+}
+
+/* Các element phổ biến trong main-content */
+.main-content h1, .main-content h2, .main-content h3 {
+    color: #003580;
+    margin-bottom: 20px;
+}
+
+.main-content p {
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
+/* Buttons */
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #006ce4;
+    color: #fff;
+    text-decoration: none;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn:hover {
+    background-color: #0056b3;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+}
+
+/* Tables */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.table th, .table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.table th {
+    background-color: #003580;
+    color: #fff;
+}
+
+.table tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Cards */
+.card {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+.card-header {
+    background-color: #003580;
+    color: #fff;
+    padding: 15px;
+    font-weight: bold;
+}
+
+.card-body {
+    padding: 20px;
+}
+
+/* Forms */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-group input, .form-group select, .form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+    outline: none;
+    border-color: #006ce4;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 60px;
+    }
+    
+    .sidebar .logo-text,
+    .sidebar .nav-item span {
+        display: none;
+    }
+    
+    .header {
+        left: 60px;
+        width: calc(100% - 60px);
+    }
+    
+    .main-content {
+        margin-left: 60px;
+    }
+    
+    .header-content {
+        padding: 0 10px;
+    }
+    
+    .search-container {
+        display: none;
+    }
+    
+    .user-info {
+        display: none;
+    }
 }

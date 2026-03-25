@@ -2,15 +2,15 @@
 namespace Controllers\admin;
 use Controller;
 
-class Dashboard extends Controller {
+class Review_partners extends Controller {
     public function index() {
         if (isset($_GET['partial']) && $_GET['partial'] == '1') {
-            $this->view('admin/dashboard');
+            $this->view('admin/partner_moderation');
             return;
         }
 
         $this->view('layout/admin/admin', [
-            'viewFile' => './app/views/admin/dashboard.php'
+            'viewFile' => './app/views/admin/partner_moderation.php'
         ]);
     }
 }

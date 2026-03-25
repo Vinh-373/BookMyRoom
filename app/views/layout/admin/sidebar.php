@@ -1,5 +1,3 @@
-<link rel="stylesheet" href="public/css/admin/admin.css">
-
 <aside class="sidebar" id="sidebar">
     <div class="sidebar-header">
         <div class="logo-container">
@@ -29,7 +27,7 @@
     </div>
 
     <nav class="sidebar-nav">
-        <a href="#home" class="nav-item active" data-page="home">
+        <a href="#dashboard" class="nav-item active" data-page="dashboard">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
                  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <rect x="3" y="3" width="7" height="7"></rect>
@@ -102,6 +100,15 @@
                 <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
             </svg>
             <span>Tài khoản đối tác</span>
+        </a>
+
+        <a href="#review-partners" class="nav-item" data-page="review_partners">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 11l3 3L22 4"></path>
+                <path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <span>Duyệt đối tác</span>
         </a>
 
         <a href="#payments" class="nav-item" data-page="payments">
