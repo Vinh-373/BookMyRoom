@@ -91,7 +91,7 @@
       background-color: #f7f9fb;
     }
   </style>
-    <link rel="stylesheet" href="../../../../public/css/admin/admin.css">
+    <link rel="stylesheet" href="public/css/admin/admin.css">
 </head>
 <body class="bg-background text-on-background antialiased">
 <?php
