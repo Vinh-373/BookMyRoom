@@ -3,7 +3,7 @@ namespace Controllers\customer;
 use Controller;
 class Booking extends Controller {
     public function index() {
-        $viewFile = './app/views/customer/booking/index.php';
+        $viewFile = '../../customer/booking/index.php';
         // $this->view('customer/booking/index');
          $this->view('layout/customer/client',[
             'viewFile' => $viewFile
@@ -12,7 +12,7 @@ class Booking extends Controller {
     }
     public function hotels() {
         
-        $viewFile = './app/views/customer/booking/hotels.php';
+        $viewFile = '../../customer/booking/hotels.php';
         // $this->view('customer/booking/index');
          $this->view('layout/customer/client',[
             'viewFile' => $viewFile

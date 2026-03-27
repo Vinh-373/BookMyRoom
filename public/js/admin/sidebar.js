@@ -9,20 +9,8 @@ document.querySelector('.sidebar-nav').addEventListener('click', function(e) {
         // Thêm active cho item vừa click
         item.classList.add('active');
 
-        // Fetch nội dung partial (chỉ content) để thay phần main
-        const page = item.getAttribute('data-page');
-        const url = `index.php?url=admin/${page}&partial=1&t=${Date.now()}`;
-        fetch(url)
-            .then(res => res.text())
-            .then(html => {
-                const content = document.querySelector('.main-content');
-                if (content) {
-                    content.innerHTML = html;
-                } else {
-                    console.warn('Không tìm thấy .main-content, đường dẫn admin chưa cấu hình đúng.');
-                }
-            })
-            .catch(err => console.error('Lỗi tải nội dung:', err));
+        // Redirect đến href của link (đã là clean URL)
+        window.location.href = item.href;
     }
 });
 

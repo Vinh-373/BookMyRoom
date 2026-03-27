@@ -2,11 +2,11 @@
 namespace Controllers\admin;
 use Controller;
 
-class Bookings extends Controller {
+class Partners extends Controller {
     public function index() {
 
         $this->view('layout/admin/admin', [
-            'viewFile' => './app/views/admin/bookings.php',
+            'viewFile' => './app/views/admin/partners.php',
         ]);
     }
 }

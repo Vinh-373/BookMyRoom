@@ -91,26 +91,72 @@
       background-color: #f7f9fb;
     }
   </style>
-    <link rel="stylesheet" href="public/css/admin/admin.css">
+    <link rel="stylesheet" href="/BookMyRoom/public/css/admin/admin.css">
 </head>
 <body class="bg-background text-on-background antialiased">
 <?php
 session_start();
-// Sidebar
-require_once 'sidebar.php';
-// Header
-require_once 'header.php';
-?>
+$partial = isset($_GET['partial']) && $_GET['partial'] == 1;
+if (!$partial) {
+    // Sidebar
+    require_once 'sidebar.php';
+    // Header
+    require_once 'header.php';
+}
 
-<main class="main-content" style="margin-left: 240px; margin-top: 70px; width: calc(100% - 240px); min-height: calc(100dvh - 70px); background-color: #f7f9fb; box-sizing: border-box; overflow-y: auto;">
-<?php
-if (isset($viewFile) && file_exists($viewFile)) {
-    require_once $viewFile;
-} else {
-    require_once __DIR__ . '/../../admin/dashboard.php';
+if ($partial) {
+    // Khi load partial từ AJAX, chỉ trả nội dung trong trang (tránh lồng layout gây xê dịch)
+    if (isset($viewFile)) {
+        // Ưu tiên đường dẫn gốc đã hợp lệ, sau đó thử resolve từ layout folder
+        if (!file_exists($viewFile)) {
+            $viewFile = __DIR__ . '/../../' . ltrim($viewFile, '/');
+        }
+        if (!file_exists($viewFile) && strpos($viewFile, './') === 0) {
+            $viewFile = __DIR__ . '/../../' . substr($viewFile, 2);
+        }
+
+        if (file_exists($viewFile)) {
+            include $viewFile;
+        } else {
+            echo '<p style="color:red;">View file not found: ' . htmlspecialchars($viewFile) . '</p>';
+        }
+    }
+    return;
 }
 ?>
-</main>
-<script src="../../../../public/js/admin/sidebar.js"></script>
+
+  <main class="main-content">
+    <?php 
+      // $viewFile được truyền từ controller
+      if (isset($viewFile)) {
+          $pageFile = $viewFile;
+
+          $projectRoot = dirname(__DIR__, 4); // .../BookMyRoom
+
+          // Nếu đường dẫn là ./app/views/...
+          if (strpos($viewFile, './') === 0) {
+              $pageFile = $projectRoot . '/' . substr($viewFile, 2);
+          }
+
+          // Nếu đường dẫn là app/views/...
+          if (strpos($viewFile, 'app/') === 0) {
+              $pageFile = $projectRoot . '/' . $viewFile;
+          }
+
+          // Nếu đường dẫn tương đối tới admin folder (vd ../../admin/hotels.php)
+          if (!file_exists($pageFile) && (strpos($viewFile, '../') === 0 || strpos($viewFile, './') === 0)) {
+              $pageFile = realpath(__DIR__ . '/' . $viewFile);
+          }
+
+          if (file_exists($pageFile)) {
+              include $pageFile;
+          } else {
+              echo '<p style="color:red;">View file not found: ' . htmlspecialchars($pageFile) . '</p>';
+          }
+      }
+    ?>
+  </main>
+
+<script src="/BookMyRoom/public/js/admin/sidebar.js"></script>
 </body>
 </html>

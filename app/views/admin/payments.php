@@ -1,1 +1,1 @@
-<h2>Thanh toán</h2>
+<h2>Trang thanh toán</h2>

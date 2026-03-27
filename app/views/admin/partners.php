@@ -1,0 +1,1 @@
+<h2>Trang quản lý tài khoản đối tác</h2>

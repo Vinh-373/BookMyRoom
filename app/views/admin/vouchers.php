@@ -1,1 +1,1 @@
-<h2>Phiếu giảm giá</h2>
+<h2>Trang voucher</h2>
