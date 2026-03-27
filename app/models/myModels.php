@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__ . '/../core/Database.php';
+
 abstract class myModels extends Database
 {
     protected $table; // ⚠️ BẮT BUỘC: class con phải khai báo tên bảng
@@ -178,23 +180,51 @@ abstract class myModels extends Database
     }
     function insert($table, $data = NULL)
     {
+        if (empty($data) || !is_array($data)) {
+            return json_encode([
+                "type" => "error",
+                "message" => "Dữ liệu không hợp lệ"
+            ]);
+        }
+
         $fields = array_keys($data);
         $field_list = implode(',', $fields);
         $values = array_values($data);
-        $qr = str_repeat('?,', count($values) - 1) . '?';
-        $sql = "INSERT INTO $table ($field_list) VALUES ($qr)";
+        $placeholders = str_repeat('?,', count($values) - 1) . '?';
+        $sql = "INSERT INTO $table ($field_list) VALUES ($placeholders)";
 
         $stmt = $this->conn->prepare($sql);
-        if ($stmt->execute($values)) {
+        if ($stmt === false) {
+            return json_encode([
+                "type" => "error",
+                "message" => "Prepare failed: " . $this->conn->error
+            ]);
+        }
+
+        // Bind parameters
+        $types = '';
+        foreach ($values as $value) {
+            $types .= is_int($value) ? 'i' : 's';
+        }
+        
+        if (!empty($values)) {
+            $stmt->bind_param($types, ...$values);
+        }
+
+        if ($stmt->execute()) {
+            $insert_id = $this->conn->insert_id;
+            $stmt->close();
             return json_encode([
                 "type" => "success",
-                "message" => "isert success",
-                "data" => $this->conn->insert_id
+                "message" => "Insert success",
+                "data" => $insert_id
             ]);
         } else {
-            return  json_encode([
+            $error = $stmt->error;
+            $stmt->close();
+            return json_encode([
                 "type" => "error",
-                "message" => "insert failed: " . $this->conn->error
+                "message" => "Insert failed: " . $error
             ]);
         }
     }

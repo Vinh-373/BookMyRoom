@@ -1,6 +1,6 @@
-@import url("accounts_staff.css");
-@import url("accounts_partner.css");
-@import url("accounts_customer.css");
+@import url("staff.css");
+@import url("partner.css");
+@import url("customer.css");
 
 /* Reset và layout tổng thể */
 body {

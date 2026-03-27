@@ -1,1 +1,1 @@
-<h2>Trang quản lý phòng</h2>
+<h2> Trang đặt phòng </h2>

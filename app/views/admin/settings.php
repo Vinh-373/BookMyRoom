@@ -1,1 +1,1 @@
-<h2>Trang cài đặt</h2>
+<h2> Trang cài đặt </h2>

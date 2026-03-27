@@ -1,1 +1,1 @@
-<h2>Trang đánh giá</h2>
+<h2> Trang đánh giá </h2>
