@@ -6,7 +6,7 @@ class Hotels extends Controller {
     public function index() {
 
         $this->view('layout/admin/admin', [
-            'viewFile' => '../../admin/hotels.php',
+            'viewFile' => './app/views/admin/hotels.php',
         ]);
     }
 }

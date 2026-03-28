@@ -28,17 +28,13 @@ document.addEventListener('DOMContentLoaded', () => {
     addModal.classList.add('hidden');
     addForm.reset();
   }
-  function closeEditModalFunc() {
-    editModal.classList.add('hidden');
-    editForm.reset();
-  }
+
 
   // Event listeners for modals
   addBtn.addEventListener('click', () => addModal.classList.remove('hidden'));
   closeAddModal.addEventListener('click', closeAddModalFunc);
   cancelAddBtn.addEventListener('click', closeAddModalFunc);
-  closeEditModal.addEventListener('click', closeEditModalFunc);
-  cancelEditBtn.addEventListener('click', closeEditModalFunc);
+
 
   // Close modals when clicking outside
   [addModal, editModal].forEach(modal => {
@@ -63,37 +59,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.partners-stat-card')[3].textContent = `${blocked} Bị khóa`;
   }
 
-  // Attach listeners for edit/delete/approve buttons
-  function attachActionListeners() {
-    document.querySelectorAll('.partner-edit-btn').forEach(btn => {
-      btn.addEventListener('click', function () {
-        editModal.classList.remove('hidden');
-        // điền dữ liệu vào form sửa
-        for (const [key, value] of Object.entries(this.dataset)) {
-          const input = document.getElementById('edit' + key.charAt(0).toUpperCase() + key.slice(1));
-          if (input) input.value = value;
-        }
-      });
-    });
-
-    document.querySelectorAll('.approve-btn').forEach(btn => {
-      btn.addEventListener('click', function () {
-        const userId = this.dataset.userId;
-        if (confirm('Bạn có chắc muốn duyệt đối tác này?')) {
-          fetch(`${apiBase}/approve`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ userId })
-          })
-            .then(res => res.json())
-            .then(result => {
-              alert(result.success ? 'Duyệt đối tác thành công!' : 'Lỗi: ' + result.message);
-              if (result.success) location.reload();
-            });
-        }
-      });
-    });
-  }
 
   // Add partner form submit
   addForm.addEventListener('submit', function (e) {
@@ -114,28 +79,11 @@ document.addEventListener('DOMContentLoaded', () => {
       .catch(err => { console.error('Error:', err); alert('Có lỗi xảy ra khi thêm đối tác!'); });
   });
 
-  // Edit partner form submit
-  editForm.addEventListener('submit', function (e) {
-    e.preventDefault();
-    const data = Object.fromEntries(new FormData(editForm));
-    try { JSON.parse(data.businessLicense); } catch { alert('Giấy phép kinh doanh phải là JSON hợp lệ!'); return; }
-
-    fetch(`${apiBase}/update`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
-    })
-      .then(res => res.json())
-      .then(result => {
-        alert(result.success ? 'Cập nhật đối tác thành công!' : 'Lỗi: ' + result.message);
-        if (result.success) { closeEditModalFunc(); location.reload(); }
-      })
-      .catch(err => { console.error('Error:', err); alert('Có lỗi xảy ra khi cập nhật đối tác!'); });
-  });
 
 
 
-////////////////Đây là hàm cập nhật nút KHÓA MỞ
+
+  ////////////////Đây là hàm cập nhật nút KHÓA MỞ
   document.querySelectorAll('.partner-toggle-status-btn').forEach(btn => {
     btn.addEventListener('click', function () {
 
@@ -228,16 +176,165 @@ document.addEventListener('DOMContentLoaded', () => {
   searchInput.addEventListener('input', filterTable);
   // Gắn sự kiện: khi chọn trạng thái thì lọc ngay
   statusFilter.addEventListener('change', filterTable);
+  ////////////////////////////////////////////////////////////
+  // ================= MODAL & FORM =================
+  // 🔹 Hàm đóng modal
+  function closeEditModalFunc() {
+    editModal.classList.add('hidden');
+    editForm.reset();
+  }
+  closeEditModal.addEventListener('click', closeEditModalFunc);
+  cancelEditBtn.addEventListener('click', closeEditModalFunc);
+
+  // ================= GỬI UPDATE =================
+  editForm.addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const formData = Object.fromEntries(new FormData(editForm));
+    console.log('DATA:', formData);
+
+    // Kiểm tra businessLicense là JSON hợp lệ
+    try {
+      if (formData.businessLicense) JSON.parse(formData.businessLicense);
+    } catch {
+      alert('Giấy phép kinh doanh phải là JSON hợp lệ!');
+      return;
+    }
+
+    fetch(`${apiBase}/update`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        userId: formData.userId,
+        fullName: formData.fullName,
+        email: formData.email,
+        password: formData.password, // hash ở backend
+        phone: formData.phone,
+        status: formData.status,
+        address: formData.address,
+        gender: formData.gender,
+        birthDate: formData.birthDate,
+        avatarUrl: formData.avatarUrl,
+        cityId: formData.cityId || null,
+        wardId: formData.wardId || null,
+        companyName: formData.companyName,
+        taxCode: formData.taxCode,
+        businessLicense: formData.businessLicense
+      })
+    })
+      .then(res => res.json())
+      .then(result => {
+        console.log('RESULT:', result);
+
+        if (result.success) {
+          const updated = result.updatedUser;
+
+          // Lấy row trong bảng
+          const row = document.querySelector(
+            `.partner-edit-btn[data-user-id="${formData.userId}"]`
+          ).closest('tr');
+
+          // Update DOM bảng
+          row.querySelector('td:nth-child(2)').textContent = updated.fullName;
+          row.querySelector('td:nth-child(3)').textContent = updated.email;
+          row.querySelector('td:nth-child(4)').textContent = '••••••••'; // password ẩn
+          row.querySelector('td:nth-child(5)').textContent = updated.phone || '';
+          row.querySelector('td:nth-child(6)').textContent = updated.status;
+          row.querySelector('td:nth-child(7)').textContent = updated.address || '';
+          row.querySelector('td:nth-child(8)').textContent = updated.gender || '';
+
+          // format ngày sinh
+          row.querySelector('td:nth-child(9)').textContent = updated.birthDate || '';
+
+          row.querySelector('td:nth-child(10)').textContent = updated.avatarUrl || '';
+          row.querySelector('td:nth-child(11)').textContent = updated.cityName || '';
+          row.querySelector('td:nth-child(12)').textContent = updated.wardName || '';
+          row.querySelector('td:nth-child(14)').textContent = updated.companyName || '';
+          row.querySelector('td:nth-child(15)').textContent = updated.taxCode || '';
+          row.querySelector('td:nth-child(16)').textContent = updated.businessLicense || '';
+
+          closeEditModalFunc();
+          filterTable();
+          alert('Cập nhật thành công!');
+        } else {
+          alert(result.message || 'Cập nhật thất bại!');
+        }
+      })
+      .catch(err => {
+        console.error('ERROR:', err);
+        alert('Có lỗi xảy ra!');
+      });
+  });
+
+  // ================= ĐIỀN FORM KHI CLICK SỬA =================
+  function attachActionListeners() {
+    document.querySelectorAll('.partner-edit-btn').forEach(btn => {
+      btn.addEventListener('click', function () {
+        editModal.classList.remove('hidden');
+
+        // Điền dữ liệu vào form
+        for (const [key, value] of Object.entries(this.dataset)) {
+          const input = document.getElementById(
+            'edit' + key.charAt(0).toUpperCase() + key.slice(1)
+          );
+          if (input) {
+            if (key === 'password') {
+              input.value = ''; // password luôn trống
+            } else {
+              input.value = value;
+            }
+          }
+        }
+      });
+    });
+
+    // Duyệt đối tác
+    document.querySelectorAll('.approve-btn').forEach(btn => {
+      btn.addEventListener('click', function () {
+        const userId = this.dataset.userId;
+        if (confirm('Bạn có chắc muốn duyệt đối tác này?')) {
+          fetch(`${apiBase}/approve`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ userId })
+          })
+            .then(res => res.json())
+            .then(result => {
+              alert(result.success ? 'Duyệt đối tác thành công!' : 'Lỗi: ' + result.message);
+              if (result.success) location.reload();
+            });
+        }
+      });
+    });
+  }
 
 
 
+  ///////////////// Thêm đối tác
+  const addCitySelect = document.getElementById('addCityId');
+  const addWardSelect = document.getElementById('addWardId');
 
+  addCitySelect.addEventListener('change', () => {
+    const cityId = addCitySelect.value;
+    Array.from(addWardSelect.options).forEach(option => {
+      option.style.display = (!option.dataset.cityId || option.dataset.cityId === cityId) ? '' : 'none';
+    });
+    addWardSelect.value = '';
+  });
 
+  ///////////////// Sửa đối tác
+  const editCitySelect = document.getElementById('editCityId');
+  const editWardSelect = document.getElementById('editWardId');
 
+  editCitySelect.addEventListener('change', () => {
+    const cityId = editCitySelect.value;
+    Array.from(editWardSelect.options).forEach(option => {
+      option.style.display = (!option.dataset.cityId || option.dataset.cityId === cityId) ? '' : 'none';
+    });
+    editWardSelect.value = '';
+  });
 
-
-
-
-  // Initial attach listeners
+  // Gắn sự kiện ban đầu
   attachActionListeners();
+
 });

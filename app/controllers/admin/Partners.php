@@ -9,6 +9,7 @@ class Partners extends Controller
     public function index()
     {
         require_once './app/models/partnersModel.php';
+            require_once './app/models/myModels.php';
         $partnersModel = new \partnersModel();
 
         $partners = $partnersModel->join_multi(
@@ -20,6 +21,7 @@ class Partners extends Controller
                 ]
             ],
             select: '
+            partners.*,
             users.fullName,
             users.email,
             users.password,
@@ -32,22 +34,55 @@ class Partners extends Controller
             users.cityId,
             users.wardId,
             users.createdAt,
-            users.deletedAt,
-            partners.companyName,
-            partners.taxCode,
-            partners.businessLicense,
-            partners.userId
+            users.deletedAt
+
         ',
             where: [],
             orderBy: 'users.createdAt DESC'
         );
 
+        // 2️⃣ Lấy cities và wards để mapping tên
+        $myModelCities = new class extends \myModels {
+            protected $table = "cities";
+        };
+        $cities = $myModelCities->findAll();
+
+        $myModelWards = new class extends \myModels {
+            protected $table = "wards";
+        };
+        $wards = $myModelWards->findAll();
+
+        // 3️⃣ Map cityName và wardName cho mỗi partner
+        foreach ($partners as &$partner) {
+            $partner['cityName'] = '';
+            $partner['wardName'] = '';
+            foreach ($cities as $city) {
+                if ($partner['cityId'] == $city['id']) {
+                    $partner['cityName'] = $city['name'];
+                    break;
+                }
+            }
+            foreach ($wards as $ward) {
+                if ($partner['wardId'] == $ward['id']) {
+                    $partner['wardName'] = $ward['name'];
+                    break;
+                }
+            }
+        }
+
+        // 4️⃣ Truyền dữ liệu vào view
         $this->view('layout/admin/admin', [
             'viewFile' => './app/views/admin/partners.php',
-            'partners' => $partners
+            'partners' => $partners,
+            'cities'   => $cities,
+            'wards'    => $wards
         ]);
     }
 
+
+
+
+    /////////////////////////////////////////////////////////////////////////
     public function add()
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -170,6 +205,8 @@ class Partners extends Controller
             exit;
         }
     }
+
+    /////////////////////////////////////////////////////////////////////////
     public function search()
     {
         require_once './app/models/partnersModel.php';
@@ -222,13 +259,17 @@ class Partners extends Controller
         exit;
     }
 
+
+
+
+
+    /////////////////////////////////////////////////////////////////////////
     public function update()
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             http_response_code(405);
             echo json_encode(['success' => false, 'message' => 'Method not allowed']);
             exit;
-            return;
         }
 
         $input = json_decode(file_get_contents('php://input'), true);
@@ -236,7 +277,6 @@ class Partners extends Controller
         if (!$input || !isset($input['userId'])) {
             echo json_encode(['success' => false, 'message' => 'Invalid data']);
             exit;
-            return;
         }
 
         try {
@@ -250,48 +290,93 @@ class Partners extends Controller
                 protected $table = "partners";
             };
 
-            // Update user info
+            // ================= USER =================
             $userData = [];
+
             if (isset($input['fullName']))   $userData['fullName'] = $input['fullName'];
             if (isset($input['email']))      $userData['email'] = $input['email'];
-            if (isset($input['password']))   $userData['password'] = password_hash($input['password'], PASSWORD_DEFAULT);
+            if (!empty($input['password']))  $userData['password'] = password_hash($input['password'], PASSWORD_DEFAULT);
             if (isset($input['phone']))      $userData['phone'] = $input['phone'];
             if (isset($input['status']))     $userData['status'] = $input['status'];
             if (isset($input['address']))    $userData['address'] = $input['address'];
             if (isset($input['gender']))     $userData['gender'] = $input['gender'];
             if (isset($input['birthDate']))  $userData['birthDate'] = $input['birthDate'];
             if (isset($input['avatarUrl']))  $userData['avatarUrl'] = $input['avatarUrl'];
-            if (isset($input['cityId']))     $userData['cityId'] = $input['cityId'];
-            if (isset($input['wardId']))     $userData['wardId'] = $input['wardId'];
-            if (isset($input['companyName'])) $userData['companyName'] = $input['companyName'];
-            if (isset($input['taxCode']))    $userData['taxCode'] = $input['taxCode'];
-            if (isset($input['businessLicense'])) $userData['businessLicense'] = $input['businessLicense'];
+
+            // Kiểm tra rỗng cityId / wardId
+            $userData['cityId'] = (isset($input['cityId']) && $input['cityId'] !== "") ? $input['cityId'] : null;
+            $userData['wardId'] = (isset($input['wardId']) && $input['wardId'] !== "") ? $input['wardId'] : null;
 
             if (!empty($userData)) {
                 $userResult = json_decode($userModel->update($userData, ['id' => $input['userId']]), true);
-                if ($userResult['type'] !== 'success') {
-                    echo json_encode(['success' => false, 'message' => 'Không thể cập nhật thông tin user']);
+                if (!in_array($userResult['type'], ['success', 'warning'])) {
+                    echo json_encode(['success' => false, 'message' => 'Không thể cập nhật user']);
                     exit;
-                    return;
                 }
             }
 
-            // Update partner info
+            // ================= PARTNER =================
             $partnerData = [];
             if (isset($input['companyName']))     $partnerData['companyName'] = $input['companyName'];
             if (isset($input['taxCode']))         $partnerData['taxCode'] = $input['taxCode'];
             if (isset($input['businessLicense'])) $partnerData['businessLicense'] = $input['businessLicense'];
 
             if (!empty($partnerData)) {
-                $partnerResult = json_decode($partnersModel->update($partnerData, ['userId' => $input['userId']]), true);
-                if ($partnerResult['type'] !== 'success') {
-                    echo json_encode(['success' => false, 'message' => 'Không thể cập nhật thông tin đối tác']);
+                $existing = $partnersModel->findOne(['userId' => $input['userId']]);
+                if ($existing) {
+                    $partnerResult = json_decode(
+                        $partnersModel->update($partnerData, ['userId' => $input['userId']]),
+                        true
+                    );
+                } else {
+                    $partnerData['userId'] = $input['userId'];
+                    $partnerResult = json_decode(
+                        $partnersModel->insert($partnerData),
+                        true
+                    );
+                }
+                if (!$partnerResult || !isset($partnerResult['type']) || !in_array($partnerResult['type'], ['success', 'warning'])) {
+                    echo json_encode([
+                        'success' => false,
+                        'message' => 'Không thể cập nhật đối tác',
+                        'debug' => $partnerResult
+                    ]);
                     exit;
-                    return;
                 }
             }
 
-            echo json_encode(['success' => true, 'message' => 'Cập nhật thành công']);
+            // ================= LẤY DỮ LIỆU ĐỂ TRẢ VỀ =================
+            $updatedUser = $userModel->findOne(['id' => $input['userId']]);
+
+            // Lấy tên city / ward
+            // Giả sử trong myModels có property $conn (mysqli)
+            $cityName = '';
+            $wardName = '';
+
+            if (!empty($updatedUser['cityId'])) {
+                $cityRow = $userModel->conn->query("SELECT name FROM cities WHERE id = " . $updatedUser['cityId']);
+                $cityName = $cityRow ? $cityRow->fetch_assoc()['name'] : '';
+            }
+
+            if (!empty($updatedUser['wardId'])) {
+                $wardRow = $userModel->conn->query("SELECT name FROM wards WHERE id = " . $updatedUser['wardId']);
+                $wardName = $wardRow ? $wardRow->fetch_assoc()['name'] : '';
+            }
+            $updatedUser['cityName'] = $cityName;
+            $updatedUser['wardName'] = $wardName;
+
+            // Thêm dữ liệu partner
+            $partner = $partnersModel->findOne(['userId' => $input['userId']]);
+            $updatedUser['companyName'] = $partner['companyName'] ?? '';
+            $updatedUser['taxCode'] = $partner['taxCode'] ?? '';
+            $updatedUser['businessLicense'] = $partner['businessLicense'] ?? '';
+
+            // Trả về JSON
+            echo json_encode([
+                'success' => true,
+                'message' => 'Cập nhật thành công',
+                'updatedUser' => $updatedUser
+            ]);
             exit;
         } catch (\Exception $e) {
             echo json_encode(['success' => false, 'message' => 'Lỗi hệ thống: ' . $e->getMessage()]);
@@ -299,6 +384,7 @@ class Partners extends Controller
         }
     }
 
+    //////////////////////////////////////////////////////////////////
     public function approve()
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -343,55 +429,54 @@ class Partners extends Controller
     }
 
 
+    /////////////////////////////////////////////////////
 
 
+    public function toggleStatus()
+    {
+        header('Content-Type: application/json; charset=utf-8');
 
-public function toggleStatus()
-{
-    header('Content-Type: application/json; charset=utf-8');
-
-    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-        http_response_code(405);
-        echo json_encode(['success' => false, 'message' => 'Method not allowed']);
-        exit;
-        return;
-    }
-
-    $input = json_decode(file_get_contents('php://input'), true);
-
-    if (!$input || !isset($input['userId']) || !isset($input['status'])) {
-        echo json_encode(['success' => false, 'message' => 'Invalid data']);
-        exit;
-        return;
-    }
-
-    try {
-        require_once './app/models/myModels.php';
-
-        $userModel = new class extends \myModels {
-            protected $table = "users";
-        };
-
-        $result = $userModel->update(['status' => $input['status']], ['id' => $input['userId']]);
-
-        // Nếu update() trả về JSON string, decode trước
-        $decoded = json_decode($result, true);
-
-        if ($decoded && $decoded['type'] === 'success') {
-            echo json_encode([
-                'success' => true,
-                'message' => 'Cập nhật trạng thái thành công',
-                'newStatus' => $input['status']
-            ]);
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            http_response_code(405);
+            echo json_encode(['success' => false, 'message' => 'Method not allowed']);
             exit;
-        } else {
-            echo json_encode(['success' => false, 'message' => 'Không thể cập nhật trạng thái']);
+            return;
+        }
+
+        $input = json_decode(file_get_contents('php://input'), true);
+
+        if (!$input || !isset($input['userId']) || !isset($input['status'])) {
+            echo json_encode(['success' => false, 'message' => 'Invalid data']);
+            exit;
+            return;
+        }
+
+        try {
+            require_once './app/models/myModels.php';
+
+            $userModel = new class extends \myModels {
+                protected $table = "users";
+            };
+
+            $result = $userModel->update(['status' => $input['status']], ['id' => $input['userId']]);
+
+            // Nếu update() trả về JSON string, decode trước
+            $decoded = json_decode($result, true);
+
+            if ($decoded && in_array($decoded['type'], ['success', 'warning'])) {
+                echo json_encode([
+                    'success' => true,
+                    'message' => 'Cập nhật trạng thái thành công',
+                    'newStatus' => $input['status']
+                ]);
+                exit;
+            } else {
+                echo json_encode(['success' => false, 'message' => 'Không thể cập nhật trạng thái']);
+                exit;
+            }
+        } catch (\Exception $e) {
+            echo json_encode(['success' => false, 'message' => 'Lỗi hệ thống: ' . $e->getMessage()]);
             exit;
         }
-    } catch (\Exception $e) {
-        echo json_encode(['success' => false, 'message' => 'Lỗi hệ thống: ' . $e->getMessage()]);
-        exit;
     }
-}
-
 }

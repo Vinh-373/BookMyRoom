@@ -6,7 +6,7 @@ class Payments extends Controller {
     public function index() {
 
         $this->view('layout/admin/admin', [
-            'viewFile' => '../../admin/payments.php',
+            'viewFile' => './app/views/admin/payments.php',
         ]);
     }
 }

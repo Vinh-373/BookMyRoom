@@ -6,7 +6,7 @@ class Vouchers extends Controller {
     public function index() {
 
         $this->view('layout/admin/admin', [
-            'viewFile' => '../../admin/vouchers.php',
+            'viewFile' => './app/views/admin/vouchers.php',
         ]);
     }
 }

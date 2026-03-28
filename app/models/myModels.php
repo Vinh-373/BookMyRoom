@@ -245,6 +245,26 @@ abstract class myModels extends Database
         return $result->fetch_assoc();
     }
 
+
+     public function findAll($conditions = []) {
+        $sql = "SELECT * FROM {$this->table}";
+        if (!empty($conditions)) {
+            $where = [];
+            foreach ($conditions as $key => $value) {
+                $where[] = "$key = '" . $this->conn->real_escape_string($value) . "'";
+            }
+            $sql .= " WHERE " . implode(" AND ", $where);
+        }
+        $result = $this->conn->query($sql);
+        $rows = [];
+        if ($result) {
+            while ($row = $result->fetch_assoc()) {
+                $rows[] = $row;
+            }
+        }
+        return $rows;
+    }
+
     function update($data = NULL, $where = NULL)
     {
         // Kiểm tra đầu vào

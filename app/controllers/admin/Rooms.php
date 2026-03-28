@@ -6,7 +6,7 @@ class Rooms extends Controller {
     public function index() {
 
         $this->view('layout/admin/admin', [
-            'viewFile' => '../../admin/rooms.php',
+            'viewFile' => './app/views/admin/rooms.php',
         ]);
     }
 }

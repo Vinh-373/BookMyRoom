@@ -50,7 +50,7 @@
            <td><?php echo $partner['userId']; ?></td>
            <td><?php echo htmlspecialchars($partner['fullName']); ?></td>
            <td><?php echo htmlspecialchars($partner['email']); ?></td>
-           <td><?php echo htmlspecialchars($partner['password']); ?></td>
+           <td>********</td>
            <td><?php echo htmlspecialchars($partner['phone']); ?></td>
            <td><?php echo $partner['status']; ?></td>
            <td><?php echo htmlspecialchars($partner['address'] ?? ''); ?></td>
@@ -69,21 +69,20 @@
              <?php else: ?>
                <button class="partner-edit-btn"
                  data-user-id="<?php echo $partner['userId']; ?>"
-                 data-fullname="<?php echo htmlspecialchars($partner['fullName']); ?>"
+                 data-full-name="<?php echo htmlspecialchars($partner['fullName']); ?>"
                  data-email="<?php echo htmlspecialchars($partner['email']); ?>"
-                 data-password="<?php echo htmlspecialchars($partner['password']); ?>"
                  data-phone="<?php echo htmlspecialchars($partner['phone']); ?>"
                  data-status="<?php echo $partner['status']; ?>"
                  data-address="<?php echo htmlspecialchars($partner['address'] ?? ''); ?>"
                  data-gender="<?php echo htmlspecialchars($partner['gender'] ?? ''); ?>"
-                 data-birthdate="<?php echo htmlspecialchars($partner['birthDate'] ?? ''); ?>"
-                 data-avatar="<?php echo htmlspecialchars($partner['avatarUrl'] ?? ''); ?>"
-                 data-city="<?php echo htmlspecialchars($partner['cityId'] ?? ''); ?>"
-                 data-ward="<?php echo htmlspecialchars($partner['wardId'] ?? ''); ?>"
-                 data-created="<?php echo date('Y-m-d', strtotime($partner['createdAt'])); ?>"
-                 data-company="<?php echo htmlspecialchars($partner['companyName']); ?>"
-                 data-taxcode="<?php echo htmlspecialchars($partner['taxCode']); ?>"
-                 data-license="<?php echo htmlspecialchars($partner['businessLicense']); ?>">Sửa</button>
+                 data-birth-date="<?php echo htmlspecialchars($partner['birthDate'] ?? ''); ?>"
+                 data-avatar-url="<?php echo htmlspecialchars($partner['avatarUrl'] ?? ''); ?>"
+                 data-city-id="<?php echo htmlspecialchars($partner['cityId'] ?? ''); ?>"
+                 data-ward-id="<?php echo htmlspecialchars($partner['wardId'] ?? ''); ?>"
+                 data-created-at="<?php echo date('Y-m-d', strtotime($partner['createdAt'])); ?>"
+                 data-company-name="<?php echo htmlspecialchars($partner['companyName']); ?>"
+                 data-tax-code="<?php echo htmlspecialchars($partner['taxCode']); ?>"
+                 data-business-license="<?php echo htmlspecialchars($partner['businessLicense']); ?>">Sửa</button>
              <?php endif; ?>
              <button
                class="partner-toggle-status-btn <?php echo $partner['status'] == 'BLOCKED' ? 'btn-active' : 'btn-blocked'; ?>"
@@ -187,15 +186,27 @@
          <!-- Thành phố -->
          <div>
            <label class="block text-sm font-medium text-gray-700">Thành phố</label>
-           <input type="text" name="cityId"
+           <select name="cityId" id="addCityId" required
              class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+             <option value="">-- Chọn thành phố --</option>
+             <?php foreach ($cities as $city): ?>
+               <option value="<?php echo $city['id']; ?>"><?php echo htmlspecialchars($city['name']); ?></option>
+             <?php endforeach; ?>
+           </select>
          </div>
 
          <!-- Khu vực -->
          <div>
            <label class="block text-sm font-medium text-gray-700">Khu vực</label>
-           <input type="text" name="wardId"
+           <select name="wardId" id="addWardId" required
              class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+             <option value="">-- Chọn khu vực --</option>
+             <?php foreach ($wards as $ward): ?>
+               <option value="<?php echo $ward['id']; ?>" data-city-id="<?php echo $ward['cityId']; ?>">
+                 <?php echo htmlspecialchars($ward['name']); ?>
+               </option>
+             <?php endforeach; ?>
+           </select>
          </div>
 
          <!-- Công ty -->
@@ -266,8 +277,8 @@
          <!-- Mật khẩu -->
          <div>
            <label class="block text-sm font-medium text-gray-700">Mật khẩu</label>
-           <input type="password" name="password" id="editPassword" required
-             class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+           <input type="password" name="password" id="editPassword"
+             class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="Nhập mật khẩu mới">
          </div>
 
          <!-- Số điện thoại -->
@@ -321,19 +332,31 @@
              class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
          </div>
 
-         <!-- Thành phố -->
-         <div>
-           <label class="block text-sm font-medium text-gray-700">Thành phố</label>
-           <input type="text" name="cityId" id="editCityId"
-             class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-         </div>
+<!-- Thành phố -->
+<div>
+  <label class="block text-sm font-medium text-gray-700">Thành phố</label>
+  <select name="cityId" id="editCityId" required
+    class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+    <option value="">-- Chọn thành phố --</option>
+    <?php foreach ($cities as $city): ?>
+      <option value="<?php echo $city['id']; ?>"><?php echo htmlspecialchars($city['name']); ?></option>
+    <?php endforeach; ?>
+  </select>
+</div>
 
-         <!-- Khu vực -->
-         <div>
-           <label class="block text-sm font-medium text-gray-700">Khu vực</label>
-           <input type="text" name="wardId" id="editWardId"
-             class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-         </div>
+<!-- Khu vực -->
+<div>
+  <label class="block text-sm font-medium text-gray-700">Khu vực</label>
+  <select name="wardId" id="editWardId" required
+    class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+    <option value="">-- Chọn khu vực --</option>
+    <?php foreach ($wards as $ward): ?>
+      <option value="<?php echo $ward['id']; ?>" data-city-id="<?php echo $ward['cityId']; ?>">
+        <?php echo htmlspecialchars($ward['name']); ?>
+      </option>
+    <?php endforeach; ?>
+  </select>
+</div>
 
          <!-- Ngày tạo (readonly) -->
          <div>

@@ -6,7 +6,7 @@ class Reviews extends Controller {
     public function index() {
 
         $this->view('layout/admin/admin', [
-            'viewFile' => '../../admin/reviews.php',
+            'viewFile' => './app/views/admin/reviews.php',
         ]);
     }
 }

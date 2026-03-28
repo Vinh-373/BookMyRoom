@@ -6,7 +6,7 @@ class Settings extends Controller {
     public function index() {
 
         $this->view('layout/admin/admin', [
-            'viewFile' => '../../admin/settings.php',
+            'viewFile' => './app/views/admin/settings.php',
         ]);
     }
 }
