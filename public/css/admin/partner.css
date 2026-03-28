@@ -161,14 +161,21 @@
   transform: translateY(-1px);
 }
 
-.partners-data-table button:last-child {
-  background: #ef4444;
-  color: white;
+.btn-blocked {
+  background-color: #9f3039;
+  color: #fff;
 }
-
-.partners-data-table button:last-child:hover {
-  background: #dc2626;
-  transform: translateY(-1px);
+.btn-blocked:hover {
+  background-color: #891e27;
+  color: #fff;
+}
+.btn-active {
+  background-color: #479f5c;
+  color: #fff;
+}
+.btn-active {
+  background-color: #276c37;
+  color: #fff;
 }
 
 /* Responsive Design */

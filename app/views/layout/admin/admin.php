@@ -157,6 +157,6 @@ if ($partial) {
     ?>
   </main>
 
-<script src="/BookMyRoom/public/js/admin/sidebar.js"></script>
+<script type="module" src="/BookMyRoom/public/js/admin/admin.js"></script>
 </body>
 </html>
