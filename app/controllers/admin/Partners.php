@@ -38,7 +38,7 @@ class Partners extends Controller
 
         ',
             where: [],
-            orderBy: 'users.createdAt DESC'
+            orderBy: 'partners.userId ASC'
         );
 
         // 2️⃣ Lấy cities và wards để mapping tên

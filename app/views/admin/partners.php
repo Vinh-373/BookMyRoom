@@ -35,7 +35,7 @@
          <th>Giới tính</th>
          <th>Ngày sinh</th>
          <th>AvatarUrl</th>
-         <th>Thành phố/th>
+         <th>Thành phố</th>
          <th>Khu vực</th>
          <th>Ngày tạo</th>
          <th>Công ty</th>
