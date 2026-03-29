@@ -4,12 +4,13 @@ namespace Controllers\admin;
 
 use Controller;
 
+
 class Partners extends Controller
 {
     public function index()
     {
         require_once './app/models/partnersModel.php';
-            require_once './app/models/myModels.php';
+        require_once './app/models/myModels.php';
         $partnersModel = new \partnersModel();
 
         $partners = $partnersModel->join_multi(
@@ -24,7 +25,6 @@ class Partners extends Controller
             partners.*,
             users.fullName,
             users.email,
-            users.password,
             users.phone,
             users.status,
             users.address,
@@ -53,22 +53,23 @@ class Partners extends Controller
         $wards = $myModelWards->findAll();
 
         // 3️⃣ Map cityName và wardName cho mỗi partner
-        foreach ($partners as &$partner) {
-            $partner['cityName'] = '';
-            $partner['wardName'] = '';
-            foreach ($cities as $city) {
-                if ($partner['cityId'] == $city['id']) {
-                    $partner['cityName'] = $city['name'];
-                    break;
-                }
-            }
-            foreach ($wards as $ward) {
-                if ($partner['wardId'] == $ward['id']) {
-                    $partner['wardName'] = $ward['name'];
-                    break;
-                }
-            }
+        // tạo map trước
+        $cityMap = [];
+        foreach ($cities as $c) {
+            $cityMap[$c['id']] = $c['name'];
         }
+
+        $wardMap = [];
+        foreach ($wards as $w) {
+            $wardMap[$w['id']] = $w['name'];
+        }
+
+        // map vào partners
+        foreach ($partners as &$partner) {
+            $partner['cityName'] = $cityMap[$partner['cityId']] ?? '';
+            $partner['wardName'] = $wardMap[$partner['wardId']] ?? '';
+        }
+
 
         // 4️⃣ Truyền dữ liệu vào view
         $this->view('layout/admin/admin', [
@@ -90,33 +91,81 @@ class Partners extends Controller
             die("Method not allowed");
         }
 
-        $input = $_POST;
-
+        $input = json_decode(file_get_contents('php://input'), true);
+        if (!$input) {
+            echo json_encode(['success' => false, 'message' => 'Dữ liệu không hợp lệ']);
+            exit;
+        }
         // Validate dữ liệu bắt buộc
         $required_fields = ['fullName', 'email', 'password', 'phone', 'companyName', 'taxCode', 'businessLicense'];
         foreach ($required_fields as $field) {
             if (empty($input[$field])) {
-                $_SESSION['error'] = "Thiếu trường: $field";
-                header("Location: /BookMyRoom/admin/partners/add");
+                echo json_encode([
+                    'success' => false,
+                    'message' => "Thiếu trường: $field"
+                ]);
                 exit;
             }
         }
 
         if (!filter_var($input['email'], FILTER_VALIDATE_EMAIL)) {
-            $_SESSION['error'] = "Email không hợp lệ";
-            header("Location: /BookMyRoom/admin/partners/add");
+            echo json_encode([
+                'success' => false,
+                'message' => 'Email không hợp lệ'
+            ]);
             exit;
         }
 
         if (!preg_match('/^[0-9]{10}$/', $input['phone'])) {
-            $_SESSION['error'] = "Số điện thoại không hợp lệ";
-            header("Location: /BookMyRoom/admin/partners/add");
+            echo json_encode([
+                'success' => false,
+                'message' => 'Số điện thoại không hợp lệ'
+            ]);
+            exit;
+        }
+        require_once './app/models/myModels.php';
+
+        try {
+            require_once './app/models/myModels.php';
+
+            $tempModel = new class extends \myModels {
+                protected $table = "partners";
+            };
+
+            $conn = $tempModel->conn;
+
+            $stmt = $conn->prepare("SELECT userId FROM partners WHERE companyName = ? LIMIT 1");
+
+            if (!$stmt) {
+                throw new \Exception($conn->error);
+            }
+
+            $stmt->bind_param("s", $input['companyName']);
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            if ($result->num_rows > 0) {
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'Tên công ty đã tồn tại'
+                ]);
+                exit;
+            }
+        } catch (\Exception $e) {
+            echo json_encode([
+                'success' => false,
+                'message' => 'Lỗi check company: ' . $e->getMessage()
+            ]);
             exit;
         }
 
-        if (!json_decode($input['businessLicense'])) {
-            $_SESSION['error'] = "Giấy phép kinh doanh phải là JSON hợp lệ";
-            header("Location: /BookMyRoom/admin/partners/add");
+
+        json_decode($input['businessLicense']);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            echo json_encode([
+                'success' => false,
+                'message' => 'Giấy phép kinh doanh phải là JSON hợp lệ'
+            ]);
             exit;
         }
 
@@ -136,8 +185,10 @@ class Partners extends Controller
             $stmt->execute();
             $result = $stmt->get_result();
             if ($result->num_rows > 0) {
-                $_SESSION['error'] = "Email đã tồn tại";
-                header("Location: /BookMyRoom/admin/partners/add");
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'Email đã tồn tại'
+                ]);
                 exit;
             }
 
@@ -157,12 +208,19 @@ class Partners extends Controller
                 'createdAt'  => date('Y-m-d H:i:s')
             ];
 
-            $userId = $userModel->insert('users', $userData);
-            if (!$userId) {
-                $_SESSION['error'] = "Không thể tạo tài khoản user";
-                header("Location: /BookMyRoom/admin/partners/add");
+            $userResultRaw = $userModel->insert('users', $userData);
+            $userResult = json_decode($userResultRaw, true);
+
+            if (!$userResult || !isset($userResult['data'])) {
+                echo json_encode([
+                    'success' => false,
+                    'message' => "Không thể tạo tài khoản user",
+                    'debug' => $userResultRaw
+                ]);
                 exit;
             }
+
+            $userId = $userResult['data'];
 
             // Thêm partner
             $partnersModel = new \partnersModel();
@@ -172,10 +230,15 @@ class Partners extends Controller
                 'taxCode'        => $input['taxCode'],
                 'businessLicense' => $input['businessLicense']
             ];
-            $partnerId = $partnersModel->insert('partners', $partnerData);
-            if (!$partnerId) {
-                $_SESSION['error'] = "Không thể thêm thông tin đối tác";
-                header("Location: /BookMyRoom/admin/partners/add");
+            $partnerResultRaw = $partnersModel->insert('partners', $partnerData);
+            $partnerResult = json_decode($partnerResultRaw, true);
+
+            if (!$partnerResult || $partnerResult['type'] !== 'success') {
+                echo json_encode([
+                    'success' => false,
+                    'message' => "Không thể thêm thông tin đối tác",
+                    'debug' => $partnerResultRaw
+                ]);
                 exit;
             }
 
@@ -188,20 +251,29 @@ class Partners extends Controller
                 'userId' => $userId,
                 'roleId' => $roleId
             ];
-            $userRoleId = $userRoleModel->insert('user_roles', $userRoleData);
-            if (!$userRoleId) {
-                $_SESSION['error'] = "Không thể gán role cho user";
-                header("Location: /BookMyRoom/admin/partners/add");
+            $userRoleRaw = $userRoleModel->insert('user_roles', $userRoleData);
+            $userRoleResult = json_decode($userRoleRaw, true);
+
+            if (!$userRoleResult || $userRoleResult['type'] !== 'success') {
+                echo json_encode([
+                    'success' => false,
+                    'message' => "Không thể gán role cho user",
+                    'debug' => $userRoleRaw
+                ]);
                 exit;
             }
 
             // Thành công → redirect về danh sách
-            $_SESSION['success'] = "Thêm đối tác thành công";
-            header("Location: /BookMyRoom/admin/partners");
+            echo json_encode([
+                'success' => true,
+                'message' => "Thêm đối tác thành công"
+            ]);
             exit;
         } catch (\Exception $e) {
-            $_SESSION['error'] = "Lỗi hệ thống: " . $e->getMessage();
-            header("Location: /BookMyRoom/admin/partners/add");
+            echo json_encode([
+                'success' => false,
+                'message' => "Lỗi hệ thống: " . $e->getMessage()
+            ]);
             exit;
         }
     }
@@ -221,10 +293,9 @@ class Partners extends Controller
                 ['table' => 'users', 'type' => 'LEFT', 'on' => 'partners.userId = users.id']
             ],
             select: '
-            partners.*;
+            partners.*,
             users.fullName,
             users.email,
-            users.password,
             users.phone,
             users.status,
             users.address,
@@ -294,7 +365,22 @@ class Partners extends Controller
             $userData = [];
 
             if (isset($input['fullName']))   $userData['fullName'] = $input['fullName'];
-            if (isset($input['email']))      $userData['email'] = $input['email'];
+            if (isset($input['email'])) {
+                $stmt = $userModel->conn->prepare("SELECT id FROM users WHERE email = ? AND id != ?");
+                $stmt->bind_param("si", $input['email'], $input['userId']);
+                $stmt->execute();
+                $result = $stmt->get_result();
+
+                if ($result->num_rows > 0) {
+                    echo json_encode([
+                        'success' => false,
+                        'message' => 'Email đã tồn tại'
+                    ]);
+                    exit;
+                }
+
+                $userData['email'] = $input['email'];
+            }
             if (!empty($input['password']))  $userData['password'] = password_hash($input['password'], PASSWORD_DEFAULT);
             if (isset($input['phone']))      $userData['phone'] = $input['phone'];
             if (isset($input['status']))     $userData['status'] = $input['status'];
@@ -331,7 +417,7 @@ class Partners extends Controller
                 } else {
                     $partnerData['userId'] = $input['userId'];
                     $partnerResult = json_decode(
-                        $partnersModel->insert($partnerData),
+                        $partnersModel->insert('partners', $partnerData),
                         true
                     );
                 }
@@ -350,18 +436,26 @@ class Partners extends Controller
 
             // Lấy tên city / ward
             // Giả sử trong myModels có property $conn (mysqli)
+
+
             $cityName = '';
-            $wardName = '';
-
             if (!empty($updatedUser['cityId'])) {
-                $cityRow = $userModel->conn->query("SELECT name FROM cities WHERE id = " . $updatedUser['cityId']);
-                $cityName = $cityRow ? $cityRow->fetch_assoc()['name'] : '';
+                $stmt = $userModel->conn->prepare("SELECT name FROM cities WHERE id = ?");
+                $stmt->bind_param("i", $updatedUser['cityId']);
+                $stmt->execute();
+                $result = $stmt->get_result();
+                $cityName = $result->fetch_assoc()['name'] ?? '';
             }
 
+            $wardName = '';
             if (!empty($updatedUser['wardId'])) {
-                $wardRow = $userModel->conn->query("SELECT name FROM wards WHERE id = " . $updatedUser['wardId']);
-                $wardName = $wardRow ? $wardRow->fetch_assoc()['name'] : '';
+                $stmt = $userModel->conn->prepare("SELECT name FROM wards WHERE id = ?");
+                $stmt->bind_param("i", $updatedUser['wardId']);
+                $stmt->execute();
+                $result = $stmt->get_result();
+                $wardName = $result->fetch_assoc()['name'] ?? '';
             }
+
             $updatedUser['cityName'] = $cityName;
             $updatedUser['wardName'] = $wardName;
 

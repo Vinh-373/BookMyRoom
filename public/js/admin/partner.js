@@ -60,91 +60,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
 
-  // Add partner form submit
-  addForm.addEventListener('submit', function (e) {
-    e.preventDefault();
-    const data = Object.fromEntries(new FormData(addForm));
-    try { JSON.parse(data.businessLicense); } catch { alert('Giấy phép kinh doanh phải là JSON hợp lệ!'); return; }
-
-    fetch(`${apiBase}/add`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
-    })
-      .then(res => res.json())
-      .then(result => {
-        alert(result.success ? 'Thêm đối tác thành công!' : 'Lỗi: ' + result.message);
-        if (result.success) { closeAddModalFunc(); location.reload(); }
-      })
-      .catch(err => { console.error('Error:', err); alert('Có lỗi xảy ra khi thêm đối tác!'); });
-  });
-
-
-
-
-
-  ////////////////Đây là hàm cập nhật nút KHÓA MỞ
-  document.querySelectorAll('.partner-toggle-status-btn').forEach(btn => {
-    btn.addEventListener('click', function () {
-
-      const userId = this.dataset.userId;
-
-      const row = this.closest('tr');
-      const statusCell = row.querySelector('td:nth-child(6)');
-      const currentStatus = statusCell.textContent.trim(); // ✅ lấy từ UI thật
-
-      const newStatus = currentStatus === 'BLOCKED' ? 'ACTIVE' : 'BLOCKED';
-      const actionText = newStatus === 'BLOCKED' ? 'khóa' : 'mở lại';
-
-      if (!confirm(`Bạn có chắc muốn ${actionText} đối tác này?`)) return;
-
-      // 👉 disable nút để tránh spam click
-      this.disabled = true;
-
-      fetch(`${apiBase}/toggleStatus`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId, status: newStatus })
-      })
-        .then(res => res.json())
-        .then(result => {
-          console.log(result); // 🔥 debug
-
-          if (result.success) {
-
-            // ✅ LẤY STATUS TỪ SERVER (quan trọng)
-            const updatedStatus = result.newStatus;
-
-            alert(`Đã ${actionText} đối tác thành công!`);
-
-            // update UI theo server
-            statusCell.textContent = updatedStatus;
-            this.textContent = updatedStatus === 'BLOCKED' ? 'Mở' : 'Khóa';
-
-            // màu
-            if (updatedStatus === 'BLOCKED') {
-              this.style.backgroundColor = '#479f5c'; // xanh
-              this.style.color = '#fff';
-
-            } else {
-              this.style.backgroundColor = '#9f3039'; // đỏ
-              this.style.color = '#fff';
-            }
-            filterTable();
-
-          } else {
-            alert('Lỗi: ' + result.message);
-          }
-        })
-        .catch(err => {
-          alert('Có lỗi kết nối: ' + err.message);
-        })
-        .finally(() => {
-          this.disabled = false;
-        });
-    });
-  });
-
 
 
   //////////////// Lấy tất cả các hàng <tr> trong tbody của bảng
@@ -186,7 +101,10 @@ document.addEventListener('DOMContentLoaded', () => {
   closeEditModal.addEventListener('click', closeEditModalFunc);
   cancelEditBtn.addEventListener('click', closeEditModalFunc);
 
-  // ================= GỬI UPDATE =================
+
+
+
+  // ================= Edit Form =================
   editForm.addEventListener('submit', function (e) {
     e.preventDefault();
 
@@ -240,6 +158,8 @@ document.addEventListener('DOMContentLoaded', () => {
           row.querySelector('td:nth-child(4)').textContent = '••••••••'; // password ẩn
           row.querySelector('td:nth-child(5)').textContent = updated.phone || '';
           row.querySelector('td:nth-child(6)').textContent = updated.status;
+          const btn = row.querySelector('.partner-toggle-status-btn');
+          updateStatusButton(btn, updated.status);
           row.querySelector('td:nth-child(7)').textContent = updated.address || '';
           row.querySelector('td:nth-child(8)').textContent = updated.gender || '';
 
@@ -267,46 +187,122 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // ================= ĐIỀN FORM KHI CLICK SỬA =================
-  function attachActionListeners() {
-    document.querySelectorAll('.partner-edit-btn').forEach(btn => {
-      btn.addEventListener('click', function () {
-        editModal.classList.remove('hidden');
+  document.getElementById('partnersTableBody').addEventListener('click', function (e) {
+    const row = e.target.closest('tr'); // luôn lấy row từ click target
+    if (!row) return;
 
-        // Điền dữ liệu vào form
-        for (const [key, value] of Object.entries(this.dataset)) {
-          const input = document.getElementById(
-            'edit' + key.charAt(0).toUpperCase() + key.slice(1)
-          );
-          if (input) {
-            if (key === 'password') {
-              input.value = ''; // password luôn trống
-            } else {
-              input.value = value;
-            }
-          }
-        }
-      });
-    });
 
-    // Duyệt đối tác
-    document.querySelectorAll('.approve-btn').forEach(btn => {
-      btn.addEventListener('click', function () {
-        const userId = this.dataset.userId;
-        if (confirm('Bạn có chắc muốn duyệt đối tác này?')) {
-          fetch(`${apiBase}/approve`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ userId })
-          })
-            .then(res => res.json())
-            .then(result => {
-              alert(result.success ? 'Duyệt đối tác thành công!' : 'Lỗi: ' + result.message);
-              if (result.success) location.reload();
-            });
-        }
-      });
-    });
+
+// 🔹 Duyệt đối tác
+  if (e.target.classList.contains('partners-approve-btn')) {
+    const userId = e.target.dataset.userId;
+    if (!confirm('Bạn có chắc muốn duyệt đối tác này?')) return;
+
+    fetch(`${apiBase}/approve`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userId })
+    })
+    .then(res => res.json())
+    .then(result => {
+      if (result.success) {
+        // Update DOM row
+        row.querySelector('td:nth-child(6)').textContent = 'ACTIVE'; // cột status
+        const actionCell = e.target.parentElement;
+        actionCell.innerHTML = `
+          <button class="partner-edit-btn" data-user-id="${userId}">Sửa</button>
+          <button class="partner-toggle-status-btn" data-user-id="${userId}">Khóa</button>
+        `;
+
+        // Cập nhật nút toggle màu
+        const toggleBtn = actionCell.querySelector('.partner-toggle-status-btn');
+        updateStatusButton(toggleBtn, 'ACTIVE');
+
+        alert('Duyệt đối tác thành công!');
+      } else {
+        alert(result.message || 'Duyệt thất bại!');
+      }
+    })
+    .catch(err => alert('Có lỗi xảy ra: ' + err.message));
   }
+
+
+
+    // 🔹 Toggle status
+    if (e.target.classList.contains('partner-toggle-status-btn')) {
+      const btn = e.target;
+      const userId = btn.dataset.userId;
+      const statusCell = row.querySelector('td:nth-child(6)');
+      const currentStatus = statusCell.textContent.trim();
+      const newStatus = currentStatus === 'BLOCKED' ? 'ACTIVE' : 'BLOCKED';
+
+      if (!confirm(`Bạn có chắc muốn ${newStatus === 'BLOCKED' ? 'khóa' : 'mở'} đối tác này?`)) return;
+
+      fetch(`${apiBase}/toggleStatus`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId, status: newStatus })
+      })
+        .then(res => res.json())
+        .then(result => {
+          if (result.success) {
+            const updatedStatus = newStatus;
+            statusCell.textContent = updatedStatus;
+            updateStatusButton(btn, updatedStatus);
+
+            const editBtn = row.querySelector('.partner-edit-btn');
+            editBtn.dataset.status = updatedStatus;
+          } else {
+            alert('Lỗi: ' + result.message);
+          }
+        })
+        .catch(err => alert('Có lỗi kết nối: ' + err.message));
+    }
+
+    // 🔹 Mở modal edit
+    if (e.target.classList.contains('partner-edit-btn')) {
+      const rowData = row.querySelectorAll('td');
+      const editBtn = e.target;
+
+      editForm.userId.value = editBtn.dataset.userId;
+      editForm.fullName.value = rowData[1].textContent;
+      editForm.email.value = rowData[2].textContent;
+      editForm.password.value = '';
+      editForm.phone.value = rowData[4].textContent;
+      editForm.status.value = rowData[5].textContent;
+      editForm.address.value = rowData[6].textContent;
+      editForm.gender.value = rowData[7].textContent;
+      editForm.birthDate.value = rowData[8].textContent;
+      editForm.avatarUrl.value = rowData[9].textContent;
+      editForm.cityId.value = editBtn.dataset.cityId || '';
+      editCitySelect.dispatchEvent(new Event('change'));
+      editForm.wardId.value = editBtn.dataset.wardId || '';
+      editForm.companyName.value = rowData[13].textContent;
+      editForm.taxCode.value = rowData[14].textContent;
+      editForm.businessLicense.value = rowData[15].textContent;
+
+      editModal.classList.remove('hidden');
+    }
+  });
+
+  function updateStatusButton(btn, status) {
+    if (status === 'BLOCKED') {
+      btn.textContent = 'Mở';
+      btn.style.backgroundColor = '#479f5c';
+    } else if (status === 'ACTIVE') {
+      btn.textContent = 'Khóa';
+      btn.style.backgroundColor = '#9f3039';
+    }
+    btn.style.color = '#fff';
+  }
+  document.querySelectorAll('.partner-toggle-status-btn').forEach(btn => {
+    const row = btn.closest('tr');
+    const status = row.querySelector('td:nth-child(6)').textContent.trim();
+    updateStatusButton(btn, status);
+  });
+
+
+
 
 
 
@@ -334,7 +330,53 @@ document.addEventListener('DOMContentLoaded', () => {
     editWardSelect.value = '';
   });
 
-  // Gắn sự kiện ban đầu
-  attachActionListeners();
+
+
+
+
+
+
+
+  // Add partner form submit
+  addForm.addEventListener('submit', function (e) {
+    e.preventDefault();
+    const data = Object.fromEntries(new FormData(addForm));
+    try { JSON.parse(data.businessLicense); } catch { alert('Giấy phép kinh doanh phải là JSON hợp lệ!'); return; }
+
+    fetch(`${apiBase}/add`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    })
+      .then(res => res.json())
+      .then(result => {
+        alert(result.success ? 'Thêm đối tác thành công!' : 'Lỗi: ' + result.message);
+        if (result.success) { closeAddModalFunc(); location.reload(); }
+      })
+      .catch(err => { console.error('Error:', err); alert('Có lỗi xảy ra khi thêm đối tác!'); });
+  });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 });

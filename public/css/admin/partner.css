@@ -139,8 +139,11 @@
   border-bottom: none;
 }
 
-/* Action Buttons */
-.partners-data-table button {
+
+
+.btn-blocked {
+  height:40px;
+  width: 70px;
   padding: 0.5rem 1rem;
   border: none;
   border-radius: 6px;
@@ -149,34 +152,89 @@
   cursor: pointer;
   margin-right: 0.5rem;
   transition: all 0.2s ease;
-}
-
-.partners-data-table button:first-child {
-  background: #3b82f6;
-  color: white;
-}
-
-.partners-data-table button:first-child:hover {
-  background: #2563eb;
-  transform: translateY(-1px);
-}
-
-.btn-blocked {
   background-color: #9f3039;
   color: #fff;
 }
+
 .btn-blocked:hover {
-  background-color: #891e27;
-  color: #fff;
+  background-color: #4d070d;
+  transform: translateY(-1px);
 }
+
 .btn-active {
+   height:40px;
+  width: 70px;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  margin-right: 0.5rem;
+  transition: all 0.2s ease;
   background-color: #479f5c;
   color: #fff;
 }
-.btn-active {
+
+.btn-active:hover {
   background-color: #276c37;
-  color: #fff;
+  transform: translateY(-1px);
 }
+
+
+
+.btn-approve {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  margin-right: 0.5rem;
+  transition: all 0.2s ease;
+  background-color: #f7a128;
+  width: 70px;
+   height:40px;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.btn-approve:hover {
+  background: #b09303;
+  transform: translateY(-1px);
+}
+
+.btn-edit {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  width: 70px;
+   height:40px;
+  cursor: pointer;
+  margin-right: 0.5rem;
+  transition: all 0.2s ease;
+  background-color: #0329c2;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.btn-edit:hover {
+  background: #011e90;
+  transform: translateY(-1px);
+}
+
+
+
+
+
+
+
 
 /* Responsive Design */
 @media (max-width: 768px) {

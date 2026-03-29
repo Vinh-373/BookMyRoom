@@ -57,17 +57,17 @@
            <td><?php echo htmlspecialchars($partner['gender'] ?? ''); ?></td>
            <td><?php echo htmlspecialchars($partner['birthDate'] ?? ''); ?></td>
            <td><?php echo htmlspecialchars($partner['avatarUrl'] ?? ''); ?></td>
-           <td><?php echo htmlspecialchars($partner['cityId'] ?? ''); ?></td>
-           <td><?php echo htmlspecialchars($partner['wardId'] ?? ''); ?></td>
+           <td><?php echo htmlspecialchars($partner['cityName'] ?? ''); ?></td>
+           <td><?php echo htmlspecialchars($partner['wardName'] ?? ''); ?></td>
            <td><?php echo date('Y-m-d', strtotime($partner['createdAt'])); ?></td>
            <td><?php echo htmlspecialchars($partner['companyName']); ?></td>
            <td><?php echo htmlspecialchars($partner['taxCode']); ?></td>
            <td><?php echo htmlspecialchars($partner['businessLicense']); ?></td>
            <td>
              <?php if ($partner['status'] == 'PENDING'): ?>
-               <button class="approve-btn" data-user-id="<?php echo $partner['userId']; ?>">Duyệt</button>
+               <button class="partners-approve-btn btn-approve" data-user-id="<?php echo $partner['userId']; ?>">Duyệt</button>
              <?php else: ?>
-               <button class="partner-edit-btn"
+               <button class="partner-edit-btn btn-edit"
                  data-user-id="<?php echo $partner['userId']; ?>"
                  data-full-name="<?php echo htmlspecialchars($partner['fullName']); ?>"
                  data-email="<?php echo htmlspecialchars($partner['email']); ?>"
@@ -83,19 +83,18 @@
                  data-company-name="<?php echo htmlspecialchars($partner['companyName']); ?>"
                  data-tax-code="<?php echo htmlspecialchars($partner['taxCode']); ?>"
                  data-business-license="<?php echo htmlspecialchars($partner['businessLicense']); ?>">Sửa</button>
+               <button
+                 class="partner-toggle-status-btn <?php echo $partner['status'] == 'BLOCKED' ? 'btn-active' : 'btn-blocked'; ?>"
+                 data-user-id="<?php echo $partner['userId']; ?>">
+                 <?php echo $partner['status'] == 'ACTIVE' ? 'Khóa' : 'Mở'; ?>
+               </button>
              <?php endif; ?>
-             <button
-               class="partner-toggle-status-btn <?php echo $partner['status'] == 'BLOCKED' ? 'btn-active' : 'btn-blocked'; ?>"
-               data-user-id="<?php echo $partner['userId']; ?>">
-               <?php echo $partner['status'] == 'ACTIVE' ? 'Khóa' : 'Mở'; ?>
-             </button>
            </td>
          </tr>
        <?php endforeach; ?>
      </tbody>
    </table>
  </div>
-
  <!-- Modal thêm đối tác -->
  <div id="addPartnerModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
@@ -294,7 +293,6 @@
            <select name="status" id="editStatus"
              class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
              <option value="ACTIVE">ACTIVE</option>
-             <option value="PENDING">PENDING</option>
              <option value="BLOCKED">BLOCKED</option>
            </select>
          </div>
@@ -332,31 +330,31 @@
              class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
          </div>
 
-<!-- Thành phố -->
-<div>
-  <label class="block text-sm font-medium text-gray-700">Thành phố</label>
-  <select name="cityId" id="editCityId" required
-    class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-    <option value="">-- Chọn thành phố --</option>
-    <?php foreach ($cities as $city): ?>
-      <option value="<?php echo $city['id']; ?>"><?php echo htmlspecialchars($city['name']); ?></option>
-    <?php endforeach; ?>
-  </select>
-</div>
+         <!-- Thành phố -->
+         <div>
+           <label class="block text-sm font-medium text-gray-700">Thành phố</label>
+           <select name="cityId" id="editCityId" required
+             class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+             <option value="">-- Chọn thành phố --</option>
+             <?php foreach ($cities as $city): ?>
+               <option value="<?php echo $city['id']; ?>"><?php echo htmlspecialchars($city['name']); ?></option>
+             <?php endforeach; ?>
+           </select>
+         </div>
 
-<!-- Khu vực -->
-<div>
-  <label class="block text-sm font-medium text-gray-700">Khu vực</label>
-  <select name="wardId" id="editWardId" required
-    class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-    <option value="">-- Chọn khu vực --</option>
-    <?php foreach ($wards as $ward): ?>
-      <option value="<?php echo $ward['id']; ?>" data-city-id="<?php echo $ward['cityId']; ?>">
-        <?php echo htmlspecialchars($ward['name']); ?>
-      </option>
-    <?php endforeach; ?>
-  </select>
-</div>
+         <!-- Khu vực -->
+         <div>
+           <label class="block text-sm font-medium text-gray-700">Khu vực</label>
+           <select name="wardId" id="editWardId" required
+             class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+             <option value="">-- Chọn khu vực --</option>
+             <?php foreach ($wards as $ward): ?>
+               <option value="<?php echo $ward['id']; ?>" data-city-id="<?php echo $ward['cityId']; ?>">
+                 <?php echo htmlspecialchars($ward['name']); ?>
+               </option>
+             <?php endforeach; ?>
+           </select>
+         </div>
 
          <!-- Ngày tạo (readonly) -->
          <div>
