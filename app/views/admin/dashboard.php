@@ -1,145 +1,182 @@
-﻿<div class="dashboard-container">
-    <h1>Dashboard</h1>
+﻿<div class="dashboard-content"> <!-- Tổng quan -->
+  <h1 class="dashboard-title">Tổng quan Admin</h1>
+  <p class="dashboard-subtitle">Thống kê và phân tích hệ thống booking khách sạn</p>
 
-    <!-- Main Stats Grid -->
-    <div class="stats-grid">
-      <div class="stat-card">
-        <div class="stat-icon">📊</div>
-        <div class="stat-content">
-          <h3>1,250</h3>
-          <p>Tổng đặt phòng</p>
-          <span class="stat-change positive">+12.5%</span>
-        </div>
+  <div class="dashboard-stats-grid">
+
+    <div class="dashboard-stat-card">
+      <div class="dashboard-stat-icon">$</div>
+      <div class="dashboard-sum-hotels">
+        <span class="dashboard-stat-value">1000</span>
+        <span class="dashboard-stat-label">Tổng khách sạn</span>
+        <span class="dashboard-stat-change positive">+12.5%</span>
       </div>
-      <div class="stat-card">
-        <div class="stat-icon">💰</div>
-        <div class="stat-content">
-          <h3>850M VND</h3>
-          <p>Doanh thu tháng</p>
-          <span class="stat-change positive">+8.2%</span>
-        </div>
+    </div>
+    <div class="dashboard-stat-card">
+      <div class="dashboard-stat-icon">📦</div>
+      <div class="dashboard-sum-rooms">
+        <span class="dashboard-stat-value">3,400</span>
+        <span class="dashboard-stat-label">Tổng phòng</span>
+        <span class="dashboard-stat-change positive">+8.2%</span>
       </div>
-      <div class="stat-card">
-        <div class="stat-icon">🏨</div>
-        <div class="stat-content">
-          <h3>85</h3>
-          <p>Khách sạn</p>
-          <span class="stat-change neutral">+2</span>
-        </div>
+    </div>
+    <div class="dashboard-stat-card">
+      <div class="dashboard-stat-icon">📦</div>
+      <div class="dashboard-sum-bookings">
+        <span class="dashboard-stat-value">3,400</span>
+        <span class="dashboard-stat-label">Tổng booking</span>
+        <span class="dashboard-stat-change positive">+8.2%</span>
       </div>
-      <div class="stat-card">
-        <div class="stat-icon">👥</div>
-        <div class="stat-content">
-          <h3>1,890</h3>
-          <p>Khách hàng</p>
-          <span class="stat-change positive">+15.3%</span>
-        </div>
+    </div>
+    <div class="dashboard-stat-card">
+      <div class="dashboard-stat-icon">👥</div>
+      <div class="dashboard-sum-customers">
+        <span class="dashboard-stat-value">2,847</span>
+        <span class="dashboard-stat-label">Tổng khách hàng</span>
+        <span class="dashboard-stat-change positive">+15.3%</span>
+      </div>
+    </div>
+    <div class="dashboard-stat-card">
+      <div class="dashboard-stat-icon">📦</div>
+      <div class="dashboard-sum-staffs">
+        <span class="dashboard-stat-value">3,400</span>
+        <span class="dashboard-stat-label">Tổng nhân viên</span>
+        <span class="dashboard-stat-change positive">+8.2%</span>
+      </div>
+    </div>
+    <div class="dashboard-stat-card">
+      <div class="dashboard-stat-icon">👥</div>
+      <div class="dashboard-sum-partners">
+        <span class="dashboard-stat-value">2,847</span>
+        <span class="dashboard-stat-label">Tổng đối tác</span>
+        <span class="dashboard-stat-change positive">+15.3%</span>
+      </div>
+    </div>
+    <div class="dashboard-stat-card">
+      <div class="dashboard-stat-icon">👥</div>
+      <div class="dashboard-sum-payments">
+        <span class="dashboard-stat-value">2,847</span>
+        <span class="dashboard-stat-label">Tổng thanh toán</span>
+        <span class="dashboard-stat-change positive">+15.3%</span>
       </div>
     </div>
 
-    <!-- Charts Section -->
-    <div class="charts-section">
-      <div class="chart-card">
-        <h3>Doanh thu theo tháng</h3>
-        <div class="chart-placeholder">
-          <div class="chart-bar" style="height: 60%; background: #667eea;"></div>
-          <div class="chart-bar" style="height: 75%; background: #764ba2;"></div>
-          <div class="chart-bar" style="height: 45%; background: #f093fb;"></div>
-          <div class="chart-bar" style="height: 80%; background: #f5576c;"></div>
-          <div class="chart-bar" style="height: 90%; background: #4facfe;"></div>
-          <div class="chart-bar" style="height: 85%; background: #00f2fe;"></div>
-        </div>
-        <div class="chart-labels">
-          <span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span><span>May</span><span>Jun</span>
-        </div>
-      </div>
-
-      <div class="chart-card">
-        <h3>Trạng thái đặt phòng</h3>
-        <div class="pie-chart">
-          <div class="pie-segment confirmed" style="--percentage: 65;"></div>
-          <div class="pie-segment pending" style="--percentage: 20;"></div>
-          <div class="pie-segment cancelled" style="--percentage: 15;"></div>
-        </div>
-        <div class="chart-legend">
-          <div class="legend-item">
-            <span class="legend-color confirmed"></span>
-            <span>Đã xác nhận (65%)</span>
-          </div>
-          <div class="legend-item">
-            <span class="legend-color pending"></span>
-            <span>Chờ xử lý (20%)</span>
-          </div>
-          <div class="legend-item">
-            <span class="legend-color cancelled"></span>
-            <span>Đã hủy (15%)</span>
-          </div>
-        </div>
+    <div class="dashboard-stat-card">
+      <div class="dashboard-stat-icon">👥</div>
+      <div class="dashboard-sum-vouchers">
+        <span class="dashboard-stat-value">2,847</span>
+        <span class="dashboard-stat-label">Tổng phiếu giảm giá</span>
+        <span class="dashboard-stat-change positive">+15.3%</span>
       </div>
     </div>
-
-    <!-- Recent Activities -->
-    <div class="recent-activities">
-      <h3>Hoạt động gần đây</h3>
-      <div class="activity-list">
-        <div class="activity-item">
-          <div class="activity-icon">🆕</div>
-          <div class="activity-content">
-            <p><strong>Nguyễn Văn A</strong> đã đặt phòng tại Grand Hotel</p>
-            <span class="activity-time">2 phút trước</span>
-          </div>
-        </div>
-        <div class="activity-item">
-          <div class="activity-icon">💳</div>
-          <div class="activity-content">
-            <p>Thanh toán thành công <strong>2,500,000 VND</strong></p>
-            <span class="activity-time">5 phút trước</span>
-          </div>
-        </div>
-        <div class="activity-item">
-          <div class="activity-icon">⭐</div>
-          <div class="activity-content">
-            <p><strong>Trần Thị B</strong> đã đánh giá 5 sao cho Seaside Resort</p>
-            <span class="activity-time">10 phút trước</span>
-          </div>
-        </div>
-        <div class="activity-item">
-          <div class="activity-icon">👤</div>
-          <div class="activity-content">
-            <p>Đối tác mới <strong>XYZ Travel</strong> đã đăng ký</p>
-            <span class="activity-time">15 phút trước</span>
-          </div>
-        </div>
-        <div class="activity-item">
-          <div class="activity-icon">🏨</div>
-          <div class="activity-content">
-            <p>Khách sạn <strong>City Center Hotel</strong> đã được cập nhật</p>
-            <span class="activity-time">20 phút trước</span>
-          </div>
-        </div>
+    <div class="dashboard-stat-card">
+      <div class="dashboard-stat-icon">🏢</div>
+      <div class="dashboard-sum-reviews">
+        <span class="dashboard-stat-value">156</span>
+        <span class="dashboard-stat-label">Tổng đánh giá</span>
+        <span class="dashboard-stat-change negative">-2.4%</span>
       </div>
     </div>
+  </div>
 
-    <!-- Quick Actions -->
-    <div class="quick-actions">
-      <h3>Thao tác nhanh</h3>
-      <div class="action-buttons">
-        <button class="action-btn primary">
-          <span class="action-icon">➕</span>
-          <span>Thêm đặt phòng</span>
-        </button>
-        <button class="action-btn secondary">
-          <span class="action-icon">🏨</span>
-          <span>Thêm khách sạn</span>
-        </button>
-        <button class="action-btn secondary">
-          <span class="action-icon">👥</span>
-          <span>Thêm nhân viên</span>
-        </button>
-        <button class="action-btn secondary">
-          <span class="action-icon">🎫</span>
-          <span>Tạo voucher</span>
-        </button>
-      </div>
+  <!-- Biểu đồ & trạng thái -->
+  <div class="dashboard-charts-grid"> <!-- Line chart doanh thu --><!-- Donut chart trạng thái booking -->
+    <div class="dashboard-chart-card">
+      <h2 class="dashboard-chart-title">Trạng thái Booking</h2> <canvas id="dashboard-donut-chart"></canvas>
+      <ul class="dashboard-donut-legend">
+        <li><span class="dashboard-legend-dot complete"></span> Hoàn thành - 2580</li>
+        <li><span class="dashboard-legend-dot confirmed"></span> Đã xác nhận - 420</li>
+        <li><span class="dashboard-legend-dot pending"></span> Chờ xử lý - 165</li>
+        <li><span class="dashboard-legend-dot cancelled"></span> Đã hủy - 235</li>
+      </ul>
     </div>
+  </div>
+
+
+
+<!-- Phần mở rộng dưới các biểu đồ cũ -->
+<div class="dashboard-lower-grid">
+  <!-- Top khách sạn -->
+  <div class="dashboard-card">
+    <h2 class="dashboard-card-title">
+      Top khách sạn
+      <a href="#" class="dashboard-link">Xem tất cả →</a>
+    </h2>
+    <ul class="dashboard-top-hotels">
+      <li>
+        <span class="dashboard-rank">1</span>
+        <img class="dashboard-hotel-thumb" src="https://via.placeholder.com/60" alt="Imperial Palace Hotel">
+        <div class="dashboard-hotel-info">
+          <span class="dashboard-hotel-name">Imperial Palace Hotel</span>
+          <span class="dashboard-hotel-location">Quận 1, TP.HCM</span>
+          <span class="dashboard-hotel-rating">⭐ 4.9 - 156 booking</span>
+        </div>
+        <span class="dashboard-hotel-revenue">45.000.000 đ</span>
+      </li>
+      <li>
+        <span class="dashboard-rank">2</span>
+        <img class="dashboard-hotel-thumb" src="https://via.placeholder.com/60" alt="Gold Star Luxury Resort">
+        <div class="dashboard-hotel-info">
+          <span class="dashboard-hotel-name">Gold Star Luxury Resort</span>
+          <span class="dashboard-hotel-location">Phú Quốc</span>
+          <span class="dashboard-hotel-rating">⭐ 4.8 - 132 booking</span>
+        </div>
+        <span class="dashboard-hotel-revenue">38.000.000 đ</span>
+      </li>
+      <li>
+        <span class="dashboard-rank">3</span>
+        <img class="dashboard-hotel-thumb" src="https://via.placeholder.com/60" alt="Sunrise Grand Hotel">
+        <div class="dashboard-hotel-info">
+          <span class="dashboard-hotel-name">Sunrise Grand Hotel</span>
+          <span class="dashboard-hotel-location">Hà Nội</span>
+          <span class="dashboard-hotel-rating">⭐ 4.7 - 118 booking</span>
+        </div>
+        <span class="dashboard-hotel-revenue">32.000.000 đ</span>
+      </li>
+      <li>
+        <span class="dashboard-rank">4</span>
+        <img class="dashboard-hotel-thumb" src="https://via.placeholder.com/60" alt="Oceanic Beach Resort">
+        <div class="dashboard-hotel-info">
+          <span class="dashboard-hotel-name">Oceanic Beach Resort</span>
+          <span class="dashboard-hotel-location">Đà Nẵng</span>
+          <span class="dashboard-hotel-rating">⭐ 4.6 - 95 booking</span>
+        </div>
+        <span class="dashboard-hotel-revenue">28.000.000 đ</span>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!-- Booking gần đây -->
+<div class="dashboard-card">
+  <h2 class="dashboard-card-title">
+    Booking gần đây
+    <a href="#" class="dashboard-link">Xem tất cả →</a>
+  </h2>
+  <table class="dashboard-table">
+    <thead>
+      <tr>
+        <th>MÃ BOOKING</th>
+        <th>KHÁCH HÀNG</th>
+        <th>KHÁCH SẠN</th>
+        <th>THỜI GIAN</th>
+        <th>TỔNG TIỀN</th>
+        <th>TRẠNG THÁI</th>
+        <th>HÀNH ĐỘNG</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a href="#">BK12345</a></td>
+        <td>Nguyễn Văn An</td>
+        <td>Imperial Palace Hotel</td>
+        <td>1/4/2026 - 3/4/2026 <br><small>2 giờ trước</small></td>
+        <td>3.000.000 đ</td>
+        <td><span class="dashboard-status confirmed">Đã xác nhận</span></td>
+        <td><span class="dashboard-action">👁️</span></td>
+      </tr>
+      <!-- Thêm booking khác tương tự -->
+    </tbody>
+  </table>
+</div>
 </div>

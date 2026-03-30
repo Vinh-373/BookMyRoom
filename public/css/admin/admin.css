@@ -1,6 +1,13 @@
 @import url("staff.css");
 @import url("partner.css");
 @import url("customer.css");
+@import url("dashboard.css");
+@import url("hotel.css");
+@import url("room.css");
+@import url("booking.css");
+@import url("payment.css");
+@import url("review.css");
+@import url("voucher.css");
 
 /* Reset và layout tổng thể */
 body {

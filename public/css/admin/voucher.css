@@ -1,0 +1,105 @@
+.vouchers-container {
+  padding: 20px;
+  font-family: Arial;
+  background: #f5f7fb;
+}
+
+.vouchers-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+/* FILTER */
+.vouchers-filter {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.vouchers-input,
+.vouchers-select {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.vouchers-btn {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.vouchers-btn.add {
+  background: #28a745;
+}
+
+/* TABLE */
+.vouchers-table-wrapper {
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.vouchers-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.vouchers-table th,
+.vouchers-table td {
+  padding: 12px;
+  border-bottom: 1px solid #eee;
+}
+
+.vouchers-table th {
+  background: #f1f3f9;
+}
+
+/* CODE */
+.vouchers-code {
+  font-weight: bold;
+  color: #007bff;
+}
+
+/* VALUE */
+.vouchers-value {
+  color: #e53935;
+  font-weight: bold;
+}
+
+/* BADGE */
+.vouchers-badge {
+  padding: 5px 10px;
+  border-radius: 6px;
+  color: white;
+}
+
+.vouchers-badge.percent {
+  background: #17a2b8;
+}
+
+.vouchers-badge.fixed {
+  background: #ffc107;
+  color: black;
+}
+
+/* ACTION */
+.vouchers-action {
+  padding: 5px 10px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+
+.vouchers-action.edit {
+  background: #ffc107;
+}
+
+.vouchers-action.delete {
+  background: #dc3545;
+  color: white;
+}

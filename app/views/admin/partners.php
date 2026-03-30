@@ -11,7 +11,7 @@
 
    <!-- Search & filter -->
    <div class="partners-search-filter">
-     <input type="text" id="searchInput" placeholder="Tìm kiếm đối tác...">
+     <input type="text" id="searchInput_partner" placeholder="Tìm kiếm đối tác...">
      <select id="partnerStatusFilter">
        <option value="">-- Lọc trạng thái --</option>
        <option value="ACTIVE">ACTIVE</option>
@@ -101,7 +101,7 @@
      <div class="mt-3">
        <div class="flex items-center justify-between mb-4">
          <h3 class="text-lg font-medium text-gray-900">Thêm đối tác mới</h3>
-         <button id="closeModal" class="text-gray-400 hover:text-gray-600">
+         <button id="closeModal_partner" class="text-gray-400 hover:text-gray-600">
            <span class="text-2xl">&times;</span>
          </button>
        </div>
@@ -231,7 +231,7 @@
 
          <!-- Nút hành động -->
          <div class="flex justify-end space-x-3 pt-4">
-           <button type="button" id="cancelBtn"
+           <button type="button" id="cancelBtn_partner"
              class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 focus:ring-2 focus:ring-gray-500">
              Hủy
            </button>
@@ -251,7 +251,7 @@
      <div class="mt-3">
        <div class="flex items-center justify-between mb-4">
          <h3 class="text-lg font-medium text-gray-900">Sửa đối tác</h3>
-         <button id="closeEditModal" class="text-gray-400 hover:text-gray-600">
+         <button id="closeEditModal_partner" class="text-gray-400 hover:text-gray-600">
            <span class="text-2xl">&times;</span>
          </button>
        </div>
@@ -386,7 +386,7 @@
 
          <!-- Nút hành động -->
          <div class="flex justify-end space-x-3 pt-4">
-           <button type="button" id="cancelEditBtn"
+           <button type="button" id="cancelEditBtn_partner"
              class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 focus:ring-2 focus:ring-gray-500">
              Hủy
            </button>

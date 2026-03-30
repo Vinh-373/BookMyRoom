@@ -2,13 +2,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const addModal = document.getElementById('addPartnerModal');
   const editModal = document.getElementById('editPartnerModal');
   const addBtn = document.querySelector('.partners-btn-add-partner');
-  const closeAddModal = document.getElementById('closeModal');
-  const closeEditModal = document.getElementById('closeEditModal');
-  const cancelAddBtn = document.getElementById('cancelBtn');
-  const cancelEditBtn = document.getElementById('cancelEditBtn');
+  const closeAddModal = document.getElementById('closeModal_partner');
+  const closeEditModal = document.getElementById('closeEditModal_partner');
+  const cancelAddBtn = document.getElementById('cancelBtn_partner');
+  const cancelEditBtn = document.getElementById('cancelEditBtn_partner');
   const addForm = document.getElementById('addPartnerForm');
   const editForm = document.getElementById('editPartnerForm');
-  const searchInput = document.getElementById('searchInput');
+  const searchInput = document.getElementById('searchInput_partner');
   const statusFilter = document.getElementById('partnerStatusFilter');
 
   // Base API path
@@ -91,6 +91,14 @@ document.addEventListener('DOMContentLoaded', () => {
   searchInput.addEventListener('input', filterTable);
   // Gắn sự kiện: khi chọn trạng thái thì lọc ngay
   statusFilter.addEventListener('change', filterTable);
+
+
+
+
+
+
+
+  
   ////////////////////////////////////////////////////////////
   // ================= MODAL & FORM =================
   // 🔹 Hàm đóng modal
@@ -355,26 +363,6 @@ document.addEventListener('DOMContentLoaded', () => {
       })
       .catch(err => { console.error('Error:', err); alert('Có lỗi xảy ra khi thêm đối tác!'); });
   });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

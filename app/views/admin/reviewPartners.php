@@ -1,1 +1,0 @@
-<h2>Trang đánh giá đối tác</h2>

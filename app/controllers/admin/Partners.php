@@ -220,6 +220,33 @@ class Partners extends Controller
                 exit;
             }
 
+
+
+            $userRoleModel = new class extends \myModels {
+                protected $table = "user_roles";
+            };
+
+            // Chỉ insert trực tiếp
+            $userRoleData = [
+                'userId' => $userId,
+                'roleId' => $roleId ?? 2 // mặc định 2 nếu không truyền
+            ];
+
+            $userRoleRaw = $userRoleModel->insert('user_roles', $userRoleData);
+            $userRoleResult = json_decode($userRoleRaw, true);
+
+            if (!$userRoleResult || $userRoleResult['type'] !== 'success') {
+                echo json_encode([
+                    'success' => false,
+                    'message' => "Không thể thêm role cho user",
+                    'debug' => $userRoleRaw
+                ]);
+                exit;
+            }
+
+
+
+
             $userId = $userResult['data'];
 
             // Thêm partner

@@ -41,11 +41,11 @@ class Customers extends Controller
                 users.createdAt,
                 users.deletedAt
             ',
-            where: [
-                ['roles.name', '=', 'CUSTOMER' or 'roles.id', '=', '3']
-            ],
+            where: ['roles.name' => 'CUSTOMER'],
             orderBy: 'users.id ASC'
         );
+
+        
 
         // 2️⃣ Lấy cities và wards để mapping tên
         $myModelCities = new class extends \myModels {
