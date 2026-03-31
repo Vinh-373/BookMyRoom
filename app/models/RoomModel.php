@@ -9,11 +9,11 @@ class RoomModel extends Model {
      */
     public function getRoomTypes($hotelId, $filters = []) {
         $params = [':hotelId' => $hotelId];
-        $where = "WHERE rc.hotelId = :hotelId AND rc.deleted_at is null";
+        $where = "WHERE rc.hotelId = :hotelId AND rc.deleted_at is null ";
 
         // Lọc theo loại phòng nếu có truyền vào
         if (!empty($filters['roomTypeId'])) {
-            $where .= "AND rt.id = :roomTypeId";
+            $where .= " AND rt.id = :roomTypeId ";
             $params[':roomTypeId'] = $filters['roomTypeId'];
         }
 
@@ -85,7 +85,7 @@ class RoomModel extends Model {
         $sql = "SELECT DISTINCT rt.id, rt.name 
                 FROM roomTypes rt
                 INNER JOIN roomConfigurations rc ON rt.id = rc.roomTypeId
-                WHERE rc.hotelId = :hotelId";
+                WHERE rc.hotelId = :hotelId and rc.deleted_at is null";
         return $this->db->fetchAll($sql, [':hotelId' => $hotelId]);
     }
 

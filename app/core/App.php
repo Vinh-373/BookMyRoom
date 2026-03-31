@@ -5,13 +5,12 @@ class App {
     protected $params = [];
 
     public function __construct() {
-        if($_SESSION['user_role']=='Partner'){
-            $this->controller = "PartnerController";
-            $this->action = "index";
+        if(!empty($_SESSION['user_role']) && $_SESSION['user_role']=='Partner'){
             //Di chuyển toàn bộ đoạn bên dưới lên đây khi gộp file
 
         }
-
+        $this->controller = "PartnerController";
+        $this->action = "index";
         $url = $this->parseUrl();
         $routes = require_once "../app/routes/web.php";
         $path = '';
