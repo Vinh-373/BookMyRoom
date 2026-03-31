@@ -1,0 +1,517 @@
+/* --- SCOPED WRAPPER --- */
+.inventory-v3-wrapper {
+    padding: 24px;
+    background: #f1f5f9;
+    width: 100%;
+    min-height: 100vh;
+    box-sizing: border-box;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    color: #1e293b;
+}
+
+/* Header Section */
+.inventory-v3-wrapper .inventory-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.inventory-v3-wrapper .inventory-header h1 {
+    font-size: 1.75rem;
+    font-weight: 800;
+    margin: 0;
+}
+
+/*Bulk Update*/
+.inventory-v3-wrapper .btn-bulk-update {
+    background: #2261E0;
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.inventory-v3-wrapper .btn-bulk-update:hover {
+    background: #1a4db3;
+}
+
+/* Filter Bar */
+.inventory-v3-wrapper .inventory-filter-bar {
+    background: #ffffff;
+    padding: 16px 20px;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    margin-bottom: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #e2e8f0;
+}
+
+.inventory-v3-wrapper .filter-controls {
+    display: flex;
+    gap: 12px;
+}
+
+.inventory-v3-wrapper .control-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    padding: 8px 14px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.inventory-v3-wrapper .control-item:hover {
+    border-color: #2261E0;
+}
+
+.inventory-v3-wrapper .control-item input,
+.inventory-v3-wrapper .control-item select {
+    border: none;
+    background: transparent;
+    font-size: 0.9rem;
+    color: #64748b;
+    font-weight: 600;
+    outline: none;
+    cursor: pointer;
+}
+
+/* --- TIMELINE GRID --- */
+.inventory-v3-wrapper .days-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 100px;
+}
+
+.inventory-v3-wrapper .day-card {
+    background: #ffffff;
+    border-radius: 16px;
+    border: 1px solid #e2e8f0;
+    display: grid;
+    grid-template-columns: 140px 1fr auto;
+    overflow: hidden;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+}
+
+.inventory-v3-wrapper .day-card:hover {
+    transform: translateX(6px);
+    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+    border-color: #2261E0;
+}
+
+/* Date Block (Left) */
+.inventory-v3-wrapper .date-block {
+    background: #f8fafc;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-right: 1px solid #e2e8f0;
+    text-align: center;
+}
+
+.inventory-v3-wrapper .date-block.weekend {
+    background: #fff7ed;
+    border-right-color: #ffedd5;
+}
+
+.inventory-v3-wrapper .date-block .day-name {
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.inventory-v3-wrapper .date-block .day-num {
+    font-size: 2.25rem;
+    font-weight: 900;
+    color: #1e293b;
+    line-height: 1;
+    margin: 4px 0;
+}
+
+.inventory-v3-wrapper .date-block .month-year {
+    font-size: 0.85rem;
+    color: #94a3b8;
+}
+
+/* Rooms Matrix (Center) */
+.inventory-v3-wrapper .rooms-matrix {
+    padding: 20px 30px;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: center;
+    gap: 32px;
+}
+
+.inventory-v3-wrapper .room-data-point {
+    min-width: 160px;
+}
+
+.inventory-v3-wrapper .room-type-name {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #94a3b8;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    display: block;
+}
+
+.inventory-v3-wrapper .room-price-display {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: #2261E0;
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+}
+
+.inventory-v3-wrapper .room-price-display small {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: #64748b;
+}
+
+.inventory-v3-wrapper .stock-status {
+    margin-top: 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 6px 12px;
+    border-radius: 8px;
+}
+
+.inventory-v3-wrapper .stock-available { background: #dcfce7; color: #166534; }
+.inventory-v3-wrapper .stock-soldout { background: #fee2e2; color: #991b1b; }
+
+/* Actions (Right) */
+.inventory-v3-wrapper .day-actions {
+    padding: 24px;
+    display: flex;
+    align-items: center;
+    border-left: 1px dashed #e2e8f0;
+}
+
+.inventory-v3-wrapper .btn-edit-day {
+    background: #f8fafc;
+    color: #64748b;
+    border: 1px solid #e2e8f0;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.inventory-v3-wrapper .btn-edit-day:hover {
+    background: #1e293b;
+    color: #ffffff;
+    border-color: #1e293b;
+}
+
+/* --- MODAL STYLES --- */
+.inventory-v3-wrapper .inventory-modal {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    inset: 0;
+    background-color: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(6px);
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.inventory-v3-wrapper .inventory-modal .modal-content {
+    background-color: #ffffff;
+    width: 100%;
+    max-width: 650px;
+    border-radius: 20px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    overflow: hidden;
+    animation: modalSlideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modalSlideUp {
+    from { transform: translateY(30px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.inventory-v3-wrapper .inventory-modal .modal-header {
+    padding: 24px;
+    border-bottom: 1px solid #e2e8f0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f8fafc;
+}
+
+.inventory-v3-wrapper .inventory-modal .modal-header h3 { margin: 0; font-size: 1.25rem; font-weight: 800; }
+
+.inventory-v3-wrapper .inventory-modal .close-btn {
+    background: white; border: 1px solid #e2e8f0; 
+    width: 36px; height: 36px; border-radius: 10px;
+    font-size: 20px; cursor: pointer; color: #64748b;
+    display: flex; align-items: center; justify-content: center;
+}
+
+.inventory-v3-wrapper .inventory-modal .modal-body {
+    padding: 24px;
+    max-height: 65vh;
+    overflow-y: auto;
+}
+
+/* Quick Edit Row */
+.inventory-v3-wrapper .room-edit-row {
+    padding: 18px;
+    background: #f8fafc;
+    border-radius: 14px;
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    border: 1px solid #e2e8f0;
+}
+
+.inventory-v3-wrapper .room-edit-row .room-info { flex: 1; }
+.inventory-v3-wrapper .room-edit-row .room-info strong { display: block; font-size: 1rem; color: #1e293b; margin-bottom: 2px; }
+.inventory-v3-wrapper .room-edit-row .room-info small { color: #94a3b8; font-weight: 500; }
+
+.inventory-v3-wrapper .room-edit-row .room-inputs {
+    display: flex;
+    gap: 16px;
+}
+
+.inventory-v3-wrapper .room-edit-row .input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.inventory-v3-wrapper .room-edit-row label { 
+    font-size: 0.65rem; 
+    font-weight: 800; 
+    color: #94a3b8; 
+    text-transform: uppercase; 
+    letter-spacing: 0.05em;
+}
+
+.inventory-v3-wrapper .room-edit-row input, 
+.inventory-v3-wrapper .room-edit-row select {
+    padding: 10px 14px;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #1e293b;
+    transition: border-color 0.2s;
+}
+
+.inventory-v3-wrapper .room-edit-row input:focus {
+    outline: none;
+    border-color: #2261E0;
+}
+
+/* Footer Buttons */
+.inventory-v3-wrapper .inventory-modal .modal-footer {
+    padding: 20px 24px;
+    border-top: 1px solid #e2e8f0;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    background: #f8fafc;
+}
+
+.inventory-v3-wrapper .inventory-modal .btn-primary { 
+    background: #2261E0; color: white; border: none; 
+    padding: 12px 24px; border-radius: 10px; font-weight: 700; cursor: pointer;
+    transition: background 0.2s;
+}
+
+.inventory-v3-wrapper .inventory-modal .btn-primary:hover { background: #1a4db3; }
+
+.inventory-v3-wrapper .inventory-modal .btn-secondary { 
+    background: white; color: #64748b; border: 1px solid #e2e8f0; 
+    padding: 12px 24px; border-radius: 10px; font-weight: 700; cursor: pointer;
+}
+
+.inventory-v3-wrapper .modal-quick-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-bottom: 16px;
+    margin-bottom: 16px;
+    border-bottom: 1px dashed #e2e8f0;
+}
+
+.inventory-v3-wrapper .modal-quick-actions span {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #64748b;
+}
+
+.inventory-v3-wrapper .btn-action-sm {
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid #e2e8f0;
+    transition: all 0.2s;
+}
+
+.inventory-v3-wrapper .open-all { background: #f0fdf4; color: #166534; }
+.inventory-v3-wrapper .close-all { background: #fef2f2; color: #991b1b; }
+
+.inventory-v3-wrapper .btn-action-sm:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+/* --- CHUẨN HÓA FORM TRONG MODAL --- */
+
+/* Tiền tố .inventory-v3-wrapper để tránh xung đột */
+.inventory-v3-wrapper .form-control {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #1e293b;
+    background-color: #ffffff;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.inventory-v3-wrapper .form-control:focus {
+    border-color: #2261E0;
+    box-shadow: 0 0 0 3px rgba(34, 97, 224, 0.1);
+}
+
+.inventory-v3-wrapper .input-group label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #64748b;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+}
+
+/* --- STYLE CHO CHỌN THỨ TRONG TUẦN (WEEKDAYS) --- */
+.inventory-v3-wrapper .weekday-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #f1f5f9;
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+    user-select: none;
+}
+
+.inventory-v3-wrapper .weekday-checkbox:hover {
+    background: #e2e8f0;
+}
+
+.inventory-v3-wrapper .weekday-checkbox input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    accent-color: #2261E0;
+}
+
+.inventory-v3-wrapper .weekday-checkbox span {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #475569;
+}
+
+/* --- CẢI TIẾN MULTIPLE SELECT (LOẠI PHÒNG) --- */
+.inventory-v3-wrapper select[multiple].form-control {
+    padding: 8px;
+    scrollbar-width: thin;
+}
+
+.inventory-v3-wrapper select[multiple].form-control option {
+    padding: 8px 12px;
+    margin-bottom: 2px;
+    border-radius: 6px;
+    font-weight: 600;
+}
+
+.inventory-v3-wrapper select[multiple].form-control option:checked {
+    background-color: #2261E0 !important;
+    color: white;
+}
+
+/* --- LAYOUT PHỤ TRONG MODAL --- */
+.inventory-v3-wrapper .row-flex {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.inventory-v3-wrapper .bulk-info-box {
+    background: #f8fafc;
+    padding: 18px;
+    border-radius: 14px;
+    border: 1px solid #e2e8f0;
+    display: flex;
+    gap: 15px;
+}
+
+/* --- RESPONSIVE CHO MODAL --- */
+@media (max-width: 640px) {
+    .inventory-v3-wrapper .row-flex {
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .inventory-v3-wrapper .bulk-info-box {
+        flex-direction: column;
+    }
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 768px) {
+    .inventory-v3-wrapper .day-card {
+        grid-template-columns: 1fr;
+    }
+    .inventory-v3-wrapper .date-block {
+        flex-direction: row;
+        gap: 15px;
+        padding: 15px;
+        border-right: none;
+        border-bottom: 1px solid #e2e8f0;
+    }
+    .inventory-v3-wrapper .rooms-matrix {
+        padding: 20px;
+        gap: 20px;
+    }
+    .inventory-v3-wrapper .day-actions {
+        border-left: none;
+        border-top: 1px dashed #e2e8f0;
+        justify-content: center;
+        padding: 15px;
+    }
+}
+

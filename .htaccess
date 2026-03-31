@@ -1,0 +1,9 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Chuyển hướng mọi yêu cầu vào thư mục public
+    RewriteRule ^$ public/ [L]
+    
+    # Nếu yêu cầu không phải là file hoặc thư mục có thật, đẩy vào public/index.php
+    RewriteRule (.*) public/$1 [L]
+</IfModule>

@@ -1,0 +1,140 @@
+/* --- SCOPED REVIEWS WRAPPER --- */
+.reviews-wrapper {
+    padding: 30px;
+    background-color: #f8f9fc;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* Header */
+.reviews-wrapper .reviews-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.reviews-wrapper .reviews-header h1 { font-size: 1.8rem; font-weight: 800; color: #101828; margin: 0; }
+.reviews-wrapper .reviews-header p { color: #667085; margin: 5px 0 0; }
+
+/* Layout Main */
+.reviews-wrapper .reviews-main-layout {
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+}
+
+/* Sidebar Cột Trái */
+.reviews-wrapper .reviews-sidebar {
+    flex: 0 0 320px;
+    position: sticky;
+    top: 20px;
+}
+
+.reviews-wrapper .sidebar-card {
+    background: white;
+    border-radius: 16px;
+    border: 1px solid #eaecf0;
+    padding: 24px;
+    margin-bottom: 20px;
+}
+
+.reviews-wrapper .sidebar-card h3 {
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    color: #667085;
+    margin-bottom: 20px;
+    letter-spacing: 0.5px;
+}
+
+/* Rating Summary */
+.reviews-wrapper .rating-summary { text-align: center; }
+.reviews-wrapper .avg-score { font-size: 3.5rem; font-weight: 800; color: #2261E0; display: block; }
+.reviews-wrapper .rating-label { font-weight: 700; font-size: 1.1rem; margin: 10px 0; }
+
+/* Progress Bar Breakdown */
+.reviews-wrapper .breakdown-item { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; font-size: 0.85rem; }
+.reviews-wrapper .progress-bar { flex: 1; height: 8px; background: #f2f4f7; border-radius: 4px; overflow: hidden; }
+.reviews-wrapper .progress-bar .fill { height: 100%; border-radius: 4px; }
+.reviews-wrapper .lv-label { width: 45px; font-weight: 500; }
+.reviews-wrapper .lv-pc { width: 35px; text-align: right; color: #667085; }
+
+/* Filter Tags */
+.reviews-wrapper .filter-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+.reviews-wrapper .filter-tags .tag {
+    padding: 8px 16px;
+    background: #f9fafb;
+    border: 1px solid #d0d5dd;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    text-decoration: none;
+    color: #344054;
+    transition: 0.2s;
+}
+.reviews-wrapper .filter-tags .tag.active { background: #2261E0; color: white; border-color: #2261E0; }
+
+/* Review Feed Cột Phải */
+.reviews-wrapper .reviews-feed { flex: 1; }
+
+.reviews-wrapper .review-card {
+    background: white;
+    border-radius: 16px;
+    border: 1px solid #eaecf0;
+    padding: 24px;
+    margin-bottom: 20px;
+    transition: 0.3s;
+}
+
+.reviews-wrapper .review-card__main { display: flex; gap: 20px; }
+
+.reviews-wrapper .avatar-placeholder {
+    width: 54px; height: 54px; background: #eff8ff; color: #175cd3;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 50%; font-weight: 700;
+}
+
+.reviews-wrapper .review-body { flex: 1; }
+
+.reviews-wrapper .review-meta-top {
+    display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;
+}
+
+.reviews-wrapper .status-badge {
+    font-size: 0.7rem; font-weight: 700; padding: 4px 10px; border-radius: 6px;
+}
+.reviews-wrapper .status-badge.responded { background: #ecfdf3; color: #027a48; }
+.reviews-wrapper .status-badge.pending { background: #fffaeb; color: #b54708; }
+
+.reviews-wrapper .review-text-box {
+    background: #f9fafb;
+    padding: 20px;
+    border-radius: 12px;
+    color: #344054;
+    line-height: 1.6;
+    margin: 15px 0;
+    font-style: italic;
+}
+
+/* Official Reply */
+.reviews-wrapper .official-reply {
+    background: #f8faff;
+    border-left: 4px solid #2261E0;
+    padding: 16px;
+    border-radius: 8px;
+    margin: 15px 0;
+}
+.reviews-wrapper .reply-owner { display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 5px; }
+.reviews-wrapper .reply-owner strong { color: #2261E0; text-transform: uppercase; }
+
+/* Actions */
+.reviews-wrapper .review-actions {
+    display: flex; justify-content: space-between; align-items: center;
+    padding-top: 15px; border-top: 1px solid #f2f4f7;
+}
+
+.reviews-wrapper .btn-action {
+    padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s;
+}
+.reviews-wrapper .btn-primary { background: #2261E0; color: white; border: none; }
+.reviews-wrapper .btn-outline { background: white; border: 1px solid #d0d5dd; color: #344054; }
+
+.reviews-wrapper .stars-gold { color: #F79009; letter-spacing: 1px; }

@@ -1,0 +1,11 @@
+<IfModule mod_rewrite.c>
+    Options -Multiviews
+    RewriteEngine On
+
+    # Không can thiệp nếu là file hoặc thư mục tồn tại (css, js, images)
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+
+    # Đẩy mọi thứ còn lại vào index.php dưới dạng biến $_GET['url']
+    RewriteRule ^(.*)$ index.php?url=$1 [L,QSA]
+</IfModule>

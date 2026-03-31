@@ -1,0 +1,356 @@
+/* --- CONTAINER CHÍNH --- */
+.voucher-wrapper {
+    padding: 24px;
+    background-color: #f4f7fe;
+    min-height: 100vh;
+    position: relative;
+}
+
+/* --- HEADER --- */
+.voucher-wrapper .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.voucher-wrapper .header-title h1 {
+    font-size: 1.8rem;
+    color: #1a1c21;
+    margin-bottom: 5px;
+}
+
+.voucher-wrapper .header-title p {
+    color: #667085;
+    font-size: 0.95rem;
+}
+
+/* --- GRID VOUCHER --- */
+.voucher-wrapper .voucher-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+/* --- VOUCHER CARD --- */
+.voucher-wrapper .voucher-card {
+    background: #fff;
+    border-radius: 12px;
+    border: 1px solid #eaecf0;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.voucher-wrapper .voucher-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+}
+
+/* Hiệu ứng răng cưa */
+.voucher-wrapper .voucher-card::before, 
+.voucher-wrapper .voucher-card::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 14px;
+    height: 14px;
+    background-color: #f4f7fe;
+    border-radius: 50%;
+    transform: translateY(-50%);
+}
+.voucher-wrapper .voucher-card::before { left: -7px; }
+.voucher-wrapper .voucher-card::after { right: -7px; }
+
+/* Trạng thái Badge */
+.voucher-wrapper .v-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.voucher-wrapper .v-badge.active { background: #e6fcf5; color: #087f5b; }
+.voucher-wrapper .v-badge.expired { background: #fff5f5; color: #c92a2a; }
+.voucher-wrapper .v-badge.upcoming { background: #e7f5ff; color: #1971c2; }
+.voucher-wrapper .v-badge.out-of-stock { background: #f8f9fa; color: #495057; }
+
+/* Nội dung Card */
+.voucher-wrapper .v-code {
+    display: inline-block;
+    padding: 4px 8px;
+    background: #f0f4ff;
+    color: #2261E0;
+    font-weight: 800;
+    font-family: monospace;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+.voucher-wrapper .v-amount {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #1a1c21;
+    margin-bottom: 15px;
+}
+
+.voucher-wrapper .v-details p {
+    font-size: 0.85rem;
+    color: #667085;
+    margin-bottom: 5px;
+}
+
+/* Nút hành động trong Card */
+.voucher-wrapper .v-actions {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px dashed #eaecf0;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.voucher-wrapper .btn-icon {
+    background: none;
+    border: 1px solid #eaecf0;
+    border-radius: 6px;
+    padding: 6px 10px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.voucher-wrapper .btn-icon:hover { 
+    background: #f9fafb; 
+    border-color: #2261E0; 
+}
+
+/* --- MODAL (Khắc phục lỗi lộ Modal) --- */
+.voucher-wrapper .custom-modal {
+    display: none; /* Ẩn mặc định */
+    position: fixed; /* Cố định vị trí so với viewport */
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(2px);
+}
+
+.voucher-wrapper .modal-content {
+    background: #fff;
+    width: 90%;
+    max-width: 600px;
+    border-radius: 12px;
+    overflow: hidden;
+    animation: voucherZoomIn 0.3s ease;
+}
+
+@keyframes voucherZoomIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.voucher-wrapper .modal-header {
+    padding: 20px;
+    border-bottom: 1px solid #eaecf0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.voucher-wrapper .modal-footer {
+    padding: 20px;
+    border-top: 1px solid #eaecf0;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+/* --- FORM GRID TRONG MODAL --- */
+.voucher-wrapper .form-grid {
+    padding: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.voucher-wrapper .form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.voucher-wrapper .form-group label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #344054;
+}
+
+.voucher-wrapper .form-group input, 
+.voucher-wrapper .form-group select {
+    padding: 10px;
+    border: 1px solid #d0d5dd;
+    border-radius: 8px;
+    outline: none;
+}
+
+/* Mã Voucher chiếm trọn 1 hàng */
+.voucher-wrapper .form-group:first-child {
+    grid-column: span 2;
+}
+
+/* --- NÚT BẤM CHUNG --- */
+.voucher-wrapper .btn-primary { 
+    background: #2261E0; 
+    color: #fff; 
+    border: none; 
+    padding: 10px 20px; 
+    border-radius: 8px; 
+    cursor: pointer; 
+}
+
+.voucher-wrapper .btn-secondary { 
+    background: #fff; 
+    color: #344054; 
+    border: 1px solid #d0d5dd; 
+    padding: 10px 20px; 
+    border-radius: 8px; 
+    cursor: pointer; 
+}
+
+.voucher-wrapper .empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px;
+    color: #667085;
+    background: #fff;
+    border-radius: 12px;
+    border: 2px dashed #eaecf0;
+}
+
+.voucher-wrapper .header-actions {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.voucher-wrapper .filter-select {
+    padding: 10px 15px;
+    border: 1px solid #d0d5dd;
+    border-radius: 8px;
+    background-color: #fff;
+    color: #344054;
+    font-size: 0.9rem;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.voucher-wrapper .filter-select:hover {
+    border-color: #2261E0;
+}
+
+.voucher-wrapper .empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 50px;
+    background: #fff;
+    border-radius: 12px;
+    border: 2px dashed #eaecf0;
+    color: #667085;
+}
+
+.voucher-wrapper .pagination {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+}
+
+.voucher-wrapper .page-link {
+    padding: 8px 16px;
+    border: 1px solid #d0d5dd;
+    border-radius: 8px;
+    color: #344054;
+    text-decoration: none;
+    background: #fff;
+    transition: all 0.2s;
+    font-size: 14px;
+}
+
+.voucher-wrapper .page-link:hover {
+    background-color: #f9fafb;
+    border-color: #2261E0;
+    color: #2261E0;
+}
+
+.voucher-wrapper .page-link.active {
+    background-color: #2261E0;
+    color: #fff;
+    border-color: #2261E0;
+    font-weight: 600;
+}
+
+/* Container phân trang */
+.transaction-wrapper .pagination-area {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid #eaecf0;
+}
+
+/* Thông tin số lượng */
+.transaction-wrapper .showing {
+    font-size: 0.9rem;
+    color: #667085;
+}
+
+.transaction-wrapper .showing strong {
+    color: #101828;
+}
+
+/* Khối các nút trang */
+.transaction-wrapper .pages {
+    display: flex;
+    gap: 6px;
+}
+
+.transaction-wrapper .page-num, 
+.transaction-wrapper .page-nav {
+    min-width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 8px;
+    border: 1px solid #d0d5dd;
+    border-radius: 8px;
+    background: #fff;
+    color: #344054;
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.transaction-wrapper .page-num:hover, 
+.transaction-wrapper .page-nav:hover {
+    border-color: #2261E0;
+    color: #2261E0;
+    background-color: #f9fafb;
+}
+
+.transaction-wrapper .page-num.active {
+    background-color: #2261E0;
+    border-color: #2261E0;
+    color: #fff;
+}
