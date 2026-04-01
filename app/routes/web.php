@@ -14,6 +14,7 @@ return [
     'inventory' => ['InventoryController','index'],
     'partner/processBulkUpdate' => ['InventoryController','processBulkUpdate'],
     'partner/updateInventory' => ['InventoryController','updateInventory'],
+
     'staff'         => ['StaffController', 'index'],
     'partner/toggleStatus'  => ['StaffController', 'toggleStatus'],
     'partner/resetPassword'     => ['StaffController', 'resetPassword'],
@@ -23,7 +24,7 @@ return [
     
     'reviews'       => ['ReviewController', 'index'],
     'partner/replyToReview' => ['ReviewController', 'replyToReview'],
-    'partner/replyToReview' => ['ReviewController', 'exportReviews'],
+    '/partner/exportReviewsCSV' => ['ReviewController', 'exportReviewsCSV'],
 
     'reports'       => ['FinanceController', 'index'],
     'partner/exportFinanceCSV' => ['FinanceController', 'exportFinanceCSV'],

@@ -3,19 +3,19 @@
     <div class="rooms-container">
         <header class="rooms-header">
             <div class="rooms-header__text">
-                <h1>Room Types & Rate Plans</h1>
+                <h1>Loại phòng & Kế hoạch giá</h1>
                 <p>Quản lý kho phòng, tiện nghi và chiến lược giá linh hoạt của bạn.</p>
             </div>
             <div class="rooms-header__actions">
                 <select class="filter-select" onchange="filterByRoomType(this.value)">
-                    <option value="">All Types</option>
+                    <option value="">Tất cả loại phòng</option>
                     <?php foreach ($allTypes as $type): ?>
                         <option value="<?= $type['id'] ?>" <?= ($activeFilter == $type['id']) ? 'selected' : '' ?>>
                             <?= $type['name'] ?>
                         </option>
                     <?php endforeach; ?>
                 </select>
-                <button class="btn btn-add" onclick="openAddRoomModal()">+ Add New Room Type</button>
+                <button class="btn btn-add" onclick="openAddRoomModal()">+ Thêm loại phòng mới</button>
             </div>
         </header>
     
@@ -41,18 +41,18 @@
                             
                             <div class="inventory-price-row">
                                 <div class="inv">
-                                    <span class="label">TOTAL INVENTORY</span>
-                                    <span class="val">📋 <?= $r['totalInventory'] ?? 0 ?> Rooms</span>
+                                    <span class="label">TỔNG KHO PHÒNG</span>
+                                    <span class="val">📋 <?= $r['totalInventory'] ?? 0 ?> Phòng</span>
                                 </div>
                                 <div class="price">
-                                    <span class="label">BASE PRICE</span>
-                                    <span class="val val--price">$<?= $r['formatted_price'] ?><small>/night</small></span>
+                                    <span class="label">GIÁ CƠ BẢN</span>
+                                    <span class="val val--price"><?= number_format($r['basePrice'], 0, ',', '.') ?>đ<small>/đêm</small></span>
                                 </div>
                             </div>
                             
                             <div class="room-card__actions">
-                                <button class="btn btn-edit-outline" onclick="openEditRoomModal(<?= $r['id'] ?>)">🖋️ Edit Details</button>
-                                <button class="btn btn-manage-units" onclick="openManageUnitsModal(<?= $r['id'] ?>)">🏨 Manage Units</button>
+                                <button class="btn btn-edit-outline" onclick="openEditRoomModal(<?= $r['id'] ?>)">🖋️ Sửa chi tiết</button>
+                                <button class="btn btn-manage-units" onclick="openManageUnitsModal(<?= $r['id'] ?>)">🏨 Quản lý danh sách phòng</button>
                             </div>
                         </div>
                     </article>
@@ -66,18 +66,18 @@
             <div class="inventory-health-card__left">
                 <div class="ih-icon">📈</div>
                 <div class="ih-text">
-                    <h4>Inventory Health</h4>
+                    <h4>Sức khỏe kho phòng</h4>
                     <p><?= $inventoryStats['healthScore'] ?>% loại phòng có lịch giá hoạt động trong 90 ngày tới.</p>
                 </div>
             </div>
             <div class="inventory-health-card__right">
                 <div class="ih-stat-item">
                     <span class="ih-val"><?= sprintf("%02d", $inventoryStats['totalActive']) ?></span>
-                    <span class="ih-lab">TOTAL ACTIVE UNITS</span>
+                    <span class="ih-lab">TỔNG PHÒNG HOẠT ĐỘNG</span>
                 </div>
                 <div class="ih-stat-item">
                     <span class="ih-val"><?= sprintf("%02d", $inventoryStats['maintenance']) ?></span>
-                    <span class="ih-lab">UNDER MAINTENANCE</span>
+                    <span class="ih-lab">ĐANG BẢO TRÌ</span>
                 </div>
             </div>
         </footer>
@@ -86,7 +86,7 @@
     <div id="roomAddModal" class="custom-modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>Add New Room Type</h3>
+                <h3>Thêm loại phòng mới</h3>
                 <button type="button" class="close-modal" onclick="closeAddModal()">✕</button>
             </div>
             <form id="addRoomForm" action="<?= URLROOT ?>/partner/addRoom" method="POST">
@@ -102,8 +102,8 @@
                             </select>
                         </div>
                         <div>
-                            <label>Giá cơ bản ($)</label>
-                            <input type="number" step="0.01" name="basePrice" class="form-control" required>
+                            <label>Giá cơ bản (VNĐ)</label>
+                            <input type="number" name="basePrice" class="form-control" required>
                         </div>
                         <div>
                             <label>Sức chứa tối đa</label>
@@ -138,8 +138,8 @@
                             <input type="text" id="edit-room-name" class="form-control" disabled>
                         </div>
                         <div>
-                            <label>Giá cơ bản ($)</label>
-                            <input type="number" step="0.01" name="basePrice" id="edit-room-price" class="form-control" required>
+                            <label>Giá cơ bản (VNĐ)</label>
+                            <input type="number" name="basePrice" id="edit-room-price" class="form-control" required>
                         </div>
                         <div>
                             <label>Sức chứa</label>
@@ -241,7 +241,7 @@
                         <td style="padding:10px; border-bottom:1px solid #eee;"><strong>${unit.roomNumber}</strong></td>
                         <td style="padding:10px; border-bottom:1px solid #eee;">
                             <span class="badge ${unit.status}">
-                                ${unit.status}
+                                ${unit.status === 'AVAILABLE' ? 'TRỐNG' : unit.status}
                             </span>
                         </td>
                         <td style="padding:10px; border-bottom:1px solid #eee; text-align:right;">
@@ -270,6 +270,7 @@
             `,
             showCancelButton: true,
             confirmButtonText: 'Xác nhận thêm',
+            cancelButtonText: 'Hủy',
             confirmButtonColor: '#2261E0',
             didOpen: () => {
                 const floorInp = document.getElementById('swal-floor');
@@ -310,7 +311,8 @@
             text: "Phòng sẽ bị loại bỏ khỏi kho phòng vật lý.",
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonText: 'Đồng ý xóa'
+            confirmButtonText: 'Đồng ý xóa',
+            cancelButtonText: 'Hủy'
         }).then((result) => {
             if (result.isConfirmed) {
                 window.location.href = `<?= URLROOT ?>/partner/deletePhysicalRoom/${unitId}`;
@@ -332,7 +334,8 @@
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#d33',
-            confirmButtonText: 'Xác nhận xóa'
+            confirmButtonText: 'Xác nhận xóa',
+            cancelButtonText: 'Hủy'
         }).then((result) => {
             if (result.isConfirmed) window.location.href = `<?= URLROOT ?>/partner/deleteRoom/${id}`;
         });

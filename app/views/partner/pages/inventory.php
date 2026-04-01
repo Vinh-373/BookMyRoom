@@ -4,11 +4,11 @@
             <h1>Inventory Timeline</h1>
             <p>Quản lý giá và phòng trống theo chuỗi ngày (30 ngày gần nhất)</p>
         </div>
-        <div class="header-right">
+        <!-- <div class="header-right">
             <button class="btn-bulk-update" onclick="openBulkModal()">
                 <i class="fas fa-layer-group"></i> + Bulk Update
             </button>
-        </div>
+        </div> -->
     </div>
 
     <div class="inventory-filter-bar">
@@ -172,6 +172,17 @@
 
 <script>
 const inventoryGrid = <?= json_encode($grid) ?>;
+<?php if (isset($_SESSION['flash_message'])): ?>
+        Swal.fire({
+            icon: '<?= $_SESSION['flash_message']['type'] ?>',
+            title: '<?= $_SESSION['flash_message']['title'] ?>',
+            text: '<?= $_SESSION['flash_message']['text'] ?>',
+            timer: 2500,
+            showConfirmButton: false
+        });
+        <?php unset($_SESSION['flash_message']); ?>
+<?php endif; ?>
+
 function updateInventoryFilter() {
     const start = document.getElementById('start_date').value;
     const view = document.getElementById('view_days').value;

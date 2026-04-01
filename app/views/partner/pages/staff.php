@@ -1,14 +1,14 @@
 <div class="staff-wrapper">
     <div class="staff-header">
         <div class="header-left">
-            <h1>Staff at <?= $_SESSION['hotel_name'] ?? 'Property' ?></h1>
-            <p>Manage personnel roles, shifts, and property access permissions.</p>
+            <h1>Nhân viên tại <?= $_SESSION['hotel_name'] ?? 'Khách sạn' ?></h1>
+            <p>Quản lý vai trò nhân sự, ca làm việc và quyền truy cập thuộc tính.</p>
         </div>
         <div class="header-right">
             <div class="search-staff">
-                <input type="text" id="staffSearch" placeholder="Filter staff..." onkeyup="filterStaff()">
+                <input type="text" id="staffSearch" placeholder="Lọc nhân viên..." onkeyup="filterStaff()">
             </div>
-            <button class="btn btn-add" onclick="openStaffModal()">👤 Add New Staff</button>
+            <button class="btn btn-add" onclick="openStaffModal()">👤 Thêm nhân viên mới</button>
         </div>
     </div>
 
@@ -21,49 +21,49 @@
             <div class="staff-card" data-name="<?= strtolower($s['fullName']) ?>">
                 <div class="staff-info">
                     <div class="staff-avatar">
-                        <img src="<?= URLROOT ?>/public/images/avatars/<?= $s['avatarUrl'] ?? 'default.png' ?>" alt="Avatar">
+                        <img src="<?= URLROOT ?>/public/images/avatars/<?= $s['avatarUrl'] ?? 'default.png' ?>" alt="Ảnh đại diện">
                         <span class="status-dot <?= $isOnline ? 'online' : 'offline' ?>"></span>
                     </div>
                     <div class="staff-meta">
                         <div class="name-row">
                             <strong><?= $s['fullName'] ?></strong>
-                            <span class="role-badge <?= $roleClass ?>"><?= strtoupper($s['role']) ?></span>
+                            <span class="role-badge <?= $roleClass ?>"><?= ($s['role'] === 'Partner') ? 'QUẢN LÝ' : 'NHÂN VIÊN' ?></span>
                         </div>
                         <p><?= $s['email'] ?></p>
                     </div>
                 </div>
 
                 <div class="staff-status">
-                    <span class="label">SHIFT STATUS</span>
+                    <span class="label">TRẠNG THÁI CA TRỰC</span>
                     <div style="display: flex; justify-content: space-between; align-items: center;">
                         <span class="status-text <?= $isOnline ? 'online' : 'offline' ?>">
-                            ● <?= $isOnline ? 'On Shift' : 'Off Duty' ?>
+                            ● <?= $isOnline ? 'Đang làm việc' : 'Đang nghỉ ca' ?>
                         </span>
                         <button class="btn-status-toggle" 
                                 onclick="handleToggleStatus(<?= $s['id'] ?>, '<?= $s['status'] ?>')" 
-                                title="<?= $isOnline ? 'Lock Account/Off Duty' : 'Unlock Account/On Shift' ?>">
+                                title="<?= $isOnline ? 'Khóa tài khoản / Nghỉ ca' : 'Mở khóa tài khoản / Vào ca' ?>">
                             <?= $isOnline ? '⏸️' : '▶️' ?>
                         </button>
                     </div>
                 </div>
 
                 <div class="staff-perms">
-                    <span class="label">PERMISSIONS</span>
+                    <span class="label">QUYỀN TRUY CẬP</span>
                     <div class="perm-icons">
-                        <span title="View Access">👁️</span> 
-                        <span title="Edit Access">📝</span> 
+                        <span title="Quyền xem">👁️</span> 
+                        <span title="Quyền chỉnh sửa">📝</span> 
                         <?php if($roleClass === 'manager'): ?>
-                            <span title="Admin/Shield Access">🛡️</span>
+                            <span title="Quyền Quản trị / Bảo vệ">🛡️</span>
                         <?php endif; ?>
                     </div>
                 </div>
 
-                <button class="btn-reset-pw" title="Reset Password" onclick="handleResetPassword(<?= $s['id'] ?>, '<?= $s['fullName'] ?>')">
+                <button class="btn-reset-pw" title="Đặt lại mật khẩu" onclick="handleResetPassword(<?= $s['id'] ?>, '<?= $s['fullName'] ?>')">
                     🔑
                 </button>
                 <div class="staff-actions">
-                    <button class="btn-outline" onclick="openEditRoleModal(<?= $s['id'] ?>)">Change Role</button>
-                    <button class="btn-text-danger" onclick="confirmRemove(<?= $s['id'] ?>)">Remove from Property</button>
+                    <button class="btn-outline" onclick="openEditRoleModal(<?= $s['id'] ?>)">Đổi vai trò</button>
+                    <button class="btn-text-danger" onclick="confirmRemove(<?= $s['id'] ?>)">Xóa khỏi khách sạn</button>
                 </div>
             </div>
             <?php endforeach; ?>
@@ -76,28 +76,28 @@
 
     <div class="staff-stats-grid">
         <div class="stat-item">
-            <span class="s-label">Total Staff</span>
+            <span class="s-label">Tổng nhân viên</span>
             <span class="s-value">
                 <?= sprintf("%02d", $stats['total'] ?? 0) ?>
             </span>
         </div>
 
         <div class="stat-item">
-            <span class="s-label">Active Shifts</span>
+            <span class="s-label">Đang làm việc</span>
             <span class="s-value color-green">
                 <?= sprintf("%02d", $stats['active'] ?? 0) ?>
             </span>
         </div>
 
         <div class="stat-item">
-            <span class="s-label">Managers</span>
+            <span class="s-label">Quản lý</span>
             <span class="s-value color-blue">
                 <?= sprintf("%02d", $stats['managers'] ?? 0) ?>
             </span>
         </div>
 
         <div class="stat-item">
-            <span class="s-label">Locked Accounts</span>
+            <span class="s-label">Tài khoản bị khóa</span>
             <span class="s-value color-orange">
                 <?= sprintf("%02d", $stats['blocked'] ?? 0) ?>
             </span>
@@ -119,7 +119,7 @@
                         </div>
                         <div>
                             <label>Email đăng nhập</label>
-                            <input type="email" name="email" class="form-control" placeholder="example@gmail.com" required>
+                            <input type="email" name="email" class="form-control" placeholder="vidu@gmail.com" required>
                         </div>
                         <div>
                             <label>Mật khẩu tạm thời</label>
@@ -132,8 +132,8 @@
                         <div>
                             <label>Quyền hạn</label>
                             <select name="role" class="form-control">
-                                <option value="Staff">Staff (Receptionist)</option>
-                                <option value="Partner">Manager (Supervisor)</option>
+                                <option value="Staff">Nhân viên (Lễ tân)</option>
+                                <option value="Partner">Quản lý (Giám sát)</option>
                             </select>
                         </div>
                     </div>
@@ -148,6 +148,16 @@
 </div>
 
 <script>
+    <?php if (isset($_SESSION['flash_message'])): ?>
+        Swal.fire({
+            icon: '<?= $_SESSION['flash_message']['type'] ?>',
+            title: '<?= $_SESSION['flash_message']['title'] ?>',
+            text: '<?= $_SESSION['flash_message']['text'] ?>',
+            timer: 2500,
+            showConfirmButton: false
+        });
+        <?php unset($_SESSION['flash_message']); ?>
+    <?php endif; ?>
 function openStaffModal() { 
     document.getElementById('addStaffModal').style.display = 'flex'; 
 }
@@ -182,18 +192,18 @@ function confirmRemove(staffId) {
     })
 }
 
-// Chức năng đổi Role nhanh bằng SweetAlert2
 function openEditRoleModal(staffId) {
     Swal.fire({
         title: 'Thay đổi vai trò',
         input: 'select',
         inputOptions: {
-            'Staff': 'Staff (Receptionist)',
-            'Partner': 'Manager (Supervisor)'
+            'Staff': 'Nhân viên (Lễ tân)',
+            'Partner': 'Quản lý (Giám sát)'
         },
         inputPlaceholder: 'Chọn vai trò mới',
         showCancelButton: true,
         confirmButtonText: 'Cập nhật',
+        cancelButtonText: 'Hủy',
         confirmButtonColor: '#2261E0',
         preConfirm: (role) => {
             return fetch('<?= URLROOT ?>/partner/changeRole', {
@@ -210,7 +220,6 @@ function openEditRoleModal(staffId) {
     });
 }
 
-// Hiển thị thông báo từ URL (nếu có)
 const urlParams = new URLSearchParams(window.location.search);
 if (urlParams.has('success')) {
     Swal.fire({ icon: 'success', title: 'Thành công!', text: 'Tài khoản nhân viên đã được tạo.', timer: 2000 });
@@ -219,7 +228,6 @@ if (urlParams.has('msg') && urlParams.get('msg') === 'removed') {
     Swal.fire({ icon: 'success', title: 'Đã xóa!', text: 'Nhân viên đã bị loại khỏi danh sách.', timer: 2000 });
 }
 
-// Đóng modal khi click ra ngoài vùng content
 window.onclick = function(event) {
     const modal = document.getElementById('addStaffModal');
     if (event.target == modal) {
@@ -232,9 +240,10 @@ function handleResetPassword(staffId, staffName) {
         title: 'Đặt lại mật khẩu',
         text: `Nhập mật khẩu mới cho ${staffName}`,
         input: 'password',
-        inputAttributes: { autocapitalize: 'off', placeholder: 'Mật khẩu mới ít nhất 6 ký tự' },
+        inputAttributes: { autocapitalize: 'off', placeholder: 'Ít nhất 6 ký tự' },
         showCancelButton: true,
         confirmButtonText: 'Cập nhật',
+        cancelButtonText: 'Hủy',
         confirmButtonColor: '#2261E0',
         showLoaderOnConfirm: true,
         preConfirm: (newPassword) => {
@@ -242,7 +251,6 @@ function handleResetPassword(staffId, staffName) {
                 Swal.showValidationMessage('Mật khẩu quá ngắn!');
                 return false;
             }
-            // Gửi dữ liệu qua AJAX
             let formData = new FormData();
             formData.append('staffId', staffId);
             formData.append('newPassword', newPassword);
@@ -263,8 +271,7 @@ function handleResetPassword(staffId, staffName) {
 
 function handleToggleStatus(staffId, currentStatus) {
     const actionName = (currentStatus === 'ACTIVE') ? 'Tạm khóa/Nghỉ ca' : 'Mở khóa/Vào ca';
-    const nextStatus = (currentStatus === 'ACTIVE') ? 'BLOCKED' : 'ACTIVE';
-
+    
     Swal.fire({
         title: `${actionName}?`,
         text: `Bạn muốn thay đổi trạng thái hoạt động của nhân viên này?`,
@@ -276,7 +283,6 @@ function handleToggleStatus(staffId, currentStatus) {
         cancelButtonText: 'Hủy'
     }).then((result) => {
         if (result.isConfirmed) {
-            // Chuyển hướng đến controller xử lý
             window.location.href = `<?= URLROOT ?>/partner/toggleStatus/${staffId}`;
         }
     });

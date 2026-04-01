@@ -12,13 +12,17 @@ class ReviewController extends PartnerController {
         }
     }
     public function index() {
-        $hotelId= $this->activeHotelId;
-        $filters = ['rating' => $_GET['tab'] ?? 'all'];
+        $hotelId = $this->activeHotelId;
+        $filters = [
+            'status' => $_GET['tab'] ?? 'all'
+        ];
         
         $reviewService = $this->service('ReviewService');
         $data = $reviewService->getReviewPageData($hotelId, $filters);
         $data['partnerHotels'] = $this->partnerHotels;
         $data['activeHotelId'] = $this->activeHotelId;
+        $data['title'] = "Quản lý đánh giá";
+        
         $this->viewPartner('reviews', $data);
     }
 

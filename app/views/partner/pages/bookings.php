@@ -1,5 +1,4 @@
 <div class="booking-wrapper">
-
     <div class="booking-page-container">
         <section class="booking-filter-card">
             <form action="" method="GET" id="filterForm">
@@ -8,9 +7,10 @@
                 <div class="filter-top-row">
                     <div class="search-main">
                         <i class="search-icon">🔍</i>
-                        <input type="text" name="search" 
-                               value="<?= htmlspecialchars($filters['search'] ?? '') ?>" 
-                               placeholder="Search by ID, Guest Name or Phone...">
+                        <input type="text" name="search" id="searchInput"
+                            value="<?= htmlspecialchars($filters['search'] ?? '') ?>" 
+                            placeholder="Tìm theo mã đơn, tên khách hoặc số điện thoại..."
+                            autocomplete="off">
                     </div>
                     
                     <div class="dropdown-group">
@@ -26,7 +26,7 @@
                         </div>
                         
                         <select name="roomTypeId" class="room-type-select" onchange="this.form.submit()">
-                            <option value="">Room Type: All</option>
+                            <option value="">Loại phòng: Tất cả</option>
                             <?php foreach($roomTypes as $type): ?>
                                 <option value="<?= $type['id'] ?>" <?= (($filters['roomTypeId'] ?? '') == $type['id']) ? 'selected' : '' ?>>
                                     <?= $type['name'] ?>
@@ -34,7 +34,7 @@
                             <?php endforeach; ?>
                         </select>
                         
-                        <button type="button" class="btn-export" onclick="exportBookingCSV()">📤 Export CSV</button>
+                        <button type="button" class="btn-export" onclick="exportBookingCSV()">📤 Xuất file CSV</button>
                     </div>
                 </div>
     
@@ -42,18 +42,17 @@
                     <div class="booking-tabs">
                         <?php 
                         $tabs = [
-                            'all'       => 'All', 
-                            'pending'   => 'Upcoming', 
-                            'confirmed' => 'Staying',  
-                            'completed' => 'Checked-out', 
-                            'cancelled' => 'Cancelled'
+                            'all'       => 'Tất cả', 
+                            'pending'   => 'Sắp đến', 
+                            'confirmed' => 'Đang ở',  
+                            'completed' => 'Đã trả phòng', 
+                            'cancelled' => 'Đã hủy'
                         ];
-                        // Lấy tất cả tham số hiện tại trên URL để nối đuôi cho Tab
                         $currentGet = $_GET;
                         foreach($tabs as $key => $label): 
                             $tabParams = $currentGet;
                             $tabParams['tab'] = $key;
-                            $tabParams['page'] = 1; // Reset về trang 1 khi đổi tab
+                            $tabParams['page'] = 1; 
                             $tabUrl = "?" . http_build_query($tabParams);
                         ?>
                             <a href="<?= $tabUrl ?>" class="tab <?= ($filters['status'] == $key) ? 'active' : '' ?>">
@@ -63,12 +62,12 @@
                     </div>
                     
                     <div class="sort-tool">
-                        <label for="bookingSort">≡ SORT:</label>
+                        <label for="bookingSort">≡ SẮP XẾP:</label>
                         <select name="sort" id="bookingSort" class="sort-select" onchange="this.form.submit()">
-                            <option value="newest" <?= ($filters['sort'] == 'newest') ? 'selected' : '' ?>>NEWEST FIRST</option>
-                            <option value="oldest" <?= ($filters['sort'] == 'oldest') ? 'selected' : '' ?>>OLDEST FIRST</option>
-                            <option value="price_high" <?= ($filters['sort'] == 'price_high') ? 'selected' : '' ?>>PRICE: HIGH TO LOW</option>
-                            <option value="price_low" <?= ($filters['sort'] == 'price_low') ? 'selected' : '' ?>>PRICE: LOW TO HIGH</option>
+                            <option value="newest" <?= ($filters['sort'] == 'newest') ? 'selected' : '' ?>>MỚI NHẤT</option>
+                            <option value="oldest" <?= ($filters['sort'] == 'oldest') ? 'selected' : '' ?>>CŨ NHẤT</option>
+                            <option value="price_high" <?= ($filters['sort'] == 'price_high') ? 'selected' : '' ?>>GIÁ: CAO - THẤP</option>
+                            <option value="price_low" <?= ($filters['sort'] == 'price_low') ? 'selected' : '' ?>>GIÁ: THẤP - CAO</option>
                         </select>
                     </div>
                 </div>
@@ -78,11 +77,11 @@
                 <table class="booking-table">
                     <thead>
                         <tr>
-                            <th>ORDER ID & DATE</th>
-                            <th>GUEST INFO</th>
-                            <th>ROOM & DURATION</th>
-                            <th>TOTAL & STATUS</th>
-                            <th>ACTIONS</th>
+                            <th>MÃ ĐƠN & NGÀY</th>
+                            <th>THÔNG TIN KHÁCH</th>
+                            <th>PHÒNG & THỜI GIAN</th>
+                            <th>TỔNG TIỀN & TRẠNG THÁI</th>
+                            <th>THAO TÁC</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -91,7 +90,7 @@
                             <tr>
                                 <td>
                                     <div class="id">#BK-<?= $b['id'] ?></div>
-                                    <div class="date"><?= date('d M, Y', strtotime($b['createdAt'])) ?></div>
+                                    <div class="date"><?= date('d/m/Y', strtotime($b['createdAt'])) ?></div>
                                 </td>
                                 <td>
                                     <div class="guest-flex">
@@ -104,53 +103,55 @@
                                 </td>
                                 <td>
                                     <div class="room"><?= $b['roomTypeName'] ?></div>
-                                    <div class="duration">🌙 <?= $b['nights'] ?> Nights</div>
+                                    <div class="duration">🌙 <?= $b['nights'] ?> Đêm</div>
                                 </td>
                                 <td>
-                                    <div class="amount">$<?= number_format($b['totalAmount'], 2) ?></div>
+                                    <div class="amount"><?= number_format($b['totalAmount'], 0, ',', '.') ?>đ</div>
                                     <span class="badge-status <?= strtolower($b['bookingStatus']) ?>">
-                                        ● <?= $b['bookingStatus'] ?>
+                                        ● <?= $tabs[strtolower($b['bookingStatus'])] ?? $b['bookingStatus'] ?>
                                     </span>
                                 </td>
                                 <td>
+                                    <?php 
+                                        $status = strtoupper($b['bookingStatus'] ?? ''); 
+                                        $bookingId = $b['id'];
+                                        $guestName = addslashes($b['fullName'] ?? 'Khách hàng');
+                                    ?>
                                     <div class="action-dropdown">
                                         <button type="button" class="btn-more" onclick="toggleActionMenu(this, event)">⋮</button>
                                         <div class="dropdown-menu-content">
                                             <a href="javascript:void(0);" onclick="viewBookingDetails(<?= $b['id'] ?>)">
-                                                <i class="icon">👁️</i> View Details & Print
+                                                <i class="icon">👁️</i> Chi tiết & In
                                             </a>
 
-                                            <?php 
-                                            $status = strtoupper($b['bookingStatus']); 
-                                            
-                                            // TRƯỜNG HỢP: Chờ xử lý hoặc Đã xác nhận -> Cho phép Check-in hoặc Hủy
-                                            if (in_array($status, ['PENDING', 'CONFIRMED'])): ?>
-                                                <a href="javascript:void(0);" onclick="processBookingAction('checkin', <?= $b['id'] ?>)">
-                                                    <i class="icon">🔑</i> Quick Check-in
+                                            <?php if (in_array($status, ['PENDING', 'CONFIRMED'])): ?>
+                                                <a href="javascript:void(0);" onclick="processBookingAction('checkin', <?= $bookingId ?>, '<?= $guestName ?>')">
+                                                    <i class="fas fa-key icon-fw"></i> Nhận phòng nhanh
                                                 </a>
+                                                
                                                 <div class="divider"></div>
-                                                <a href="javascript:void(0);" class="text-danger" onclick="processBookingAction('cancel', <?= $b['id'] ?>)">
-                                                    <i class="icon">❌</i> Cancel Booking
+                                                
+                                                <a href="javascript:void(0);" class="text-danger" onclick="processBookingAction('cancel', <?= $bookingId ?>, '<?= $guestName ?>')">
+                                                    <i class="fas fa-times-circle icon-fw"></i> Hủy đặt phòng
                                                 </a>
 
-                                            <?php // TRƯỜNG HỢP: Đang lưu trú -> Cho phép Check-out
-                                            elseif ($status === 'STAYING'): ?>
-                                                <a href="javascript:void(0);" onclick="processBookingAction('checkout', <?= $b['id'] ?>)">
-                                                    <i class="icon">🚪</i> Check-out
+                                            <?php elseif ($status === 'STAYING'): ?>
+                                                <a href="javascript:void(0);" onclick="processBookingAction('checkout', <?= $bookingId ?>, '<?= $guestName ?>')">
+                                                    <i class="fas fa-sign-out-alt icon-fw"></i> Trả phòng
                                                 </a>
-                                                <a href="<?= URLROOT ?>/services/add/<?= $b['id'] ?>">
-                                                    <i class="icon">➕</i> Add Service
+                                                
+                                                <a href="<?= URLROOT ?>/partner/services/add/<?= $bookingId ?>">
+                                                    <i class="fas fa-plus-circle icon-fw"></i> Thêm dịch vụ
                                                 </a>
 
                                             <?php elseif ($status === 'COMPLETED'): ?>
-                                                <a href="javascript:void(0);" onclick="viewReview(<?= $b['id'] ?>)">
-                                                    <i class="icon">⭐</i> View Review
+                                                <a href="javascript:void(0);" onclick="viewReview(<?= $bookingId ?>)">
+                                                    <i class="fas fa-star icon-fw text-warning"></i> Xem đánh giá
                                                 </a>
 
-                                            <?php // TRƯỜNG HỢP: Đã hủy -> Khôi phục
-                                            elseif ($status === 'CANCELLED'): ?>
-                                                <a href="javascript:void(0);" onclick="processBookingAction('restore', <?= $b['id'] ?>)">
-                                                    <i class="icon">🔄</i> Restore Booking
+                                            <?php elseif ($status === 'CANCELLED'): ?>
+                                                <a href="javascript:void(0);" onclick="processBookingAction('restore', <?= $bookingId ?>, '<?= $guestName ?>')">
+                                                    <i class="fas fa-undo icon-fw"></i> Khôi phục đơn
                                                 </a>
                                             <?php endif; ?>
                                         </div>
@@ -159,7 +160,7 @@
                             </tr>
                             <?php endforeach; ?>
                         <?php else: ?>
-                            <tr><td colspan="5" style="text-align:center; padding:40px; color: #999;">No bookings found for this filter.</td></tr>
+                            <tr><td colspan="5" style="text-align:center; padding:40px; color: #999;">Không tìm thấy dữ liệu phù hợp.</td></tr>
                         <?php endif; ?>
                     </tbody>
                 </table>
@@ -169,56 +170,48 @@
             <div class="pagination-area">
                 <span class="showing">
                     Hiển thị <strong><?= $showingStart ?></strong> - <strong><?= $showingEnd ?></strong> 
-                    trong tổng số <strong><?= number_format($totalCount) ?></strong> bản ghi
+                    trong <strong><?= number_format($totalCount) ?></strong> đơn hàng
                 </span>
-                
                 <div class="pages">
-                    <?php 
-                    $pageParams = $_GET; 
-                    ?>
-                    
+                    <?php $pageParams = $_GET; ?>
                     <?php if($currentPage > 1): 
-                        $pageParams['page'] = $currentPage - 1;
-                    ?>
-                        <a href="?<?= http_build_query($pageParams) ?>" class="page-nav" title="Trang trước">‹</a>
+                        $pageParams['page'] = $currentPage - 1; ?>
+                        <a href="?<?= http_build_query($pageParams) ?>" class="page-nav">‹</a>
                     <?php endif; ?>
 
-                    <?php 
-                    // Logic hiển thị số trang có giới hạn nếu quá nhiều (tùy chọn)
-                    for($i = 1; $i <= $totalPages; $i++): 
-                        $pageParams['page'] = $i;
-                    ?>
+                    <?php for($i = 1; $i <= $totalPages; $i++): 
+                        $pageParams['page'] = $i; ?>
                         <a href="?<?= http_build_query($pageParams) ?>" 
-                        class="page-num <?= ($currentPage == $i) ? 'active' : '' ?>">
+                           class="page-num <?= ($currentPage == $i) ? 'active' : '' ?>">
                             <?= $i ?>
                         </a>
                     <?php endfor; ?>
 
                     <?php if($currentPage < $totalPages): 
-                        $pageParams['page'] = $currentPage + 1;
-                    ?>
-                        <a href="?<?= http_build_query($pageParams) ?>" class="page-nav" title="Trang sau">›</a>
+                        $pageParams['page'] = $currentPage + 1; ?>
+                        <a href="?<?= http_build_query($pageParams) ?>" class="page-nav">›</a>
                     <?php endif; ?>
                 </div>
             </div>
-        <?php endif; ?>
+            <?php endif; ?>
         </section>
+
         <section class="insight-cards-grid">
             <div class="insight-card blue-gradient">
-                <div class="card-head"><span class="label">📈 REAL-TIME</span></div>
+                <div class="card-head"><span class="label">📈 TRỰC TUYẾN</span></div>
                 <div class="card-body">
-                    <p>Total Revenue (MTD)</p>
-                    <h3><?= $insights['revenue']['total'] ?></h3>
+                    <p>Tổng doanh thu (Tháng)</p>
+                    <h3><?= number_format((float)$insights['revenue']['total'], 0, ',', '.') ?>đ</h3>
                     <div class="progress-wrap">
                         <div class="progress-bar" style="width: <?= $insights['revenue']['progress'] ?>%"></div>
                     </div>
-                    <small><?= $insights['revenue']['goal_text'] ?></small>
+                    <small><?= str_replace('target', 'mục tiêu', $insights['revenue']['goal_text']) ?></small>
                 </div>
             </div>
     
             <div class="insight-card white-card">
                 <div class="card-head">
-                    <span class="label">OCCUPANCY RATE</span>
+                    <span class="label">TỶ LỆ LẤP ĐẦY</span>
                     <i class="chart-icon">📊</i>
                 </div>
                 <div class="occ-content">
@@ -236,12 +229,12 @@
             </div>
     
             <div class="insight-card white-card">
-                <div class="card-head"><span class="label">PLATFORM ACTIVITY</span><i class="bolt-icon">⚡</i></div>
+                <div class="card-head"><span class="label">HOẠT ĐỘNG MỚI</span><i class="bolt-icon">⚡</i></div>
                 <ul class="activity-log">
                     <?php foreach(array_slice($bookings, 0, 3) as $b): ?>
                         <li>
                             <span class="dot blue"></span> 
-                            New booking from <?= $b['fullName'] ?>
+                            Đặt phòng mới: <?= $b['fullName'] ?>
                             <time><?= date('H:i', strtotime($b['createdAt'])) ?></time>
                         </li>
                     <?php endforeach; ?>
@@ -264,7 +257,7 @@
                         <p id="js-m-phone" style="color: #667085; font-size: 0.9rem;"></p>
                     </div>
                     <div class="info-group" style="text-align: right;">
-                        <label style="font-size: 11px; color: #667085;">THANH TOÁN</label><br>
+                        <label style="font-size: 11px; color: #667085;">TRẠNG THÁI TT</label><br>
                         <div id="js-m-payment" class="status-pill"></div>
                     </div>
                     <div style="grid-column: span 2; background: #f8f9fa; padding: 15px; border-radius: 10px; border: 1px solid #eee;">
@@ -285,163 +278,149 @@
         </div>
     </div>
 </div>
-    <script src="https://cdn.jsdelivr.net/npm/litepicker/dist/litepicker.js"></script>
-    <script>
-        const dateInput = document.getElementById('dateRangePicker');
-        const clearBtn = document.getElementById('clearDateBtn');
-        const initialDate = dateInput.value;
+
+<script src="https://cdn.jsdelivr.net/npm/litepicker/dist/litepicker.js"></script>
+<script>
+    const dateInput = document.getElementById('dateRangePicker');
+    const clearBtn = document.getElementById('clearDateBtn');
+    const initialDate = dateInput.value;
     
-        // Khởi tạo Litepicker (Giữ nguyên logic cũ)
-        let start, end;
-        if (initialDate && initialDate.includes(' - ')) {
-            const parts = initialDate.split(' - ');
-            start = parts[0];
-            end = parts[1];
-        }
-    
-        const picker = new Litepicker({
-            element: dateInput,
-            singleMode: false,
-            numberOfMonths: 2,
-            numberOfColumns: 2,
-            format: 'YYYY-MM-DD',
-            startDate: start,
-            endDate: end,
-            allowRepick: true,
-            autoApply: true,
-            setup: (picker) => {
-                picker.on('selected', (date1, date2) => {
-                    if (dateInput.value !== initialDate) {
-                        setTimeout(() => { document.getElementById('filterForm').submit(); }, 100);
-                    }
-                });
-            },
+    let typingTimer;                
+    const doneTypingInterval = 500; // Thời gian chờ (0.5 giây)
+    const searchInput = document.getElementById('searchInput');
+    const filterForm = document.getElementById('filterForm');
+
+    <?php if (isset($_SESSION['flash_message'])): ?>
+        Swal.fire({
+            icon: '<?= $_SESSION['flash_message']['type'] ?>',
+            title: '<?= $_SESSION['flash_message']['title'] ?>',
+            text: '<?= $_SESSION['flash_message']['text'] ?>',
+            timer: 2500,
+            showConfirmButton: false
         });
-    
-        // LOGIC HỦY FILTER NGÀY
-        if (clearBtn) {
-            clearBtn.addEventListener('click', (e) => {
-                e.stopPropagation(); // Ngăn không cho lịch nhảy ra khi bấm nút X
-                dateInput.value = ''; // Xóa trắng giá trị
-                picker.clearSelection(); // Xóa vùng chọn trên lịch
-                
-                // Submit form để tải lại dữ liệu không có điều kiện ngày
-                document.getElementById('filterForm').submit();
-            });
-        }
-        
-        function toggleActionMenu(button, event) {
-            // Ngăn chặn sự kiện click lan ra ngoài (không làm ảnh hưởng dòng table)
-            event.stopPropagation();
+        <?php unset($_SESSION['flash_message']); ?>
+    <?php endif; ?>
+
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            // Xóa bộ đếm cũ mỗi khi người dùng gõ phím mới
+            clearTimeout(typingTimer);
             
-            // Đóng tất cả các menu khác đang mở trước khi mở menu mới
-            document.querySelectorAll('.dropdown-menu-content').forEach(menu => {
-                if (menu !== button.nextElementSibling) {
-                    menu.classList.remove('show');
-                }
-            });
-    
-            // Bật/tắt menu của nút vừa bấm
-            const menu = button.nextElementSibling;
-            menu.classList.toggle('show');
-        }
-    
-        // Lắng nghe sự kiện click trên toàn bộ trang để đóng menu khi click ra ngoài
-        window.addEventListener('click', function(e) {
-            if (!e.target.matches('.btn-more')) {
-                document.querySelectorAll('.dropdown-menu-content').forEach(menu => {
-                    menu.classList.remove('show');
-                });
-            }
-        });
-    
-        // Hàm xác nhận hủy đơn
-        function confirmCancel(bookingId) {
-            Swal.fire({
-                title: 'Are you sure?',
-                text: "You are about to cancel booking #BK-" + bookingId,
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#D92D20',
-                cancelButtonColor: '#667085',
-                confirmButtonText: 'Yes, cancel it!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Chuyển hướng đến URL xử lý hủy
-                    window.location.href = "?cancel_id=" + bookingId;
-                }
-            })
-        }
-    
-        // Giữ nguyên hàm toggleActionMenu đã viết ở trên
-        function toggleActionMenu(button, event) {
-            event.stopPropagation();
-            document.querySelectorAll('.dropdown-menu-content').forEach(menu => {
-                if (menu !== button.nextElementSibling) menu.classList.remove('show');
-            });
-            button.nextElementSibling.classList.toggle('show');
-        }
-    
-        //Xử lý sự kiện xem chi tiết
-        const BOOKING_STORAGE = <?= json_encode($detailMap) ?>;
-    
-        function viewBookingDetails(bookingId) {
-            const data = BOOKING_STORAGE[bookingId];
-    
-            if (!data) {
-                console.error("Không tìm thấy ID đơn hàng trong bộ nhớ.");
-                return;
-            }
-    
-            // Đổ dữ liệu vào các ID trong Modal tự dựng (phần Bước B)
-            document.getElementById('js-m-id').innerText = "#BK-" + data.id;
-            document.getElementById('js-m-name').innerText = data.fullName;
-            document.getElementById('js-m-phone').innerText = data.phone;
-            document.getElementById('js-m-room').innerText = data.roomTypeName;
-            document.getElementById('js-m-nights').innerText = data.nights;
-            document.getElementById('js-m-total').innerText = "$" + data.totalAmount;
-            document.getElementById('js-m-in').innerText = data.checkIn;
-            document.getElementById('js-m-out').innerText = data.checkOut;
-            
-            // Xử lý màu sắc Badge cho Payment
-            const pBadge = document.getElementById('js-m-payment');
-            pBadge.innerText = data.payment;
-            // Xóa các class màu cũ và thêm class mới dựa trên status
-            pBadge.className = 'status-pill pill-' + data.payment.toLowerCase();
-    
-            // Hiện Modal (Tốc độ tức thì vì không có Ajax)
-            document.getElementById('bookingDetailModal').style.display = 'flex';
-        }
-    
-        function closeBookingModal() {
-            document.getElementById('bookingDetailModal').style.display = 'none';
-        }
-        window.addEventListener('click', function(event) {
-            const modal = document.getElementById('bookingDetailModal');
-            
-            // Nếu phần tử bị click CHÍNH LÀ cái nền modal (chứ không phải nội dung bên trong)
-            if (event.target === modal) {
-                closeBookingModal();
-            }
-        });
-    
-        // Thêm sự kiện phím ESC để đóng
-        window.addEventListener('keydown', function(event) {
-            if (event.key === "Escape") {
-                closeBookingModal();
-            }
+            // Thiết lập bộ đếm mới
+            typingTimer = setTimeout(function() {
+                // Tự động gửi Form để thực hiện Filter
+                filterForm.submit();
+            }, doneTypingInterval);
         });
 
+        // Đưa con trỏ chuột về cuối văn bản sau khi trang load lại (giúp trải nghiệm mượt hơn)
+        searchInput.focus();
+        const val = searchInput.value;
+        searchInput.value = '';
+        searchInput.value = val;
+    }
+    // 1. Khởi tạo Litepicker bộ chọn ngày
+    let start, end;
+    if (initialDate && initialDate.includes(' - ')) {
+        const parts = initialDate.split(' - ');
+        start = parts[0];
+        end = parts[1];
+    }
+
+    const picker = new Litepicker({
+        element: dateInput,
+        singleMode: false,
+        numberOfMonths: 2,
+        numberOfColumns: 2,
+        format: 'YYYY-MM-DD',
+        startDate: start,
+        endDate: end,
+        allowRepick: true,
+        autoApply: true,
+        setup: (picker) => {
+            picker.on('selected', (date1, date2) => {
+                if (dateInput.value !== initialDate) {
+                    setTimeout(() => { filterForm.submit(); }, 100);
+                }
+            });
+        },
+    });
+
+    // 2. Logic xóa bộ lọc ngày
+    if (clearBtn) {
+        clearBtn.addEventListener('click', (e) => {
+            e.stopPropagation(); 
+            dateInput.value = ''; 
+            picker.clearSelection(); 
+            document.getElementById('filterForm').submit();
+        });
+    }
+    
+    // 3. Menu thao tác (Dropdown Action)
+    function toggleActionMenu(button, event) {
+        event.stopPropagation();
+        document.querySelectorAll('.dropdown-menu-content').forEach(menu => {
+            if (menu !== button.nextElementSibling) {
+                menu.classList.remove('show');
+            }
+        });
+        const menu = button.nextElementSibling;
+        menu.classList.toggle('show');
+    }
+
+    window.addEventListener('click', function(e) {
+        if (!e.target.matches('.btn-more')) {
+            document.querySelectorAll('.dropdown-menu-content').forEach(menu => {
+                menu.classList.remove('show');
+            });
+        }
+    });
+
+    // 4. Xử lý xem chi tiết (Dùng dữ liệu Map từ PHP truyền vào)
+    const BOOKING_STORAGE = <?= json_encode($detailMap) ?>;
+
+    function viewBookingDetails(bookingId) {
+        const data = BOOKING_STORAGE[bookingId];
+        if (!data) {
+            console.error("Không tìm thấy thông tin đơn hàng.");
+            return;
+        }
+
+        document.getElementById('js-m-id').innerText = "#BK-" + data.id;
+        document.getElementById('js-m-name').innerText = data.fullName;
+        document.getElementById('js-m-phone').innerText = data.phone;
+        document.getElementById('js-m-room').innerText = data.roomTypeName;
+        document.getElementById('js-m-nights').innerText = data.nights;
+        
+        // Định dạng tiền tệ sang VND cho Modal
+        const formattedTotal = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(Number(data.totalAmount.replace(/,/g, '')));
+        document.getElementById('js-m-total').innerText = formattedTotal;
+        
+        document.getElementById('js-m-in').innerText = data.checkIn;
+        document.getElementById('js-m-out').innerText = data.checkOut;
+        
+        const pBadge = document.getElementById('js-m-payment');
+        pBadge.innerText = data.payment;
+        pBadge.className = 'status-pill pill-' + data.payment.toLowerCase();
+
+        document.getElementById('bookingDetailModal').style.display = 'flex';
+    }
+
+    function closeBookingModal() {
+        document.getElementById('bookingDetailModal').style.display = 'none';
+    }
+
+    // 5. Các hành động xử lý đơn đặt phòng (SweetAlert2 Tiếng Việt)
     function processBookingAction(action, bookingId) {
         let config = {
-            'checkin':  { title: 'Xác nhận Check-in?', text: 'Khách hàng đã đến nhận phòng?', icon: 'info', color: '#2261E0' },
-            'checkout': { title: 'Xác nhận Check-out?', text: 'Khách đã trả phòng và thanh toán?', icon: 'warning', color: '#12B76A' },
-            'restore':  { title: 'Khôi phục đơn hàng?', text: 'Đưa đơn hàng này trở lại danh sách chờ?', icon: 'question', color: '#2261E0' },
-            'cancel':   { title: 'Hủy đơn hàng?', text: 'Hành động này không thể hoàn tác!', icon: 'error', color: '#D92D20' }
+            'checkin':  { title: 'Xác nhận Nhận phòng?', text: 'Khách hàng đã đến nhận phòng?', icon: 'info', color: '#2261E0' },
+            'checkout': { title: 'Xác nhận Trả phòng?', text: 'Khách đã trả phòng và thanh toán đủ?', icon: 'warning', color: '#12B76A' },
+            'restore':  { title: 'Khôi phục đơn hàng?', text: 'Đưa đơn hàng này trở lại trạng thái chờ?', icon: 'question', color: '#2261E0' },
+            'cancel':   { title: 'Hủy đặt phòng?', text: 'Bạn có chắc chắn muốn hủy đơn này không?', icon: 'error', color: '#D92D20' }
         };
 
         const c = config[action];
-        if(!c) return; // Bảo vệ nếu truyền sai action
+        if(!c) return; 
         
         Swal.fire({
             title: c.title,
@@ -450,11 +429,10 @@
             showCancelButton: true,
             confirmButtonColor: c.color,
             cancelButtonColor: '#667085',
-            confirmButtonText: 'Xác nhận',
-            cancelButtonText: 'Hủy'
+            confirmButtonText: 'Đồng ý',
+            cancelButtonText: 'Đóng'
         }).then((result) => {
             if (result.isConfirmed) {
-                // Lưu ý: URL này phải khớp với cách Controller của bạn bắt GET
                 window.location.href = `?action=${action}&id=${bookingId}`;
             }
         });
@@ -463,12 +441,11 @@
     function viewReview(bookingId) {
         const data = BOOKING_STORAGE[bookingId];
         if (!data || !data.rating) {
-            Swal.fire('Thông báo', 'Đơn hàng này chưa có đánh giá từ khách hàng.', 'info');
+            Swal.fire('Thông báo', 'Đơn đặt phòng này chưa có đánh giá từ khách hàng.', 'info');
             return;
         }
 
         let stars = '⭐'.repeat(data.rating);
-
         Swal.fire({
             title: `Đánh giá từ ${data.fullName}`,
             html: `
@@ -483,38 +460,41 @@
         });
     }
 
+    // 6. Xuất CSV
     function exportBookingCSV() {
-        // 1. Lấy tham số hiện tại từ URL để giữ bộ lọc
         const urlParams = new URLSearchParams(window.location.search);
         urlParams.set('export', 'true');
 
-        // 2. Hiện thông báo xác nhận bằng SweetAlert2
         Swal.fire({
             title: 'Xác nhận xuất dữ liệu?',
-            text: "Hệ thống sẽ trích xuất danh sách đặt phòng dựa trên bộ lọc hiện tại của bạn.",
+            text: "Hệ thống sẽ tải xuống danh sách dựa trên các tiêu chí lọc hiện tại của bạn.",
             icon: 'question',
             showCancelButton: true,
-            confirmButtonColor: '#2261E0', // Màu xanh Primary của bạn
+            confirmButtonColor: '#2261E0',
             cancelButtonColor: '#667085',
-            confirmButtonText: '🚀 Xuất file CSV',
+            confirmButtonText: '🚀 Tải file CSV',
             cancelButtonText: 'Hủy bỏ',
             reverseButtons: true
         }).then((result) => {
             if (result.isConfirmed) {
-                // Hiển thị thông báo đang xử lý (tùy chọn)
                 Swal.fire({
-                    title: 'Đang khởi tạo...',
-                    text: 'Vui lòng chờ trong giây lát.',
+                    title: 'Đang xử lý...',
+                    text: 'Vui lòng đợi giây lát.',
                     timer: 2000,
                     showConfirmButton: false,
-                    didOpen: () => {
-                        Swal.showLoading();
-                    }
+                    didOpen: () => { Swal.showLoading(); }
                 });
-
-                // Thực hiện tải file
                 window.location.href = "?" + urlParams.toString();
             }
         });
     }
+
+    // Đóng modal bằng ESC hoặc click ra ngoài
+    window.addEventListener('click', (e) => {
+        const modal = document.getElementById('bookingDetailModal');
+        if (e.target === modal) closeBookingModal();
+    });
+    window.addEventListener('keydown', (e) => {
+        if (e.key === "Escape") closeBookingModal();
+    });
 </script>

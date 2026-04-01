@@ -133,6 +133,16 @@
 </div>
 
 <script>
+<?php if (isset($_SESSION['flash_message'])): ?>
+        Swal.fire({
+            icon: '<?= $_SESSION['flash_message']['type'] ?>',
+            title: '<?= $_SESSION['flash_message']['title'] ?>',
+            text: '<?= $_SESSION['flash_message']['text'] ?>',
+            timer: 2500,
+            showConfirmButton: false
+        });
+        <?php unset($_SESSION['flash_message']); ?>
+<?php endif; ?>
 
 function setupDateConstraints() {
     const vStart = document.getElementById('vStart');

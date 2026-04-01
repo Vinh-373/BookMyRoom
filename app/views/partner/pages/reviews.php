@@ -14,10 +14,17 @@
             <div class="sidebar-card">
                 <h3>Lọc nhanh</h3>
                 <div class="filter-tags">
-                    <a href="?tab=all" class="tag <?= (!isset($_GET['tab']) || $_GET['tab'] == 'all') ? 'active' : '' ?>">Tất cả</a>
-                    <a href="?tab=pending" class="tag <?= (isset($_GET['tab']) && ($_GET['tab'] == 'pending')) ? 'active' : '' ?>">Chưa phản hồi</a>
-                    <a href="?tab=positive" class="tag <?= (isset($_GET['tab']) && ($_GET['tab'] == 'positive')) ? 'active' : '' ?>">Tích cực</a>
-                    <a href="?tab=negative" class="tag <?= (isset($_GET['tab']) && ($_GET['tab'] == 'negative')) ? 'active' : '' ?>">Tiêu cực</a>
+                    <a href="?tab=all" class="tag <?= (!isset($_GET['tab']) || $_GET['tab'] == 'all') ? 'active' : '' ?>">
+                        Tất cả (<?= count($reviews) ?>)
+                    </a>
+                    
+                    <a href="?tab=pending" class="tag <?= (isset($_GET['tab']) && $_GET['tab'] == 'pending') ? 'active' : '' ?>">
+                        Chưa phản hồi
+                    </a>
+                    
+                    <a href="?tab=responded" class="tag <?= (isset($_GET['tab']) && $_GET['tab'] == 'responded') ? 'active' : '' ?>">
+                        Đã phản hồi
+                    </a>
                 </div>
             </div>
             <div class="sidebar-card rating-summary">

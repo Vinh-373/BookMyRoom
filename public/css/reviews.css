@@ -16,6 +16,14 @@
 .reviews-wrapper .reviews-header h1 { font-size: 1.8rem; font-weight: 800; color: #101828; margin: 0; }
 .reviews-wrapper .reviews-header p { color: #667085; margin: 5px 0 0; }
 
+.reviews-wrapper .btn-export{
+    border: 1px solid #D0D5DD;
+    border-radius: 12px;
+    padding-left: 5px;
+    padding-right: 5px;
+    background: #fff;
+}
+
 /* Layout Main */
 .reviews-wrapper .reviews-main-layout {
     display: flex;
