@@ -149,6 +149,22 @@
   border-bottom: none;
 }
 
+
+.partners-avatar-img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 50%; /* tròn */
+  border: 2px solid #ddd;
+  transition: transform 0.2s ease;
+}
+
+.partners-avatar-img:hover {
+  transform: scale(1.1);
+}
+
+
+
 .btn-blocked {
   height: 40px;
   width: 70px;

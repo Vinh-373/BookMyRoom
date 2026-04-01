@@ -62,10 +62,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-  //////////////// Lấy tất cả các hàng <tr> trong tbody của bảng
-  const rows = document.querySelectorAll('#partnersTableBody tr');
   //////////////////// Hàm thực hiện lọc bảng
   function filterTable() {
+      //////////////// Lấy tất cả các hàng <tr> trong tbody của bảng
+  const rows = document.querySelectorAll('#partnersTableBody tr');
     // Lấy từ khóa nhập vào, chuyển thành chữ thường để so sánh
     const keyword = searchInput.value.toLowerCase();
     // Lấy trạng thái được chọn trong dropdown
@@ -127,7 +127,7 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    fetch(`${apiBase}/update`, {
+    fetch(`${apiBase}/update_partner`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -206,7 +206,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const userId = e.target.dataset.userId;
     if (!confirm('Bạn có chắc muốn duyệt đối tác này?')) return;
 
-    fetch(`${apiBase}/approve`, {
+    fetch(`${apiBase}/approve_partner`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ userId })
@@ -246,7 +246,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (!confirm(`Bạn có chắc muốn ${newStatus === 'BLOCKED' ? 'khóa' : 'mở'} đối tác này?`)) return;
 
-      fetch(`${apiBase}/toggleStatus`, {
+      fetch(`${apiBase}/toggleStatus_partner`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId, status: newStatus })
@@ -314,7 +314,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-  ///////////////// Thêm đối tác
+  ///////////////// Thêm thành phố 
   const addCitySelect = document.getElementById('addCityId');
   const addWardSelect = document.getElementById('addWardId');
 
@@ -326,7 +326,7 @@ document.addEventListener('DOMContentLoaded', () => {
     addWardSelect.value = '';
   });
 
-  ///////////////// Sửa đối tác
+  ///////////////// Sửa tp
   const editCitySelect = document.getElementById('editCityId');
   const editWardSelect = document.getElementById('editWardId');
 
@@ -351,7 +351,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const data = Object.fromEntries(new FormData(addForm));
     try { JSON.parse(data.businessLicense); } catch { alert('Giấy phép kinh doanh phải là JSON hợp lệ!'); return; }
 
-    fetch(`${apiBase}/add`, {
+    fetch(`${apiBase}/add_partner`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data)

@@ -34,7 +34,7 @@
          <th>Địa chỉ</th>
          <th>Giới tính</th>
          <th>Ngày sinh</th>
-         <th>AvatarUrl</th>
+         <th>Avatar</th>
          <th>Thành phố</th>
          <th>Khu vực</th>
          <th>Ngày tạo</th>
@@ -56,7 +56,11 @@
            <td><?php echo htmlspecialchars($partner['address'] ?? ''); ?></td>
            <td><?php echo htmlspecialchars($partner['gender'] ?? ''); ?></td>
            <td><?php echo htmlspecialchars($partner['birthDate'] ?? ''); ?></td>
-           <td><?php echo htmlspecialchars($partner['avatarUrl'] ?? ''); ?></td>
+           <td>
+             <img
+               src="/BookMyRoom/<?php echo $partner['avatarUrl'] ?: '/public/images/avatars/default.jpg'; ?>"
+               class="partners-avatar-img">
+           </td>
            <td><?php echo htmlspecialchars($partner['cityName'] ?? ''); ?></td>
            <td><?php echo htmlspecialchars($partner['wardName'] ?? ''); ?></td>
            <td><?php echo date('Y-m-d', strtotime($partner['createdAt'])); ?></td>

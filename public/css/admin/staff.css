@@ -139,6 +139,20 @@
   border-bottom: none;
 }
 
+.staffs-avatar-img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 50%; /* tròn */
+  border: 2px solid #ddd;
+  transition: transform 0.2s ease;
+}
+
+.staffs-avatar-img:hover {
+  transform: scale(1.1);
+}
+
+
 /* Action Buttons */
 .staffs-data-table button {
   padding: 0.5rem 1rem;
@@ -170,6 +184,49 @@
   background: #dc2626;
   transform: translateY(-1px);
 }
+
+.hidden {
+  display: none !important;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /* Responsive Design */
 @media (max-width: 768px) {

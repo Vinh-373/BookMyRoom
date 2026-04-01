@@ -84,7 +84,7 @@ class Partners extends Controller
 
 
     /////////////////////////////////////////////////////////////////////////
-    public function add()
+    public function add_partner()
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             http_response_code(405);
@@ -306,7 +306,7 @@ class Partners extends Controller
     }
 
     /////////////////////////////////////////////////////////////////////////
-    public function search()
+    public function search_partner()
     {
         require_once './app/models/partnersModel.php';
         $partnersModel = new \partnersModel();
@@ -362,7 +362,7 @@ class Partners extends Controller
 
 
     /////////////////////////////////////////////////////////////////////////
-    public function update()
+    public function update_partner()
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             http_response_code(405);
@@ -506,7 +506,7 @@ class Partners extends Controller
     }
 
     //////////////////////////////////////////////////////////////////
-    public function approve()
+    public function approve_partner()
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             http_response_code(405);
@@ -553,7 +553,7 @@ class Partners extends Controller
     /////////////////////////////////////////////////////
 
 
-    public function toggleStatus()
+    public function toggleStatus_partner()
     {
         header('Content-Type: application/json; charset=utf-8');
 

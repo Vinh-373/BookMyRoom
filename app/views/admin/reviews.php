@@ -1,79 +1,93 @@
-<div class="reviews-container">
-  <h1 class="reviews-title">Quản lý đánh giá</h1>
+<div class="reviews-content">
 
-  <!-- FILTER -->
-  <div class="reviews-filter">
-    <input type="text" placeholder="Tìm nội dung..." class="reviews-input">
+  <div class="reviews-header">
+    <div class="reviews-header-content">
+      <h1 class="reviews-title">Quản lý Đánh giá</h1>
+      <div>Tổng số đánh giá:<?php echo count($reviews); ?></div>
+      <div>
+        <div class="medium-rating" id="mediumRating">
+          ★ <?php echo number_format(array_sum(array_column($reviews, 'rating')) / count($reviews), 1); ?>
+        </div>
+        <div>Điểm trung bình</div>
+      </div>
+    </div>
+    <!-- Summary -->
+    <div class="reviews-summary">
+      <?php for ($i = 5; $i >= 1; $i--) { ?>
+        <div class="reviews-summary-item">
+          <ul>
+            <li data-rating="<?php echo $i; ?>"><?php echo $i; ?> ★</li>
+            <li>
+              <?php
+              echo count(array_filter($reviews, fn($r) => $r['rating'] == $i));
+              ?> đánh giá
+            </li>
+          </ul>
+        </div>
+      <?php } ?>
+    </div>
 
-    <select class="reviews-select">
-      <option value="">Số sao</option>
-      <option>5 sao</option>
-      <option>4 sao</option>
-      <option>3 sao</option>
-      <option>2 sao</option>
-      <option>1 sao</option>
-    </select>
+    <div class="reviews-filter">
+      <input type="text" class="reviews-search" placeholder="Tìm kiếm theo nội dung, khách hàng hoặc khách sạn...">
+      <select class="reviews-partners">
+        <option value="">Chọn công ty</option>
+        <?php foreach ($partners as $partner) { ?>
+          <option value="<?php echo $partner['userId']; ?>">
+            <?php echo htmlspecialchars($partner['companyName']); ?>
+          </option>
+        <?php } ?>
+      </select>
 
-    <button class="reviews-btn">Lọc</button>
+      <button class="reviews-clear-btn">Xóa bộ lọc</button>
+    </div>
+
   </div>
 
-  <!-- TABLE -->
-  <div class="reviews-table-wrapper">
-    <table class="reviews-table">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Khách hàng</th>
-          <th>Khách sạn</th>
-          <th>Đánh giá</th>
-          <th>Nội dung</th>
-          <th>Ngày</th>
-          <th>Hành động</th>
-        </tr>
-      </thead>
+  <!-- Reviews list -->
+  <div class="reviews-list">
 
-      <tbody>
+    <div class="reviews-card">
+      <?php foreach ($reviews as $review) { ?>
+        <div class="reviews-item"
+          data-id="<?php echo $review['id']; ?>"
+          data-rating="<?php echo $review['rating']; ?>"
+          data-content="<?php echo htmlspecialchars($review['content']); ?>"
+          data-name="<?php echo htmlspecialchars($review['fullName']); ?>"
+          data-bookingId="<?php echo $review['bookingId'] ?? ''; ?>"
+          data-hotel="<?php echo htmlspecialchars($review['hotelName']); ?>"
+          data-date="<?php echo date('d/m/Y', strtotime($review['createdAt'])); ?>"
+          data-partner="<?php echo $review['partnerId'] ?? ''; ?>">
+          <div class="review-head">
+            <div class="reviews-name"><?php echo $review['fullName']; ?></div>
+            <div class="reviews-rating">★ <?php echo $review['rating']; ?></div>
+          </div>
+          <div class="reviews-text"><?php echo $review['content']; ?></div>
+          <div class="reviews-footer">
+            <span><?php echo date('d/m/Y', strtotime($review['createdAt'])); ?></span>
+            <span>Khách sạn: <?php echo $review['hotelName']; ?></span>
+          </div>
+          <button class="reviews-btn-view">Xem</button>
+          <button class="reviews-btn-delete">Xóa</button>
+        </div>
+      <?php } ?>
+    </div>
 
-        <tr>
-          <td>#1</td>
-          <td>Khách Hàng A</td>
-          <td>Skeeyzi Farm Stay</td>
-          <td class="reviews-stars">★★★★★</td>
-          <td>Dịch vụ tuyệt vời!</td>
-          <td>25/03/2026</td>
-          <td>
-            <button class="reviews-action view">Xem</button>
-            <button class="reviews-action delete">Xóa</button>
-          </td>
-        </tr>
-
-        <tr>
-          <td>#2</td>
-          <td>Khách Hàng B</td>
-          <td>Saigon Riverside</td>
-          <td class="reviews-stars">★★★★☆</td>
-          <td>Phòng hơi nhỏ</td>
-          <td>25/03/2026</td>
-          <td>
-            <button class="reviews-action view">Xem</button>
-            <button class="reviews-action delete">Xóa</button>
-          </td>
-        </tr>
-
-        <tr>
-          <td>#5</td>
-          <td>Khách Hàng E</td>
-          <td>Danang Beach Hotel</td>
-          <td class="reviews-stars low">★★☆☆☆</td>
-          <td>Hỗ trợ kém</td>
-          <td>25/03/2026</td>
-          <td>
-            <button class="reviews-action view">Xem</button>
-            <button class="reviews-action delete">Xóa</button>
-          </td>
-        </tr>
-
-      </tbody>
-    </table>
   </div>
+
+  <div class="reviews-detail-content" id="reviewDetail" style="display:none;">
+    <div class="review-detail-box">
+      <h2>Chi tiết đánh giá</h2>
+      <p><b>Khách hàng:</b> <span id="d-name"></span></p>
+      <p><b>BookingId:</b> <span id="d-bookingId"></span></p>
+      <p><b>Khách sạn:</b> <span id="d-hotel"></span></p>
+      <p><b>Ngày:</b> <span id="d-date"></span></p>
+      <p><b>Rating:</b> ⭐ <span id="d-rating"></span></p>
+      <p><b>Nội dung:</b></p>
+      <div id="d-content"></div>
+
+      <button id="reviews-closeDetail">Đóng</button>
+    </div>
+  </div>
+
+
 </div>
