@@ -7,7 +7,9 @@
 <header class="main-header">
     <div class="header-left">
         <div class="logo">
-            <span class="logo-text">BookMyRoom</span>
+            <a href="<?= URLROOT ?>/partner" style="text-decoration: none; color: inherit; display: flex; align-items: center;">
+                <span class="logo-text">BookMyRoom</span>
+            </a>
         </div>
     </div>
     <?php if(!empty($activeHotelId)): ?>

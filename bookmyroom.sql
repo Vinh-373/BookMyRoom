@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 01, 2026 at 04:11 PM
+-- Generation Time: Apr 02, 2026 at 04:56 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -151,7 +151,7 @@ CREATE TABLE `bookings` (
 INSERT INTO `bookings` (`id`, `userId`, `status`, `source`, `totalAmount`, `platformFee`, `partnerRevenue`, `createdAt`) VALUES
 (1, 5, 'COMPLETED', 'WEBSITE', 1000000.00, 100000.00, 900000.00, '2026-03-25 03:49:07'),
 (2, 6, 'CONFIRMED', 'BOOKING_DOT_COM', 800000.00, 120000.00, 680000.00, '2026-03-25 03:49:07'),
-(3, 7, 'PENDING', 'WEBSITE', 1200000.00, 120000.00, 1080000.00, '2026-03-31 07:32:26'),
+(3, 7, 'PENDING', 'WEBSITE', 1200000.00, 120000.00, 1080000.00, '2026-04-01 15:18:34'),
 (4, 8, 'COMPLETED', 'DIRECT', 3000000.00, 0.00, 3000000.00, '2026-03-25 03:49:07'),
 (5, 9, 'CANCELLED', 'EXPEDIA', 1500000.00, 225000.00, 1275000.00, '2026-03-25 03:49:07'),
 (6, 10, 'COMPLETED', 'WEBSITE', 2000000.00, 200000.00, 1800000.00, '2026-03-25 03:49:07'),
@@ -185,7 +185,12 @@ INSERT INTO `cities` (`id`, `name`) VALUES
 (7, 'Huế'),
 (8, 'Phú Quốc'),
 (9, 'Cần Thơ'),
-(10, 'Hải Phòng');
+(10, 'Hải Phòng'),
+(11, 'Tỉnh Quảng Nam'),
+(12, 'Tỉnh Quảng Ninh'),
+(13, 'Tỉnh Lào Cai'),
+(14, 'Tỉnh Ninh Bình'),
+(15, 'Tỉnh Kiên Giang');
 
 -- --------------------------------------------------------
 
@@ -222,6 +227,7 @@ CREATE TABLE `hotels` (
   `cityId` int(11) NOT NULL,
   `wardId` int(11) NOT NULL,
   `address` text NOT NULL,
+  `status` enum('ACTIVE','PENDING_STOP','STOPPED') DEFAULT 'ACTIVE',
   `createdAt` datetime DEFAULT NULL,
   `deletedAt` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -230,17 +236,19 @@ CREATE TABLE `hotels` (
 -- Dumping data for table `hotels`
 --
 
-INSERT INTO `hotels` (`id`, `partnerId`, `hotelName`, `description`, `rating`, `cityId`, `wardId`, `address`, `createdAt`, `deletedAt`) VALUES
-(1, 2, 'Skeeyzi Farm Stay', NULL, 4.5, 1, 1, '123 Bến Nghé', '2026-03-25 10:49:07', NULL),
-(2, 2, 'Saigon Riverside', NULL, 4.8, 1, 2, '45 Đa Kao', '2026-03-25 10:49:07', NULL),
-(3, 3, 'Hanoi Old Quarter', NULL, 4.2, 2, 3, '12 Hàng Đào', '2026-03-25 10:49:07', NULL),
-(4, 3, 'Tràng Tiền Luxury', NULL, 5, 2, 4, '88 Tràng Tiền', '2026-03-25 10:49:07', NULL),
-(5, 4, 'Danang Beach Hotel', NULL, 4.7, 3, 5, '01 Hải Châu', '2026-03-25 10:49:07', NULL),
-(6, 4, 'Green Hill Dalat', NULL, 4, 4, 6, '10 Phường 1', '2026-03-25 10:49:07', NULL),
-(7, 2, 'Nha Trang Oasis', NULL, 4.6, 5, 7, '20 Lộc Thọ', '2026-03-25 10:49:07', NULL),
-(8, 3, 'Vung Tau Corner', NULL, 3.9, 6, 8, '15 Thắng Tam', '2026-03-25 10:49:07', NULL),
-(9, 4, 'Hue Ancient House', NULL, 4.3, 7, 9, '05 Phú Hội', '2026-03-25 10:49:07', NULL),
-(10, 2, 'Phú Quốc Sunset', NULL, 4.9, 8, 10, '99 Dương Đông', '2026-03-25 10:49:07', NULL);
+INSERT INTO `hotels` (`id`, `partnerId`, `hotelName`, `description`, `rating`, `cityId`, `wardId`, `address`, `status`, `createdAt`, `deletedAt`) VALUES
+(1, 2, 'Skeeyzi Farm Stay', NULL, 4.5, 1, 1, '123 Bến Nghé', 'ACTIVE', '2026-03-25 10:49:07', NULL),
+(2, 2, 'Saigon Riverside', NULL, 4.8, 1, 2, '45 Đa Kao', 'ACTIVE', '2026-03-25 10:49:07', NULL),
+(3, 3, 'Hanoi Old Quarter', NULL, 4.2, 2, 3, '12 Hàng Đào', 'ACTIVE', '2026-03-25 10:49:07', NULL),
+(4, 3, 'Tràng Tiền Luxury', NULL, 5, 2, 4, '88 Tràng Tiền', 'ACTIVE', '2026-03-25 10:49:07', NULL),
+(5, 4, 'Danang Beach Hotel', NULL, 4.7, 3, 5, '01 Hải Châu', 'ACTIVE', '2026-03-25 10:49:07', NULL),
+(6, 4, 'Green Hill Dalat', NULL, 4, 4, 6, '10 Phường 1', 'ACTIVE', '2026-03-25 10:49:07', NULL),
+(7, 2, 'Nha Trang Oasis', NULL, 4.6, 5, 7, '20 Lộc Thọ', 'ACTIVE', '2026-03-25 10:49:07', NULL),
+(8, 3, 'Vung Tau Corner', NULL, 3.9, 6, 8, '15 Thắng Tam', 'ACTIVE', '2026-03-25 10:49:07', NULL),
+(9, 4, 'Hue Ancient House', NULL, 4.3, 7, 9, '05 Phú Hội', 'ACTIVE', '2026-03-25 10:49:07', NULL),
+(10, 2, 'Phú Quốc Sunset', NULL, 4.9, 8, 10, '99 Dương Đông', 'ACTIVE', '2026-03-25 10:49:07', NULL),
+(11, 2, 'Khách Sạn Test', 'abbcddCC', 0, 4, 6, '123 Đường A, Phường C', 'ACTIVE', '2026-04-02 21:41:41', NULL),
+(12, 2, 'Khách sạn TEST2', 'dbef', 0, 1, 1, '123 Đường D', 'PENDING_STOP', '2026-04-02 21:46:36', NULL);
 
 -- --------------------------------------------------------
 
@@ -328,7 +336,8 @@ INSERT INTO `physicalrooms` (`id`, `roomConfigId`, `roomNumber`, `floor`, `statu
 (9, 8, '202', 2, 'AVAILABLE', NULL),
 (10, 9, '101', 1, 'AVAILABLE', NULL),
 (13, 12, '401', 4, 'AVAILABLE', NULL),
-(14, 13, '402', 4, 'AVAILABLE', NULL);
+(14, 13, '402', 4, 'AVAILABLE', NULL),
+(20, 15, '501', 5, 'AVAILABLE', '2026-04-01 21:28:01');
 
 -- --------------------------------------------------------
 
@@ -352,7 +361,7 @@ CREATE TABLE `reviews` (
 --
 
 INSERT INTO `reviews` (`id`, `userId`, `bookingDetailId`, `rating`, `content`, `replyContent`, `replyDate`, `createdAt`) VALUES
-(1, 5, 1, 5, 'Dịch vụ tuyệt vời!', NULL, NULL, '2026-03-25 03:49:07'),
+(1, 5, 1, 5, 'Dịch vụ tuyệt vời!', 'Xin chân thành cảm ơn!', '2026-04-01 21:44:46', '2026-04-01 14:44:46'),
 (2, 6, 2, 4, 'Phòng hơi nhỏ', NULL, NULL, '2026-03-25 03:49:07'),
 (3, 7, 3, 5, 'View đẹp xuất sắc', NULL, NULL, '2026-03-25 03:49:07'),
 (4, 8, 4, 5, 'Khách sạn rất sang trọng', NULL, NULL, '2026-03-25 03:49:07'),
@@ -424,7 +433,8 @@ INSERT INTO `roomconfigurations` (`id`, `hotelId`, `roomTypeId`, `basePrice`, `a
 (10, 9, 5, 1800000.00, 60, 4, '2026-03-25 03:49:07', NULL),
 (12, 1, 5, 2000000.00, 40, 10, '2026-03-29 04:17:36', NULL),
 (13, 1, 4, 700000.00, 30, 2, '2026-03-29 05:43:03', NULL),
-(14, 1, 7, 5000000.00, 40, 4, '2026-03-30 16:06:00', '2026-03-30 23:06:00');
+(14, 1, 7, 5000000.00, 40, 4, '2026-03-30 16:06:00', '2026-03-30 23:06:00'),
+(15, 1, 2, 3000000.00, 40, 4, '2026-04-01 14:28:01', '2026-04-01 21:28:01');
 
 -- --------------------------------------------------------
 
@@ -486,16 +496,17 @@ CREATE TABLE `roominventory` (
 --
 
 INSERT INTO `roominventory` (`id`, `roomConfigId`, `date`, `availableCount`) VALUES
-(1, 1, '2026-04-01', 10),
 (2, 1, '2026-04-02', 8),
-(3, 2, '2026-04-01', 5),
-(4, 3, '2026-04-01', 8),
+(4, 3, '2026-04-01', 0),
 (5, 4, '2026-04-01', 12),
 (6, 5, '2026-04-01', 2),
 (7, 6, '2026-04-01', 6),
 (8, 7, '2026-04-01', 4),
 (9, 8, '2026-04-01', 10),
-(10, 9, '2026-04-01', 15);
+(10, 9, '2026-04-01', 15),
+(22, 3, '2026-04-02', 0),
+(23, 3, '2026-04-03', 0),
+(24, 3, '2026-04-04', 0);
 
 -- --------------------------------------------------------
 
@@ -518,14 +529,19 @@ INSERT INTO `roomprices` (`id`, `roomConfigId`, `date`, `price`) VALUES
 (1, 1, '2026-04-01', 500000.00),
 (2, 1, '2026-04-02', 550000.00),
 (3, 2, '2026-04-01', 1200000.00),
-(4, 3, '2026-04-01', 800000.00),
+(4, 3, '2026-04-01', 1500000.00),
 (5, 4, '2026-04-01', 600000.00),
 (6, 5, '2026-04-01', 3000000.00),
 (7, 6, '2026-04-01', 1500000.00),
 (8, 7, '2026-04-01', 2000000.00),
 (9, 8, '2026-04-01', 900000.00),
 (10, 9, '2026-04-01', 450000.00),
-(11, 1, '2026-03-30', 530000.00);
+(11, 1, '2026-03-30', 530000.00),
+(49, 3, '2026-04-02', 1500000.00),
+(50, 3, '2026-04-03', 1500000.00),
+(51, 3, '2026-04-04', 1500000.00),
+(55, 12, '2026-04-01', 2000000.00),
+(56, 13, '2026-04-01', 700000.00);
 
 -- --------------------------------------------------------
 
@@ -595,8 +611,10 @@ INSERT INTO `users` (`id`, `fullName`, `email`, `password`, `phone`, `status`, `
 (8, 'Khách Hàng D', 'customer4@gmail.com', 'pass_hash', '0901234574', 'ACTIVE', NULL, NULL, NULL, NULL, 5, 7, '2026-03-30 07:39:37', NULL, 'Customer', NULL, NULL),
 (9, 'Khách Hàng E', 'customer5@gmail.com', 'pass_hash', '0901234575', 'ACTIVE', NULL, NULL, NULL, NULL, 6, 8, '2026-03-30 07:39:37', NULL, 'Customer', NULL, NULL),
 (10, 'Khách Hàng F', 'customer6@gmail.com', 'pass_hash', '0901234576', 'ACTIVE', NULL, NULL, NULL, NULL, 1, 1, '2026-03-30 07:39:37', NULL, 'Customer', NULL, NULL),
-(11, 'Tran Van B', 'tranvanb@dalatpalace.com', '$2y$10$uumxkZxh6O6sWD0Ovd2Woe5gy6GG9KwC001Bia7V6ydxrTY8zcMU.', '0123456789', 'BLOCKED', NULL, NULL, NULL, NULL, NULL, NULL, '2026-03-30 07:39:37', NULL, 'Staff', 1, 1),
-(12, 'Trần Quốc Cờ', 'quocco.dalatplace@gmail.com', '$2y$10$q4vKCTRFK./oh7YIrVPKGOGxx.IkQt/bf2w10I2n/8CSbgInWH57C', '0123456789', 'ACTIVE', NULL, NULL, NULL, NULL, NULL, NULL, '2026-03-29 16:54:48', NULL, 'Staff', 1, 1);
+(11, 'Tran Van B', 'tranvanb@dalatpalace.com', '$2y$10$uumxkZxh6O6sWD0Ovd2Woe5gy6GG9KwC001Bia7V6ydxrTY8zcMU.', '0123456789', 'BLOCKED', NULL, NULL, NULL, NULL, NULL, NULL, '2026-04-01 14:29:58', '2026-04-01 21:29:58', 'Staff', 1, 1),
+(12, 'Trần Quốc Cờ', 'quocco.dalatplace@gmail.com', '$2y$10$q4vKCTRFK./oh7YIrVPKGOGxx.IkQt/bf2w10I2n/8CSbgInWH57C', '0123456789', 'ACTIVE', NULL, NULL, NULL, NULL, NULL, NULL, '2026-03-29 16:54:48', NULL, 'Staff', 1, 1),
+(13, 'Nguyễn Thị Lười', 'thiluoi@gmail.com', '$2y$10$lx7OyeRQThXNnAw5rFSJMOCVA93cjt0hj7uylFDwGULxUXL.oZA4G', '0912112332', 'BLOCKED', NULL, NULL, NULL, NULL, NULL, NULL, '2026-04-01 14:42:09', NULL, 'Staff', 1, 1),
+(14, 'Ngô Thị Nhàn', 'thinhan@gmail.com', '$2y$10$RR0eJLE4yGkKCvMps6JZA..leK/PHPlSkuWHLVqq05lN.lxXnlMfK', '0988765421', 'BLOCKED', NULL, NULL, NULL, NULL, NULL, NULL, '2026-04-01 14:41:32', '2026-04-01 21:41:32', 'Staff', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -658,7 +676,22 @@ INSERT INTO `wards` (`id`, `cityId`, `name`) VALUES
 (7, 5, 'Phường Lộc Thọ'),
 (8, 6, 'Phường Thắng Tam'),
 (9, 7, 'Phường Phú Hội'),
-(10, 8, 'Dương Đông');
+(10, 8, 'Dương Đông'),
+(11, 11, 'Thành phố Hội An'),
+(12, 11, 'Thành phố Tam Kỳ'),
+(13, 11, 'Huyện Duy Xuyên (Mỹ Sơn)'),
+(14, 12, 'Thành phố Hạ Long'),
+(15, 12, 'Thành phố Móng Cái'),
+(16, 12, 'Huyện Vân Đồn'),
+(17, 13, 'Thị xã Sa Pa'),
+(18, 13, 'Thành phố Lào Cai'),
+(19, 14, 'Thành phố Ninh Bình'),
+(20, 14, 'Huyện Hoa Lư (Tràng An)'),
+(21, 15, 'Thành phố Phú Quốc'),
+(22, 15, 'Thành phố Hà Tiên'),
+(23, 5, 'Huyện Vạn Ninh (Vịnh Vân Phong)'),
+(24, 6, 'Huyện Xuyên Mộc (Hồ Tràm)'),
+(25, 10, 'Huyện Đảo Phú Quý');
 
 --
 -- Indexes for dumped tables
@@ -860,7 +893,7 @@ ALTER TABLE `bookings`
 -- AUTO_INCREMENT for table `cities`
 --
 ALTER TABLE `cities`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `hotelimages`
@@ -872,7 +905,7 @@ ALTER TABLE `hotelimages`
 -- AUTO_INCREMENT for table `hotels`
 --
 ALTER TABLE `hotels`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `payments`
@@ -884,7 +917,7 @@ ALTER TABLE `payments`
 -- AUTO_INCREMENT for table `physicalrooms`
 --
 ALTER TABLE `physicalrooms`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `reviews`
@@ -896,7 +929,7 @@ ALTER TABLE `reviews`
 -- AUTO_INCREMENT for table `roomconfigurations`
 --
 ALTER TABLE `roomconfigurations`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `roomimages`
@@ -908,13 +941,13 @@ ALTER TABLE `roomimages`
 -- AUTO_INCREMENT for table `roominventory`
 --
 ALTER TABLE `roominventory`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- AUTO_INCREMENT for table `roomprices`
 --
 ALTER TABLE `roomprices`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
 
 --
 -- AUTO_INCREMENT for table `roomtypes`
@@ -926,7 +959,7 @@ ALTER TABLE `roomtypes`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `vouchers`
@@ -938,7 +971,7 @@ ALTER TABLE `vouchers`
 -- AUTO_INCREMENT for table `wards`
 --
 ALTER TABLE `wards`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- Constraints for dumped tables

@@ -15,7 +15,7 @@ class RoomService extends Service {
         $allTypes = $roomModel->getUniqueRoomTypes($hotelId);
         $systemRoomTypes = $roomModel->getAllSystemRoomTypes();
         $allPhysicalRooms = $roomModel->getAllPhysicalRoomsByHotel($hotelId);
-
+        $map = $this->getRoomMapData($hotelId);
         $roomDetailMap = [];
         $physicalRoomMap = [];
 
@@ -70,6 +70,7 @@ class RoomService extends Service {
         return [
             'rooms'          => $rooms,
             'allTypes'       => $allTypes,
+            'roomMap' => $map,
             'roomDetailMap'  => $roomDetailMap,
             'systemRoomTypes' => $systemRoomTypes,
             'physicalRoomMap' => $physicalRoomMap,
@@ -112,5 +113,36 @@ class RoomService extends Service {
 
     public function deletePhysicalRoom($unitId){
         return $this->model('RoomModel')->deleteRoomUnit($unitId);
+    }
+
+    public function getRoomMapData($hotelId) {
+        $roomModel = $this->model('RoomModel');
+        $allRooms = $roomModel->getPhysicalRoomsByHotel($hotelId);
+        
+        $map = [];
+        foreach ($allRooms as $room) {
+            $floor = $room['floor'] ?? 0;
+            $map[$floor][] = $room;
+        }
+        
+        krsort($map);
+        
+        return $map;
+    }
+
+    public function toggleMaintenance($roomId, $currentStatus) {
+        $roomModel = $this->model('RoomModel');
+        
+        if ($currentStatus === 'MAINTENANCE') {
+            // Hoàn tất bảo trì -> Chuyển sang chờ dọn dẹp
+            return $roomModel->updateMaintenanceStatus($roomId, 'CLEANING');
+        } else {
+            // Nếu phòng đang có khách (OCCUPIED), không nên cho bảo trì ngay
+            if ($currentStatus === 'OCCUPIED') {
+                return false;
+            }
+            // Chuyển sang bảo trì
+            return $roomModel->updateMaintenanceStatus($roomId, 'MAINTENANCE');
+        }
     }
 }

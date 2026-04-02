@@ -7,6 +7,10 @@
                 <p>Quản lý kho phòng, tiện nghi và chiến lược giá linh hoạt của bạn.</p>
             </div>
             <div class="rooms-header__actions">
+                <button class="btn btn-map" onclick="openRoomMap()">
+                    <i class="fas fa-th"></i> Sơ đồ phòng vật lý
+                </button>
+
                 <select class="filter-select" onchange="filterByRoomType(this.value)">
                     <option value="">Tất cả loại phòng</option>
                     <?php foreach ($allTypes as $type): ?>
@@ -15,6 +19,7 @@
                         </option>
                     <?php endforeach; ?>
                 </select>
+                
                 <button class="btn btn-add" onclick="openAddRoomModal()">+ Thêm loại phòng mới</button>
             </div>
         </header>
@@ -189,6 +194,55 @@
             </div>
         </div>
     </div>
+    <div id="roomMapModal" class="custom-modal">
+        <div class="modal-content" style="max-width: 900px;"> 
+            <div class="modal-header">
+                <h3>🗺️ Sơ đồ phòng vật lý</h3>
+                <button class="close-modal" onclick="closeRoomMap()">✕</button>
+            </div>
+            
+            <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
+                <div class="room-map-grid">
+                    <?php if(!empty($roomMap)): ?>
+                        <?php foreach ($roomMap as $floor => $rooms): ?>
+                            <div class="floor-group">
+                                <div class="floor-tag">Tầng <?= $floor == 0 ? 'G' : $floor ?></div>
+                                <div class="floor-rooms">
+                                    <?php foreach ($rooms as $r): ?>
+                                        <?php 
+                                            $currentStatus = strtoupper($r['status']);
+                                            $statusClass = strtolower($currentStatus);
+                                        ?>
+                                        <div class="room-item status-<?= $statusClass ?>" 
+                                            onclick="selectRoom(<?= $r['id'] ?>, '<?= $r['roomNumber'] ?>', '<?= $currentStatus ?>')">
+                                            
+                                            <span class="r-num"><?= $r['roomNumber'] ?></span>
+                                            <span class="r-type"><?= $r['roomTypeName'] ?></span>
+                                            
+                                            <?php if($currentStatus === 'MAINTENANCE'): ?>
+                                                <i class="fas fa-tools" style="position:absolute; top:5px; right:8px; font-size:0.75rem; color:#64748b;"></i>
+                                            <?php endif; ?>
+
+                                            <span class="status-dot"></span>
+                                        </div>
+                                    <?php endforeach; ?>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <div style="text-align: center; padding: 40px; color: #94a3b8;">
+                            <i class="fas fa-layer-group" style="font-size: 3rem; margin-bottom: 10px;"></i>
+                            <p>Chưa có dữ liệu phòng vật lý cho khách sạn này.</p>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeRoomMap()">Đóng cửa sổ</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -353,4 +407,55 @@
             Swal.fire({ title: 'Đang xử lý...', didOpen: () => Swal.showLoading(), allowOutsideClick: false });
         });
     });
+    function openRoomMap() {
+        document.getElementById('roomMapModal').style.display = 'flex';
+    }
+
+    function closeRoomMap() {
+        document.getElementById('roomMapModal').style.display = 'none';
+    }
+
+    function selectRoom(id, roomNumber, currentStatus) {
+        let title = '';
+        let text = '';
+        let confirmButtonText = '';
+
+        // Chuẩn hóa trạng thái về viết hoa để so sánh chính xác
+        const status = currentStatus.toUpperCase();
+
+        if (status === 'MAINTENANCE') {
+            title = `Hoàn tất bảo trì phòng ${roomNumber}?`;
+            text = "Xác nhận phòng đã sửa xong và chuyển sang trạng thái chờ dọn dẹp.";
+            confirmButtonText = "Xác nhận hoàn tất";
+        } else if (status === 'AVAILABLE' || status === 'CLEANING') {
+            title = `Đưa phòng ${roomNumber} vào bảo trì?`;
+            text = "Phòng sẽ bị khóa và không thể nhận khách đặt mới cho đến khi sửa xong.";
+            confirmButtonText = "Bắt đầu bảo trì";
+        } else if (status === 'OCCUPIED') {
+            Swal.fire({
+                title: 'Không thể thực hiện',
+                text: 'Phòng đang có khách ở, vui lòng thực hiện trả phòng trước khi bảo trì.',
+                icon: 'warning',
+                confirmButtonColor: '#2261E0'
+            });
+            return;
+        } else {
+            return; // Các trạng thái khác không xử lý
+        }
+
+        Swal.fire({
+            title: title,
+            text: text,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#2261E0',
+            cancelButtonColor: '#64748b',
+            confirmButtonText: confirmButtonText,
+            cancelButtonText: 'Hủy'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = `<?= URLROOT ?>/partner/changeRoomStatus/${id}?current=${status}`;
+            }
+        });
+    }
 </script>

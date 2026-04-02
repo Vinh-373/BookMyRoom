@@ -43,4 +43,88 @@ class PartnerController extends Controller {
         $data['hideSidebar'] = true;
         $this->viewPartner('globalportfoliodashboard', $data);
     }
+
+
+    public function addHotel() {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $portfolioService = $this->service('PortfolioService');
+            
+            // Lấy ID người dùng từ Session
+            $partnerId = 2;//$_SESSION['user_id'];
+            
+            $result = $portfolioService->createNewProperty($_POST, $partnerId);
+
+            if ($result) {
+                $_SESSION['flash_message'] = [
+                    'type'  => 'success',
+                    'title' => 'Thành công!',
+                    'text'  => 'Khách sạn mới đã được đăng ký vào hệ thống.'
+                ];
+            } else {
+                $_SESSION['flash_message'] = [
+                    'type'  => 'error',
+                    'title' => 'Thất bại!',
+                    'text'  => 'Có lỗi xảy ra khi tạo khách sạn, vui lòng thử lại.'
+                ];
+            }
+            
+            header('Location: ' . URLROOT . '/partner');
+            exit;
+        }
+    }
+
+    public function editHotel($id) {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $portfolioService = $this->service('PortfolioService');
+            
+            $partnerId = 2;//$_SESSION['user_id'];
+            $hotel = $portfolioService->getHotelForEdit($id, $partnerId);
+
+            if (!$hotel) {
+                $_SESSION['flash_message'] = [
+                    'type'  => 'error',
+                    'title' => 'Từ chối!',
+                    'text'  => 'Bạn không có quyền chỉnh sửa khách sạn này.'
+                ];
+            } else {
+                $result = $portfolioService->updateHotelInfo($id, $_POST);
+
+                if ($result) {
+                    $_SESSION['flash_message'] = [
+                        'type'  => 'success',
+                        'title' => 'Cập nhật thành công',
+                        'text'  => 'Thông tin khách sạn đã được lưu lại.'
+                    ];
+                } else {
+                    $_SESSION['flash_message'] = [
+                        'type'  => 'info',
+                        'title' => 'Thông báo',
+                        'text'  => 'Không có thay đổi nào được thực hiện.'
+                    ];
+                }
+            }
+
+            header('Location: ' . URLROOT . '/partner');
+            exit;
+        }
+    }
+
+    public function getWardsAjax($cityId) {
+        $wards = $this->model('HotelModel')->getWardsByCity($cityId);
+        echo json_encode($wards);
+    }
+
+    public function requestStop($hotelId) {
+        $service = $this->service('PortfolioService');
+        $result = $service->requestToStop($hotelId);
+
+        $_SESSION['flash_message'] = [
+            'type' => $result['success'] ? 'success' : 'error',
+            'title' => $result['success'] ? 'Đã gửi yêu cầu' : 'Từ chối',
+            'text' => $result['message']
+        ];
+
+        header('Location: ' . URLROOT . '/partner');
+        exit;
+    }
 }

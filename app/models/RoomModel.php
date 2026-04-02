@@ -148,4 +148,23 @@ class RoomModel extends Model {
         $sql = "UPDATE physicalRooms SET deleted_at = NOW() WHERE id = :unitId ";
         return $this->db->fetchAll($sql, [':unitId' => $unitId]);
     }
+
+    public function getPhysicalRoomsByHotel($hotelId) {
+        $sql = "SELECT pr.*, rt.name as roomTypeName 
+                FROM physicalrooms pr
+                JOIN roomconfigurations rc ON pr.roomConfigId = rc.id
+                JOIN roomtypes rt ON rc.roomTypeId = rt.id
+                WHERE rc.hotelId = :hId AND pr.deleted_at IS NULL
+                ORDER BY pr.floor ASC, pr.roomNumber ASC";
+                
+        return $this->db->fetchAll($sql, [':hId' => $hotelId]);
+    }
+
+    public function updateMaintenanceStatus($roomId, $status) {
+    $sql = "UPDATE physicalrooms SET status = :status WHERE id = :id";
+    return $this->db->query($sql, [
+        ':status' => $status,
+        ':id'     => $roomId
+    ]);
+}
 }

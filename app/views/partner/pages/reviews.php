@@ -4,9 +4,9 @@
             <h1>Guest Reviews</h1>
             <p>Phân tích và phản hồi đánh giá từ khách hàng của bạn.</p>
         </div>
-        <div class="header-right">
+        <!-- <div class="header-right">
             <button class="btn btn-export" onclick="exportReviews()">📥 Xuất báo cáo</button>
-        </div>
+        </div> -->
     </header>
 
     <div class="reviews-main-layout">

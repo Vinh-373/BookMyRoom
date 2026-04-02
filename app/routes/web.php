@@ -2,6 +2,10 @@
 return [
     'partner'       => ['PartnerController', 'index'],
     'manage'        => ['PartnerController', 'manage'],
+    'partner/getWardsAjax' => ['PartnerController', 'getWardsAjax'],
+    'partner/addHotel' => ['PartnerController', 'addHotel'],
+    'partner/editHotel' => ['PartnerController', 'editHotel'],
+    'partner/requestStop' => ['PartnerController', 'requestStop'],
     'dashboard' => ['DashboardController', 'index'],
     'bookings'  => ['BookingController', 'index'],
     'booking/detail' => ['BookingController', 'show'],
@@ -11,6 +15,8 @@ return [
     'partner/addPhysicalRoom' => ['RoomController','addPhysicalRoom'],
     'partner/deletePhysicalRoom' => ['RoomController','deletePhysicalRoom'],
     'partner/deleteRoom' => ['RoomController','deleteRoom'],
+    'partner/changeRoomStatus' => ['RoomController','changeRoomStatus'],
+
     'inventory' => ['InventoryController','index'],
     'partner/processBulkUpdate' => ['InventoryController','processBulkUpdate'],
     'partner/updateInventory' => ['InventoryController','updateInventory'],
@@ -24,7 +30,7 @@ return [
     
     'reviews'       => ['ReviewController', 'index'],
     'partner/replyToReview' => ['ReviewController', 'replyToReview'],
-    '/partner/exportReviewsCSV' => ['ReviewController', 'exportReviewsCSV'],
+    // 'partner/exportReviewsCSV' => ['ReviewController', 'exportReviewsCSV'],
 
     'reports'       => ['FinanceController', 'index'],
     'partner/exportFinanceCSV' => ['FinanceController', 'exportFinanceCSV'],

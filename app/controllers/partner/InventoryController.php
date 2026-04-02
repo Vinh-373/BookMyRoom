@@ -46,7 +46,7 @@ class InventoryController extends PartnerController {
             $service = $this->service('InventoryService');
             if ($service->processBulkUpdate($_POST)) {
                 $_SESSION['flash_message'] = ['type' => 'success', 'title' => 'Thành công!', 'text' => 'Cập nhật hàng loạt hoàn tất.'];
-                header('Location: ' . URLROOT . '/partner/inventory');
+                header('Location: ' . URLROOT . '/inventory');
                 exit;
             }
         }

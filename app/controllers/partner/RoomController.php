@@ -139,4 +139,21 @@ class RoomController extends PartnerController {
         header('Location: ' . URLROOT . '/rooms');
         exit();
     }
+
+    public function changeRoomStatus($roomId) {
+        $roomService = $this->service('RoomService');
+        $currentStatus = $_GET['current'];
+        
+        $result = $roomService->toggleMaintenance($roomId, $currentStatus);
+        
+        if ($result) {
+            $_SESSION['flash_message'] = [
+                'type' => 'success',
+                'title' => 'Thành công',
+                'text' => 'Trạng thái phòng đã được cập nhật.'
+            ];
+        }
+        header('Location: ' . URLROOT . '/rooms');
+        exit;
+    }
 }

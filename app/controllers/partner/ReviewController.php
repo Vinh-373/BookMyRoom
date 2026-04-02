@@ -41,7 +41,7 @@ class ReviewController extends PartnerController {
         }
     }
 
-    public function exportReviewsCSV() {
+    public function exportReviewsCSV() {//Bỏ hoặc cập nhật sau =))
         $hotelId = $_SESSION['active_hotel_id'];
         $reviewService = $this->service('ReviewService');
         $reviews = $reviewService->getReviewsByHotel($hotelId, 'all');

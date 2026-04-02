@@ -173,4 +173,72 @@ class HotelModel extends Model {
             ];
         }, $results);
     }
+
+    // Thêm khách sạn
+    public function insert($data) {
+        $sql = "INSERT INTO hotels (partnerId, hotelName, description, cityId, wardId, address, rating, createdAt) 
+                VALUES (:pId, :name, :desc, :cId, :wId, :addr, 0, NOW())";
+        
+        return $this->db->query($sql, [
+            ':pId'   => $data['partnerId'],
+            ':name'  => $data['hotelName'],
+            ':desc'  => $data['description'],
+            ':cId'   => $data['cityId'],
+            ':wId'   => $data['wardId'],
+            ':addr'  => $data['address']
+        ]);
+    }
+
+    public function getCities() {
+        return $this->db->fetchAll("SELECT * FROM cities ORDER BY name ASC");
+    }
+
+    public function getWardsByCity($cityId) {
+        return $this->db->fetchAll("SELECT * FROM wards WHERE cityId = :cId", [':cId' => $cityId]);
+    }
+
+    public function updateStatus($hotelId, $status) {
+        $sql = "UPDATE hotels SET status = :status WHERE id = :id";
+        return $this->db->query($sql, [':status' => $status, ':id' => $hotelId]);
+    }
+
+    // Phê duyệt dừng hoạt động (Soft Delete)
+    public function approveStop($hotelId) {
+        $sql = "UPDATE hotels SET status = 'STOPPED', deletedAt = NOW() WHERE id = :id";
+        return $this->db->query($sql, [':id' => $hotelId]);
+    }
+
+    // Kiểm tra xem khách sạn có đơn hàng nào chưa hoàn tất không
+    public function hasActiveBookings($hotelId) {
+        $sql = "SELECT COUNT(*) as count FROM bookings b
+                JOIN bookingdetails bd ON b.id = bd.bookingId
+                JOIN roomconfigurations rc ON bd.roomConfigId = rc.id
+                WHERE rc.hotelId = :hId AND b.status IN ('PENDING', 'CONFIRMED')";
+        $result = $this->db->fetch($sql, [':hId' => $hotelId]);
+        return $result['count'] > 0;
+    }
+
+    public function getById($id) {
+        $sql = "SELECT * FROM hotels WHERE id = :id AND deletedAt IS NULL";
+        return $this->db->fetch($sql, [':id' => $id]);
+    }
+
+    public function update($id, $data) {
+        $sql = "UPDATE hotels 
+                SET hotelName = :name, 
+                    description = :desc, 
+                    cityId = :cId, 
+                    wardId = :wId, 
+                    address = :addr 
+                WHERE id = :id";
+                
+        return $this->db->query($sql, [
+            ':name' => $data['hotelName'],
+            ':desc' => $data['description'],
+            ':cId'  => $data['cityId'],
+            ':wId'  => $data['wardId'],
+            ':addr' => $data['address'],
+            ':id'   => $id
+        ]);
+    }
 }
