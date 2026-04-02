@@ -45,7 +45,7 @@
             <div class="stat-icon">💳</div>
             <div class="stat-info">
                 <span class="label">TỔNG DOANH THU (THÁNG)</span>
-                <span class="value"><?= number_format($chain_revenue, 0, ',', '.') ?>đ</span>
+                <span class="value"><?= number_format((float) str_replace(',', '', $chain_revenue), 0, ',', '.') ?>đ</span>
             </div>
         </div>
         <div class="stat-group">
