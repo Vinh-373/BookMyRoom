@@ -6,12 +6,19 @@ class PartnerController extends Controller {
     protected $activeHotelId;
     
     public function __construct() {
-        $this->partnerHotels = $this->service('PortfolioService')->getHotelsByPartner(2);
-        $this->activeHotelId = $_SESSION['active_hotel_id'] ?? null;
         // Kiểm tra quyền truy cập Partner tại đây
         // if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'Partner') {
         //     header('Location: ' . URLROOT . '/login');
         //     exit;
+        // }
+
+        // if ($_SESSION['user_role'] == 'Staff') {
+        //     header('Location: ' . URLROOT . '/manage/'.$_SESSION['active_hotel_id']);
+        //     exit;
+        // }
+        // else{
+            $this->partnerHotels = $this->service('PortfolioService')->getHotelsByPartner(2);
+            $this->activeHotelId = $_SESSION['active_hotel_id'] ?? null;
         // }
     }
 
