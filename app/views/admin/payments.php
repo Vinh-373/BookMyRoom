@@ -3,7 +3,7 @@
 
   <!-- ===== STATS ===== -->
   <div class="payments-stats-grid">
-    <div class="payments-stat-card">
+    <div class="payments-stat-card aaa">
       <?php
       $paidPayments = array_filter($payments, fn($p) => $p['paymentStatus'] == 'PAID');
       echo number_format(array_sum(array_column($paidPayments, 'amount')), 0, ',', '.');
@@ -11,17 +11,17 @@
       <span>Tổng doanh thu</span>
     </div>
 
-    <div class="payments-stat-card">
+    <div class="payments-stat-card bbb">
       <?php echo count(array_filter($payments, fn($p) => $p['paymentStatus'] == 'PAID')); ?>
       <span>Giao dịch thành công</span>
     </div>
 
-    <div class="payments-stat-card">
+    <div class="payments-stat-card ccc">
       <?php echo count(array_filter($payments, fn($p) => $p['paymentStatus'] == 'PENDING')); ?>
       <span>Đang chờ duyệt</span>
     </div>
 
-    <div class="payments-stat-card">
+    <div class="payments-stat-card ddd">
       <?php echo count(array_filter($payments, fn($p) => $p['paymentStatus'] == 'REFUNDED' || $p['paymentStatus'] == 'FAILED')); ?>
       <span>Hoàn tiền / Thất bại</span>
     </div>
@@ -29,19 +29,19 @@
 
   <!-- ===== SUMMARY ===== -->
   <div class="payments-summary">
-    <div><?php echo count($payments); ?> <span>Tổng hóa đơn</span></div>
+    <div class="payments-summary aaa"><?php echo count($payments); ?> <span>Tổng hóa đơn</span></div>
 
-    <div>
+    <div class="payments-summary bbb">
       <?php echo number_format(array_sum(array_column($payments, 'amount')), 0, ',', '.'); ?>đ
       <span>Tổng tiền</span>
     </div>
 
-    <div>
+    <div class="payments-summary ccc">
       <?php echo number_format(array_sum(array_column($payments, 'platformFee')), 0, ',', '.'); ?>đ
       <span>Phí nền tảng</span>
     </div>
 
-    <div>
+    <div class="payments-summary ddd">
       <?php echo number_format(array_sum(array_column($payments, 'partnerRevenue')), 0, ',', '.'); ?>đ
       <span>Tiền đối tác</span>
     </div>
@@ -49,9 +49,9 @@
 
   <!-- ===== FILTER ===== -->
   <div class="payments-filter">
-    <input type="text" placeholder="Tìm theo booking..." class="payments-input">
+    <input id="paymentSearch" type="text" placeholder="Tìm theo booking..." class="payments-input">
 
-    <select class="payments-select">
+    <select id="paymentStatus" class="payments-select">
       <option value="">Trạng thái</option>
       <option value="PENDING">PENDING</option>
       <option value="PAID">PAID</option>
@@ -59,7 +59,7 @@
       <option value="REFUNDED">REFUNDED</option>
     </select>
 
-    <select class="payments-select">
+    <select id="paymentMethod" class="payments-select">
       <option value="">Phương thức</option>
       <option value="MOMO">MOMO</option>
       <option value="VNPAY">VNPAY</option>
@@ -84,7 +84,10 @@
 
       <tbody>
         <?php foreach ($payments as $payment): ?>
-          <tr>
+          <tr
+            data-booking="<?php echo $payment['bookingId']; ?>"
+            data-status="<?php echo $payment['paymentStatus']; ?>"
+            data-method="<?php echo $payment['paymentMethod']; ?>">
             <td><?php echo $payment['id']; ?></td>
             <td>#<?php echo $payment['bookingId']; ?></td>
             <td><?php echo $payment['fullName']; ?></td>
@@ -92,7 +95,7 @@
             <td><?php echo $payment['paymentMethod']; ?></td>
 
             <td>
-              <span class="badge <?php echo strtolower($payment['paymentStatus']); ?>">
+              <span class="payments-badge <?php echo strtolower($payment['paymentStatus']); ?>">
                 <?php echo $payment['paymentStatus']; ?>
               </span>
             </td>
@@ -102,14 +105,14 @@
             </td>
 
             <td>
-              <button class="btn btn-view">Xem</button>
+              <button class="payments-btn-view">Xem</button>
 
               <?php if ($payment['paymentStatus'] == 'PENDING'): ?>
-                <button class="btn btn-success">Xác nhận</button>
+                <button class="payments-btn-success">Xác nhận</button>
               <?php endif; ?>
 
               <?php if ($payment['paymentStatus'] == 'PAID'): ?>
-                <button class="btn btn-danger">Hoàn tiền</button>
+                <button class="payments-btn-danger">Hoàn tiền</button>
               <?php endif; ?>
             </td>
           </tr>
@@ -117,4 +120,26 @@
       </tbody>
     </table>
   </div>
+
+<div id="view-modal-payment" class="payments-modal">
+  <div class="payments-modal-content">
+    <h2>Chi tiết thanh toán</h2>
+
+    <p><strong>ID:</strong> <span id="payments-view-id"></span></p>
+    <p><strong>Booking:</strong> <span id="payments-view-booking"></span></p>
+    <p><strong>Khách hàng:</strong> <span id="payments-view-name"></span></p>
+    <p><strong>Số tiền:</strong> <span id="payments-view-amount"></span></p>
+    <p><strong>Phương thức:</strong> <span id="payments-view-method"></span></p>
+    <p><strong>Trạng thái:</strong> <span id="payments-view-status"></span></p>
+    <p><strong>Ngày:</strong> <span id="payments-view-date"></span></p>
+
+    <button id="close-modal-payment">Đóng</button>
+  </div>
+</div>
+
+
+
+
+
+
 </div>

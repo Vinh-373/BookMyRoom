@@ -1,5 +1,5 @@
 <div class="staffs-container">
-  <h1>Staffs</h1>
+  <h1>Tài khoản nhân viên</h1>
 
   <!-- Stats cards -->
   <div class="staffs-sum-grid">

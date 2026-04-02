@@ -1,5 +1,5 @@
 <div class="customers-container">
-  <h1>customers</h1>
+  <h1>Tài khoản khách hàng</h1>
 
 
   <!-- Stats cards -->

@@ -71,4 +71,75 @@ class Payments extends Controller
             'payments' => $payments
         ]);
     }
+
+public function update_status_payment()
+{
+    header('Content-Type: application/json; charset=utf-8');
+
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        http_response_code(405);
+        echo json_encode(['success' => false, 'message' => 'Method not allowed']);
+        exit;
+    }
+
+    $input = json_decode(file_get_contents("php://input"), true);
+
+    if (!$input || !isset($input['id']) || !isset($input['status'])) {
+        echo json_encode([
+            'success' => false,
+            'message' => 'Thiếu dữ liệu'
+        ]);
+        exit;
+    }
+
+    try {
+        require_once './app/models/myModels.php';
+
+        $paymentModel = new class extends \myModels {
+            protected $table = "payments";
+        };
+
+        $validStatus = ['PENDING', 'PAID', 'FAILED', 'REFUNDED'];
+
+        if (!in_array($input['status'], $validStatus)) {
+            echo json_encode([
+                'success' => false,
+                'message' => 'Trạng thái không hợp lệ'
+            ]);
+            exit;
+        }
+
+        // 🔥 update giống partners
+        $result = json_decode(
+            $paymentModel->update(
+                ['paymentStatus' => $input['status']],
+                ['id' => $input['id']]
+            ),
+            true
+        );
+
+        if ($result && in_array($result['type'], ['success', 'warning'])) {
+            echo json_encode([
+                'success' => true,
+                'message' => 'Cập nhật trạng thái thành công',
+                'newStatus' => $input['status']
+            ]);
+        } else {
+            echo json_encode([
+                'success' => false,
+                'message' => 'Không thể cập nhật trạng thái'
+            ]);
+        }
+
+    } catch (\Exception $e) {
+        echo json_encode([
+            'success' => false,
+            'message' => 'Lỗi hệ thống: ' . $e->getMessage()
+        ]);
+    }
+
+    exit;
+}
+
+
 }

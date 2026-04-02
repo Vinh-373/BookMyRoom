@@ -26,7 +26,6 @@
 }
 
 .partners-stat-card {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   padding: 1.5rem;
   border-radius: 12px;
@@ -36,11 +35,12 @@
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
+/* màu từng card */
+.partners-stat-card.aaa{ background: linear-gradient(135deg, #6366f1, #8b5cf6); }
+.partners-stat-card.bbb { background: linear-gradient(135deg, #22c55e, #4ade80); }
+.partners-stat-card.ccc { background: linear-gradient(135deg, #f59e0b, #fbbf24); }
+.partners-stat-card.ddd{ background: linear-gradient(135deg, #ef4444, #f87171); }
 
-.partners-stat-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-}
 
 /* Search and Filter */
 .partners-search-filter {

@@ -1,12 +1,12 @@
  <div class="partners-container">
-   <h1>Quản lý tài khoản đối tác</h1>
+   <h1>Tài khoản đối tác</h1>
 
    <!-- Stats cards -->
    <div class="partners-stats-grid">
-     <div class="partners-stat-card"><?php echo count($partners); ?> Tổng tài khoản</div>
-     <div class="partners-stat-card"><?php echo count(array_filter($partners, fn($p) => $p['status'] == 'ACTIVE')); ?> Đang hoạt động</div>
-     <div class="partners-stat-card"><?php echo count(array_filter($partners, fn($p) => $p['status'] == 'PENDING')); ?> Đang chờ duyệt</div>
-     <div class="partners-stat-card"><?php echo count(array_filter($partners, fn($p) => $p['status'] == 'BLOCKED')); ?> Bị khóa</div>
+     <div class="partners-stat-card aaa"><?php echo count($partners); ?> Tổng tài khoản</div>
+     <div class="partners-stat-card bbb"><?php echo count(array_filter($partners, fn($p) => $p['status'] == 'ACTIVE')); ?> Đang hoạt động</div>
+     <div class="partners-stat-card ccc"><?php echo count(array_filter($partners, fn($p) => $p['status'] == 'PENDING')); ?> Đang chờ duyệt</div>
+     <div class="partners-stat-card ddd"><?php echo count(array_filter($partners, fn($p) => $p['status'] == 'BLOCKED')); ?> Bị khóa</div>
    </div>
 
    <!-- Search & filter -->
