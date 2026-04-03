@@ -124,7 +124,7 @@
                                                 <i class="icon">👁️</i> Chi tiết & In
                                             </a>
 
-                                            <?php if (in_array($status, ['PENDING', 'CONFIRMED'])): ?>
+                                            <!-- <?php //if (in_array($status, ['PENDING', 'CONFIRMED'])): ?>
                                                 <a href="javascript:void(0);" onclick="processBookingAction('checkin', <?= $bookingId ?>, '<?= $guestName ?>')">
                                                     <i class="fas fa-key icon-fw"></i> Nhận phòng nhanh
                                                 </a>
@@ -135,24 +135,24 @@
                                                     <i class="fas fa-times-circle icon-fw"></i> Hủy đặt phòng
                                                 </a>
 
-                                            <?php elseif ($status === 'STAYING'): ?>
+                                            <?php //elseif ($status === 'STAYING'): ?>
                                                 <a href="javascript:void(0);" onclick="processBookingAction('checkout', <?= $bookingId ?>, '<?= $guestName ?>')">
                                                     <i class="fas fa-sign-out-alt icon-fw"></i> Trả phòng
                                                 </a>
                                                 
                                                 <a href="<?= URLROOT ?>/partner/services/add/<?= $bookingId ?>">
                                                     <i class="fas fa-plus-circle icon-fw"></i> Thêm dịch vụ
-                                                </a>
+                                                </a> -->
 
-                                            <?php elseif ($status === 'COMPLETED'): ?>
+                                            <?php if ($status === 'COMPLETED'): ?>
                                                 <a href="javascript:void(0);" onclick="viewReview(<?= $bookingId ?>)">
                                                     <i class="fas fa-star icon-fw text-warning"></i> Xem đánh giá
                                                 </a>
 
-                                            <?php elseif ($status === 'CANCELLED'): ?>
+                                            <!-- <?php //elseif ($status === 'CANCELLED'): ?>
                                                 <a href="javascript:void(0);" onclick="processBookingAction('restore', <?= $bookingId ?>, '<?= $guestName ?>')">
                                                     <i class="fas fa-undo icon-fw"></i> Khôi phục đơn
-                                                </a>
+                                                </a> -->
                                             <?php endif; ?>
                                         </div>
                                     </div>

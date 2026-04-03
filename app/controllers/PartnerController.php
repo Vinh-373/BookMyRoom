@@ -44,7 +44,6 @@ class PartnerController extends Controller {
         $this->viewPartner('globalportfoliodashboard', $data);
     }
 
-
     public function addHotel() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $portfolioService = $this->service('PortfolioService');
@@ -126,5 +125,32 @@ class PartnerController extends Controller {
 
         header('Location: ' . URLROOT . '/partner');
         exit;
+    }
+
+    public function updateProfileAjax() {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $portfolioService = $this->service('PortfolioService');
+            $userId = 2;//$_SESSION['user_id'];
+            $fileName = null;
+
+            // Xử lý upload ảnh vật lý tại Controller
+            if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] == 0) {
+                $targetDir = "public/images/avatars/";
+                $extension = pathinfo($_FILES["avatar"]["name"], PATHINFO_EXTENSION);
+                $fileName = "user_" . $userId . "_" . time() . "." . $extension;
+                
+                if (!move_uploaded_file($_FILES["avatar"]["tmp_name"], $targetDir . $fileName)) {
+                    echo json_encode(['success' => false, 'message' => 'Lỗi upload file.']);
+                    exit;
+                }
+            }
+
+            // Chuyển dữ liệu sang Service xử lý logic và DB
+            $result = $portfolioService->updatePartnerProfile($userId, $_POST, $fileName);
+
+            header('Content-Type: application/json');
+            echo json_encode($result);
+            exit;
+        }
     }
 }

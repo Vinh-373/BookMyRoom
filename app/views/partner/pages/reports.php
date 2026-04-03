@@ -12,7 +12,7 @@
                     <option value="this_year" <?= ($activePeriod == 'this_year') ? 'selected' : '' ?>>Năm nay</option>
                 </select>
                 <button type="button" class="btn btn-primary-blue btn-export" onclick="exportFinancialReport()">
-                    📥 Xuất PDF/Excel
+                    📥 Xuất CSV
                 </button>
             </form>
         </div>

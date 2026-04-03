@@ -6,6 +6,7 @@ return [
     'partner/addHotel' => ['PartnerController', 'addHotel'],
     'partner/editHotel' => ['PartnerController', 'editHotel'],
     'partner/requestStop' => ['PartnerController', 'requestStop'],
+    'partner/updateProfileAjax' => ['PartnerController', 'updateProfileAjax'],
     'dashboard' => ['DashboardController', 'index'],
     'bookings'  => ['BookingController', 'index'],
     'booking/detail' => ['BookingController', 'show'],

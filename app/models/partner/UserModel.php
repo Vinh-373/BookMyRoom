@@ -55,4 +55,31 @@ class UserModel extends Model {
             ':id'   => $id
         ]);
     }
+
+    public function checkPhoneExists($phone, $excludeId) {
+        $sql = "SELECT id FROM users WHERE phone = :phone AND id != :id LIMIT 1";
+        $result = $this->db->fetch($sql, [
+            ':phone' => $phone,
+            ':id' => $excludeId
+        ]);
+        
+        return $result ? true : false;
+    }
+
+    public function saveUserChanges($id, $data) {
+        if ($data['avatar'] === null) {
+            $sql = "UPDATE users SET fullName = :name, phone = :phone WHERE id = :id";
+            $params = [':name' => $data['fullName'], ':phone' => $data['phone'], ':id' => $id];
+        } else {
+            $sql = "UPDATE users SET fullName = :name, phone = :phone, avatar = :avatar WHERE id = :id";
+            $params = [
+                ':name' => $data['fullName'], 
+                ':phone' => $data['phone'], 
+                ':avatar' => $data['avatar'], 
+                ':id' => $id
+            ];
+        }
+
+        return $this->db->query($sql, $params);
+    }
 }

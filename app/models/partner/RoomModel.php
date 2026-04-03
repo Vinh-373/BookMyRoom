@@ -3,10 +3,6 @@
 
 class RoomModel extends Model {
 
-    /**
-     * Lấy danh sách các cấu hình phòng của khách sạn
-     * Đồng bộ: Lấy basePrice, area, maxPeople từ bảng roomConfigurations
-     */
     public function getRoomTypes($hotelId, $filters = []) {
         $params = [':hotelId' => $hotelId];
         $where = "WHERE rc.hotelId = :hotelId AND rc.deleted_at is null ";
@@ -32,10 +28,6 @@ class RoomModel extends Model {
         return $this->db->fetchAll($sql, $params);
     }
 
-    /**
-     * Lấy thống kê Inventory Health
-     * Đồng bộ: Đếm trên bảng physicalRooms và lọc trạng thái bảo trì
-     */
     public function getInventoryStats($hotelId) {
         $sql = "SELECT 
                     COUNT(pr.id) as totalActiveUnits,
@@ -47,14 +39,7 @@ class RoomModel extends Model {
         return $this->db->fetch($sql, [':hotelId' => $hotelId]);
     }
 
-    /**
-     * Cập nhật thông tin cấu hình phòng
-     * Đồng bộ: Cập nhật vào bảng roomConfigurations
-     */
     public function updateRoomType($id, $data) {
-        // Lưu ý: SQL của bạn không có cột 'description' trong roomConfigurations
-        // Nếu muốn đổi tên loại phòng, phải update bảng roomTypes riêng. 
-        // Ở đây tập trung update các thông số định nghĩa trong roomConfigurations.
         
         $sql = "UPDATE roomConfigurations SET 
                     basePrice = :basePrice, 

@@ -122,4 +122,44 @@ class PortfolioService extends Service {
 
         return $this->model('HotelModel')->update($id, $cleanData);
     }
+
+    public function updatePartnerProfile($userId, $data, $fileName) {
+        $userModel = $this->model('UserModel');
+        
+        $phone = htmlspecialchars(trim($data['phone']));
+        $fullName = htmlspecialchars(trim($data['fullName']));
+
+        if (empty($fullName) || empty($phone)) {
+            return ['success' => false, 'message' => 'Họ tên và số điện thoại không được để trống.'];
+        }
+
+        if (!preg_match('/^0\d{9}$/', $phone)) {
+            return ['success' => false, 'message' => 'Định dạng số điện thoại không hợp lệ.'];
+        }
+
+        if ($userModel->checkPhoneExists($phone, $userId)) {
+            return ['success' => false, 'message' => 'Số điện thoại này đã được sử dụng.'];
+        }
+
+        if ($userModel->checkPhoneExists($phone, $userId)) {
+            return ['success' => false, 'message' => 'Số điện thoại này đã được sử dụng bởi tài khoản khác.'];
+        }
+
+        $updateData = [
+            'fullName' => $fullName,
+            'phone'    => $phone,
+            'avatar'   => $fileName
+        ];
+
+        $isUpdated = $userModel->saveUserChanges($userId, $updateData);
+
+        if ($isUpdated) {
+            $_SESSION['user_name'] = $updateData['fullName'];
+            $_SESSION['user_phone'] = $updateData['phone'];
+            if ($fileName) $_SESSION['user_avatar'] = $fileName;
+            return ['success' => true];
+        }
+
+        return ['success' => false, 'message' => 'Lỗi hệ thống khi cập nhật dữ liệu.'];
+    }
 }
