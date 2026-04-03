@@ -91,8 +91,8 @@
                     </div>
 
                     <div class="room-actions">
-                        <button class="btn-edit room-view-btn" data-room-id="<?php echo $room['id']; ?>">Xem</button>
-                        <button class="btn-delete room-edit-btn" data-room-id="<?php echo $room['id']; ?>">Sửa</button>
+                        <!-- <button class="btn-edit room-view-btn" data-room-id="<?php echo $room['id']; ?>">Xem</button>
+                        <button class="btn-delete room-edit-btn" data-room-id="<?php echo $room['id']; ?>">Sửa</button> -->
                     </div>
                 </div>
             </div>
