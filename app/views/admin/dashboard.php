@@ -12,8 +12,8 @@
         </div>
 
         <div class="header-actions">
-            <button class="btn-secondary">Xuất báo cáo</button>
-            <button class="btn-primary">+ Tạo đơn đặt phòng</button>
+            <!-- <button class="btn-secondary">Xuất báo cáo</button>
+            <button class="btn-primary">+ Tạo đơn đặt phòng</button> -->
         </div>
     </div>
 

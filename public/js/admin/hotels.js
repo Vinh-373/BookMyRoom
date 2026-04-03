@@ -89,6 +89,77 @@ document.addEventListener('adminPartialLoad', function(e) {
     }
 });
 
+/**
+ * Bộ lọc / Lọc dữ liệu / Reset / phân trang: inject qua sidebar → delegation.
+ */
+if (!window.__hotelsFilterDelegationBound) {
+    window.__hotelsFilterDelegationBound = true;
+
+    function hotelsUiInMain(el) {
+        const main = document.querySelector('.main-content');
+        return main && el && main.contains(el);
+    }
+
+    /**
+     * Reset bộ lọc (thành phố, hạng sao), ô tìm kiếm và tải lại danh sách trang 1.
+     */
+    function resetHotelsFilters() {
+        clearTimeout(window.__hotelsFilterChangeTimer);
+        document.querySelectorAll('.main-content .hotels-filter-select').forEach(function(sel) {
+            sel.value = '';
+            sel.style.fontWeight = 'normal';
+        });
+        const searchInput = document.querySelector('.main-content .hotels-search-input');
+        if (searchInput) searchInput.value = '';
+        loadHotels(null, null, 1);
+    }
+    window.resetHotelsFilters = resetHotelsFilters;
+
+    document.addEventListener('change', function(e) {
+        const t = e.target;
+        if (!t || !t.classList.contains('hotels-filter-select')) return;
+        if (!hotelsUiInMain(t)) return;
+        clearTimeout(window.__hotelsFilterChangeTimer);
+        t.style.fontWeight = t.value ? 'bold' : 'normal';
+        window.__hotelsFilterChangeTimer = setTimeout(function() {
+            applyFilters();
+        }, 150);
+    });
+
+    document.addEventListener('click', function(e) {
+        const applyBtn = e.target.closest('#hotels-apply-filter');
+        if (applyBtn) {
+            if (!hotelsUiInMain(applyBtn)) return;
+            e.preventDefault();
+            applyFilters();
+            return;
+        }
+
+        const resetBtn = e.target.closest('#hotels-reset-filters');
+        if (resetBtn) {
+            if (!hotelsUiInMain(resetBtn)) return;
+            e.preventDefault();
+            resetHotelsFilters();
+            return;
+        }
+
+        const pg = e.target.closest('.hotel-pagination-btn');
+        if (pg && !pg.disabled && !pg.classList.contains('pagination-dots')) {
+            if (!hotelsUiInMain(pg)) return;
+            if (pg.classList.contains('active')) return;
+            e.preventDefault();
+            const page = pg.textContent.trim();
+            if (page && !isNaN(parseInt(page, 10))) {
+                document.querySelectorAll('.main-content .hotel-pagination-btn').forEach(function(b) {
+                    b.classList.remove('active', 'bg-white');
+                });
+                pg.classList.add('active', 'bg-white');
+                loadHotels(null, null, parseInt(page, 10));
+            }
+        }
+    });
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Hotels JS Loaded');
 
@@ -103,21 +174,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // ==================== Xử lý Select Filters ====================
-    const filterSelects = document.querySelectorAll('.hotels-filter-select');
-    
-    filterSelects.forEach(select => {
-        select.addEventListener('change', function() {
-            const filterType = this.getAttribute('data-filter');
-            const filterValue = this.value;
-            
-            // Highlight selected option
-            this.style.fontWeight = filterValue ? 'bold' : 'normal';
-            
-            // Auto-apply filter on change
-            applyFilters();
-        });
-    });
+    // Lọc / Reset: chỉ dùng delegation trên document (tránh double handler khi partial load).
 
     // ==================== Xử lý Table Rows - View/Edit/Delete ====================
     
@@ -178,57 +235,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 btn.style.opacity = '0';
                 btn.style.pointerEvents = 'none';
             });
-        });
-    });
-
-    // ==================== Xử lý Filter Button (Lọc Dữ Liệu) ====================
-    const filterBtn = document.querySelector('.hotels-filter-btn');
-    
-    if (filterBtn) {
-        filterBtn.addEventListener('click', function() {
-            console.log('🔍 Filter button clicked');
-            applyFilters();
-        });
-    }
-    
-    // ==================== Xử lý Nút Reset ====================
-    const resetBtn = document.querySelector('.btn-secondary');
-    if (resetBtn) {
-        resetBtn.addEventListener('click', function() {
-            console.log('🔄 Reset filters clicked');
-            // Clear all filters
-            const filterSelects = document.querySelectorAll('.hotels-filter-select');
-            filterSelects.forEach(select => {
-                select.value = '';
-                select.style.fontWeight = 'normal';
-            });
-            
-            // Clear search
-            const searchInput = document.querySelector('.hotels-search-input');
-            if (searchInput) {
-                searchInput.value = '';
-            }
-            
-            // Reload all hotels
-            loadHotels();
-        });
-    }
-
-    // ==================== Xử lý Pagination ====================
-    const paginationButtons = document.querySelectorAll('.hotel-pagination-btn');
-    
-    paginationButtons.forEach(btn => {
-        btn.addEventListener('click', function() {
-            if (this.classList.contains('active')) return;
-            
-            const page = this.textContent.trim();
-            
-            if (page && !isNaN(page)) {
-                paginationButtons.forEach(b => b.classList.remove('active', 'bg-white'));
-                this.classList.add('active', 'bg-white');
-                
-                loadHotels(null, null, page);
-            }
         });
     });
 
@@ -298,7 +304,7 @@ async function searchHotels(query) {
  */
 async function applyFilters() {
     try {
-        const filterSelects = document.querySelectorAll('.hotels-filter-select');
+        const filterSelects = document.querySelectorAll('.main-content .hotels-filter-select');
         const formData = new FormData();
         
         formData.append('action', 'filterHotels');
@@ -308,8 +314,11 @@ async function applyFilters() {
         filterSelects.forEach(select => {
             const filterType = select.getAttribute('data-filter');
             const value = select.value;
-            if (value) {
-                formData.append(filterType + 'Id', value);
+            if (!value || !filterType) return;
+            if (filterType === 'cityId') {
+                formData.append('cityId', value);
+            } else if (filterType === 'rating') {
+                formData.append('rating', value);
             }
         });
         
@@ -424,7 +433,7 @@ async function blockHotel(hotelId) {
  * Cập nhật bảng khách sạn
  */
 function updateHotelsTable(hotels) {
-    const tbody = document.querySelector('table tbody');
+    const tbody = document.querySelector('.main-content .table-container tbody');
     if (!tbody) return;
     
     // Clear existing rows
@@ -463,36 +472,21 @@ function updateHotelsTable(hotels) {
  * Cập nhật phân trang
  */
 function updatePagination(pagination) {
-    const paginationContainer = document.querySelector('.pagination');
+    const paginationContainer = document.querySelector('.main-content .pagination');
     if (!paginationContainer) return;
     
     paginationContainer.innerHTML = '';
+    const pages = Math.max(1, parseInt(pagination.pages, 10) || 1);
+    const currentPage = parseInt(pagination.page, 10) || 1;
     
-    for (let i = 1; i <= pagination.pages; i++) {
+    for (let i = 1; i <= pages; i++) {
         const btn = document.createElement('button');
-        btn.className = 'btn btn-sm hotel-pagination-btn';
-        btn.textContent = i;
-        
-        if (i === pagination.page) {
-            btn.classList.add('active', 'bg-white');
-        } else {
-            btn.classList.add('btn-light');
-        }
+        btn.type = 'button';
+        btn.className = 'hotel-pagination-btn btn btn-sm' + (i === currentPage ? ' active bg-white' : ' btn-light');
+        btn.textContent = String(i);
         
         paginationContainer.appendChild(btn);
     }
-    
-    // Re-attach listeners
-    const paginationButtons = document.querySelectorAll('.hotel-pagination-btn');
-    paginationButtons.forEach(btn => {
-        btn.addEventListener('click', function() {
-            if (this.classList.contains('active')) return;
-            const page = this.textContent.trim();
-            if (page && !isNaN(page)) {
-                loadHotels(null, null, page);
-            }
-        });
-    });
 }
 
 /**

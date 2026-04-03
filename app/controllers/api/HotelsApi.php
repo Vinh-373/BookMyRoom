@@ -225,13 +225,12 @@ class HotelsApi {
     /**
      * Lọc khách sạn theo tiêu chí
      * POST /api/hotels.php
-     * Body: { action: 'filterHotels', cityId: 1, rating: 4.5, status: 'active' }
+     * Body: { action: 'filterHotels', cityId: 1, rating: 4.5 }
      */
     public function filterHotels() {
         try {
             $cityId = $_POST['cityId'] ?? null;
             $rating = $_POST['rating'] ?? null;
-            $status = $_POST['status'] ?? null;
             $page = $_POST['page'] ?? 1;
             $limit = $_POST['limit'] ?? 10;
 
@@ -265,8 +264,7 @@ class HotelsApi {
                 'hotels' => $hotels,
                 'filters' => [
                     'cityId' => $cityId,
-                    'rating' => $rating,
-                    'status' => $status
+                    'rating' => $rating
                 ]
             ]);
 

@@ -46,21 +46,14 @@
             ?>
         </select>
 
-        <select class="hotels-filter-select" data-filter="status">
-            <option value="">Trạng thái</option>
-            <option value="active">Hoạt động</option>
-            <option value="pending">Chờ duyệt</option>
-            <option value="suspended">Tạm dừng</option>
-        </select>
-
         <select class="hotels-filter-select" data-filter="rating">
             <option value="">Hạng sao</option>
             <option value="5">5 sao</option>
             <option value="4">4 sao</option>
             <option value="3">3 sao</option>
         </select>
-        <button class="hotels-filter-btn btn-primary">Lọc dữ liệu</button>
-        <button class="btn-secondary">Reset</button>
+        <button type="button" id="hotels-apply-filter" class="hotels-filter-btn btn-primary">Lọc dữ liệu</button>
+        <button type="button" id="hotels-reset-filters" class="btn-secondary">Reset</button>
     </div>
 
     <!-- Bảng khách sạn -->
