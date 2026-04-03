@@ -19,9 +19,15 @@
   align-items: center;
   justify-content: space-between;
 }
-
+.reviews-sum-review{
+  padding:15px;
+  background-color: #2665bc;
+  border-radius: 10px;
+  color:#ffffff;
+  font-size: 20px;
+}
 .reviews-title {
-  font-size: 28px;
+  font-size: 35px;
   font-weight: 800;
   background: linear-gradient(90deg, #6366f1, #06b6d4);
   -webkit-background-clip: text;
@@ -302,6 +308,19 @@
 #reviews-closeDetail:hover {
   transform: scale(1.05);
 }
+
+
+
+
+
+.reviews-summary li.active {
+    font-weight: bold;
+    color: #000000; /* Màu vàng nổi bật */
+}
+
+
+
+
 
 /* ===== ANIMATION ===== */
 @keyframes fadeIn {

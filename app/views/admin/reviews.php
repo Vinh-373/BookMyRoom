@@ -3,7 +3,7 @@
   <div class="reviews-header">
     <div class="reviews-header-content">
       <h1 class="reviews-title">Quản lý Đánh giá</h1>
-      <div>Tổng số đánh giá:<?php echo count($reviews); ?></div>
+      <div class="reviews-sum-review" id="reviewsTotal">Tổng số đánh giá:<?php echo count($reviews); ?></div>
       <div>
         <div class="medium-rating" id="mediumRating">
           ★ <?php echo number_format(array_sum(array_column($reviews, 'rating')) / count($reviews), 1); ?>

@@ -3,25 +3,20 @@
 
   <!-- ===== STATS ===== -->
   <div class="payments-stats-grid">
-    <div class="payments-stat-card aaa">
-      <?php
-      $paidPayments = array_filter($payments, fn($p) => $p['paymentStatus'] == 'PAID');
-      echo number_format(array_sum(array_column($paidPayments, 'amount')), 0, ',', '.');
-      ?>
-      <span>Tổng doanh thu</span>
-    </div>
 
-    <div class="payments-stat-card bbb">
+    <div id="payments-count-div" class="payments-stat-card aaa"><?php echo count($payments); ?> <span>Tổng hóa đơn</span></div>
+
+    <div id="payments-paid-div" class="payments-stat-card bbb">
       <?php echo count(array_filter($payments, fn($p) => $p['paymentStatus'] == 'PAID')); ?>
       <span>Giao dịch thành công</span>
     </div>
 
-    <div class="payments-stat-card ccc">
+    <div id="payments-pending-div" class="payments-stat-card ccc">
       <?php echo count(array_filter($payments, fn($p) => $p['paymentStatus'] == 'PENDING')); ?>
       <span>Đang chờ duyệt</span>
     </div>
 
-    <div class="payments-stat-card ddd">
+    <div id="payments-faild-div" class="payments-stat-card ddd">
       <?php echo count(array_filter($payments, fn($p) => $p['paymentStatus'] == 'REFUNDED' || $p['paymentStatus'] == 'FAILED')); ?>
       <span>Hoàn tiền / Thất bại</span>
     </div>
@@ -29,20 +24,28 @@
 
   <!-- ===== SUMMARY ===== -->
   <div class="payments-summary">
-    <div class="payments-summary aaa"><?php echo count($payments); ?> <span>Tổng hóa đơn</span></div>
-
-    <div class="payments-summary bbb">
-      <?php echo number_format(array_sum(array_column($payments, 'amount')), 0, ',', '.'); ?>đ
-      <span>Tổng tiền</span>
+    <!-- Tổng doanh thu -->
+    <div id="payments-sum-div" class="payments-summary aaa">
+      <?php
+      $paidPayments = array_filter($payments, fn($p) => $p['paymentStatus'] === 'PAID');
+      echo number_format(array_sum(array_column($paidPayments, 'amount')), 0, ',', '.');
+      ?>
+      <span>Tổng doanh thu</span>
     </div>
 
-    <div class="payments-summary ccc">
-      <?php echo number_format(array_sum(array_column($payments, 'platformFee')), 0, ',', '.'); ?>đ
+    <!-- Phí nền tảng chỉ của các giao dịch PAID -->
+    <div id="payments-platformm-div" class="payments-summary ccc">
+      <?php
+      echo number_format(array_sum(array_column($paidPayments, 'platformFee')), 0, ',', '.');
+      ?> đ
       <span>Phí nền tảng</span>
     </div>
 
-    <div class="payments-summary ddd">
-      <?php echo number_format(array_sum(array_column($payments, 'partnerRevenue')), 0, ',', '.'); ?>đ
+    <!-- Tiền đối tác chỉ của các giao dịch PAID -->
+    <div id="payments-partnerFee-div" class="payments-summary ddd">
+      <?php
+      echo number_format(array_sum(array_column($paidPayments, 'partnerRevenue')), 0, ',', '.');
+      ?> đ
       <span>Tiền đối tác</span>
     </div>
   </div>
@@ -87,7 +90,10 @@
           <tr
             data-booking="<?php echo $payment['bookingId']; ?>"
             data-status="<?php echo $payment['paymentStatus']; ?>"
-            data-method="<?php echo $payment['paymentMethod']; ?>">
+            data-method="<?php echo $payment['paymentMethod']; ?>"
+            data-amount="<?php echo $payment['amount']; ?>"
+            data-platform-fee="<?php echo $payment['platformFee']; ?>"
+            data-partner-revenue="<?php echo $payment['partnerRevenue']; ?>">
             <td><?php echo $payment['id']; ?></td>
             <td>#<?php echo $payment['bookingId']; ?></td>
             <td><?php echo $payment['fullName']; ?></td>
@@ -121,21 +127,21 @@
     </table>
   </div>
 
-<div id="view-modal-payment" class="payments-modal">
-  <div class="payments-modal-content">
-    <h2>Chi tiết thanh toán</h2>
+  <div id="view-modal-payment" class="payments-modal">
+    <div class="payments-modal-content">
+      <h2>Chi tiết thanh toán</h2>
 
-    <p><strong>ID:</strong> <span id="payments-view-id"></span></p>
-    <p><strong>Booking:</strong> <span id="payments-view-booking"></span></p>
-    <p><strong>Khách hàng:</strong> <span id="payments-view-name"></span></p>
-    <p><strong>Số tiền:</strong> <span id="payments-view-amount"></span></p>
-    <p><strong>Phương thức:</strong> <span id="payments-view-method"></span></p>
-    <p><strong>Trạng thái:</strong> <span id="payments-view-status"></span></p>
-    <p><strong>Ngày:</strong> <span id="payments-view-date"></span></p>
+      <p><strong>ID:</strong> <span id="payments-view-id"></span></p>
+      <p><strong>Booking:</strong> <span id="payments-view-booking"></span></p>
+      <p><strong>Khách hàng:</strong> <span id="payments-view-name"></span></p>
+      <p><strong>Số tiền:</strong> <span id="payments-view-amount"></span></p>
+      <p><strong>Phương thức:</strong> <span id="payments-view-method"></span></p>
+      <p><strong>Trạng thái:</strong> <span id="payments-view-status"></span></p>
+      <p><strong>Ngày:</strong> <span id="payments-view-date"></span></p>
 
-    <button id="close-modal-payment">Đóng</button>
+      <button id="close-modal-payment">Đóng</button>
+    </div>
   </div>
-</div>
 
 
 

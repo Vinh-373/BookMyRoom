@@ -61,6 +61,7 @@ document.querySelectorAll(".payments-btn-success").forEach(btn => {
         row.dataset.status = "PAID";
 
         this.remove();
+        updatePaymentSummary(); 
       }
     })
     .catch(err => {
@@ -97,6 +98,7 @@ document.querySelectorAll(".payments-btn-danger").forEach(btn => {
         row.dataset.status = "REFUNDED";
 
         this.remove();
+        updatePaymentSummary(); 
       }
     })
     .catch(err => {
@@ -135,5 +137,55 @@ document.querySelectorAll(".payments-btn-danger").forEach(btn => {
       modal.style.display = "none";
     }
   };
+
+
+
+
+
+function updatePaymentSummary() {
+  const rows = document.querySelectorAll(".payments-table tbody tr");
+
+  let totalRevenue = 0;
+  let totalPlatformFee = 0;
+  let totalPartnerRevenue = 0;
+  let totalTransactions = 0;
+  let totalPaid = 0;
+  let totalPending = 0;
+  let totalFailed = 0;
+
+  rows.forEach(row => {
+    const status = row.dataset.status;
+    if (status === "PAID") {
+      totalTransactions++;
+      totalPaid++;
+      const amount = parseFloat(row.dataset.amount) || 0;
+      const platformFee = parseFloat(row.dataset.platformFee) || 0;
+      const partnerRevenue = parseFloat(row.dataset.partnerRevenue) || 0;
+
+      totalRevenue += amount;
+      totalPlatformFee += platformFee;
+      totalPartnerRevenue += partnerRevenue;
+    } else if (status === "PENDING") {
+      totalPending++;
+    } else if (status === "REFUNDED" || status === "FAILED") {
+      totalFailed++;
+    }
+  });
+
+  // Cập nhật UI
+  document.getElementById("payments-sum-div").firstChild.textContent = totalRevenue.toLocaleString("vi-VN") + " đ";
+  document.getElementById("payments-platformm-div").firstChild.textContent = totalPlatformFee.toLocaleString("vi-VN") + " đ";
+  document.getElementById("payments-partnerFee-div").firstChild.textContent = totalPartnerRevenue.toLocaleString("vi-VN") + " đ";
+
+  document.getElementById("payments-count-div").firstChild.textContent = rows.length;
+  document.getElementById("payments-paid-div").firstChild.textContent = totalPaid;
+  document.getElementById("payments-pending-div").firstChild.textContent = totalPending;
+  document.getElementById("payments-faild-div").firstChild.textContent = totalFailed;
+}
+
+
+
+
+
 
 });
