@@ -1,10 +1,10 @@
 <?php
 
 namespace Models;
+require_once "./app/models/MyModels.php";
 
-require_once __DIR__ . '/myModels.php';
 
-class InformationModel extends \myModels
+class InformationModel extends MyModels
 {
     protected $table = "users";
 

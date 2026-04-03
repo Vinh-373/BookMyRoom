@@ -1,10 +1,9 @@
 <?php
 
 namespace Models;
+require_once "./app/models/MyModels.php";
 
-require_once __DIR__ . '/myModels.php';
-
-class HistoryBookingModel extends \myModels
+class HistoryBookingModel extends MyModels
 {
     protected $table = "bookings";
 
@@ -16,7 +15,7 @@ class HistoryBookingModel extends \myModels
             b.createdAt ,
             b.status,
             b.totalAmount ,
-            
+            b.deposit,
             b.userId,
             u.fullName
 
@@ -99,14 +98,6 @@ class HistoryBookingModel extends \myModels
 
 
 
-    public function getImageHotel($hotelId)
-    {
-        $sql = "SELECT hi.image FROM hotelimages hi WHERE hi.hotelId = ?";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->execute([$hotelId]);
-
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
     public function getHotelName($hotelId)
     {
         $sql = "SELECT h.hotelName FROM hotels h WHERE h.id = ?";

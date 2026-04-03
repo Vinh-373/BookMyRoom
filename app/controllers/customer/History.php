@@ -1,7 +1,13 @@
 <?php
-namespace Controllers\customer;
-use Controller;
 
+namespace Controllers\customer;
+
+use Controller;
+use Middleware\AuthMiddleware;
+use Services\BookingService;
+
+require_once "./app/middleware/AuthMiddleware.php";
+require_once "./app/services/bookingService.php";
 require_once __DIR__ . '/../../services/historyBookingService.php';
 class History extends Controller
 {
@@ -14,7 +20,13 @@ class History extends Controller
 
     public function index()
     {
-        $history = $this->service->getHistoryByUser(11); // Thay 11 bằng userId thực tế từ session hoặc tham số
+        $user = $_SESSION['user'] ?? null;
+        // echo "session user: " . json_encode($_SESSION); // Debug session user
+        if (!$user) {
+            header("Location: " . BASE_URL . "auth/login");
+            exit();
+        }
+        $history = $this->service->getHistoryByUser($user['id']);
         $viewFile = './app/views/customer/historyPage.php';
         $this->view('layout/customer/client', [
             'viewFile' => $viewFile,
@@ -42,5 +54,23 @@ class History extends Controller
         $result = $this->service->setReview($userId, $bookingDetailId, $rating, $content, $hotelId);
         echo json_encode(['success' => $result]);
     }
+    public function cancelBooking($bookingId)
+    {
+        header('Content-Type: application/json');
 
+        try {
+            $bookingService = new BookingService();
+
+            $result = $bookingService->updateBooking($bookingId, [
+                'status' => 'CANCELLED'
+            ]);
+
+            echo json_encode(['success' => $result]);
+        } catch (\Throwable $e) {
+            echo json_encode([
+                'success' => false,
+                'error' => $e->getMessage()
+            ]);
+        }
+    }
 }

@@ -589,7 +589,7 @@
 
             const error = validateFullName(value);
             if (error) {
-                alert(error);
+                Swal.fire('Thất bại!', error, 'error');
                 document.getElementById('input-fullName').focus();
                 return;
             }
@@ -607,12 +607,12 @@
                     console.log("Response từ server:", data);
 
                     if (data.success) {
-                        alert("Cập nhật thành công");
+                        Swal.fire('Thành công!', 'Cập nhật thành công!', 'success');
                         fullName = value;
 
                         toggleEditName(false);
                     } else {
-                        alert(data.message);
+                        Swal.fire('Thất bại!', data.message, 'error');
                     }
                 });
         }
@@ -622,7 +622,7 @@
 
             const error = validatePhone(value);
             if (error) {
-                alert(error);
+                Swal.fire('Thất bại!', error, 'error');
                 document.getElementById('input-phone').focus();
                 return;
             }
@@ -641,13 +641,13 @@
                     console.log("Response từ server:", data);
 
                     if (data.success) {
-                        alert("Cập nhật thành công");
+                        Swal.fire('Thành công!', 'Cập nhật thành công!', 'success');
                         phone = value;
 
                         toggleEditPhone(false);
                     } else {
                         document.getElementById('input-phone').focus();
-                        alert(data.message);
+                        Swal.fire('Thất bại!', data.message, 'error');
                     }
                 });
         }
@@ -668,10 +668,10 @@
                     console.log("Response từ server:", data);
 
                     if (data.success) {
-                        alert("Cập nhật thành công");
+                        Swal.fire('Thành công!', 'Cập nhật thành công!', 'success');
                         toggleEditBirthDate(false);
                     } else {
-                        alert(data.message);
+                        Swal.fire('Thất bại!', data.message, 'error');
                     }
                 });
         }
@@ -681,7 +681,7 @@
 
             const error = validateGender(value);
             if (error) {
-                alert(error);
+                Swal.fire('Thất bại!', error, 'error');
                 document.getElementById('input-gender').focus();
                 return;
             }
@@ -700,12 +700,12 @@
                     console.log("Response từ server:", data);
 
                     if (data.success) {
-                        alert("Cập nhật thành công");
+                        Swal.fire('Thành công!', 'Cập nhật thành công!', 'success');
                         gender = value;
 
                         toggleEditGender(false);
                     } else {
-                        alert(data.message);
+                        Swal.fire('Thất bại!', data.message, 'error');
                     }
                 });
         }
@@ -715,7 +715,7 @@
 
             const error = validateEmail(value);
             if (error) {
-                alert(error);
+                Swal.fire('Thất bại!', error, 'error');
                 document.getElementById('input-email').focus();
                 return;
             }
@@ -734,11 +734,11 @@
                     console.log(data);
 
                     if (data.success) {
-                        alert(data.message);
+                        Swal.fire('Thành công!', data.message, 'success');
                         email = value;
                         toggleEditEmail(false);
                     } else {
-                        alert(data.message);
+                        Swal.fire('Thất bại!', data.message, 'error');
                         document.getElementById('input-email').focus();
                     }
                 });
@@ -758,20 +758,20 @@
 
             const error = validateAddress(value);
             if (error) {
-                alert(error);
+                Swal.fire('Thất bại!', error, 'error');
                 document.getElementById('input-address').focus();
                 return;
             }
             const cityError = validateCity(citySelect);
             if (cityError) {
-                alert(cityError);
+                Swal.fire('Thất bại!', cityError, 'error');
                 document.getElementById('input-city').focus();
                 return;
             }
 
             const wardError = validateWard(wardSelect);
             if (wardError) {
-                alert(wardError);
+                Swal.fire('Thất bại!', wardError, 'error');
                 wardSelect.focus();
                 return;
             }
@@ -792,7 +792,7 @@
                     console.log("Response từ server:", data);
 
                     if (data.success) {
-                        alert("Cập nhật thành công");
+                        Swal.fire('Thành công!', 'Cập nhật thành công!', 'success');
 
                         address = value;
                         cityId = citySelect;
@@ -803,7 +803,7 @@
 
                         toggleEditAddress(false);
                     } else {
-                        alert(data.message);
+                        Swal.fire('Thất bại!', data.message, 'error');
                     }
                 });
         }

@@ -419,8 +419,10 @@ class Booking extends Controller
                 'totalAmount'    => $totalAll,
                 'platformFee'    => $platformFee,
                 'partnerRevenue' => $partnerRevenue,
-                'deposit'        => $depositAmount
+                'deposit'        => $depositAmount,
+                'voucherId'     => $voucherCode ?? null
             ]);
+            
 
             if (!$bookingId) {
                 throw new Exception('Không tạo được booking');

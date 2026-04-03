@@ -1,8 +1,13 @@
 <?php
 namespace Controllers\customer;
 use Controller;
+use Middleware\AuthMiddleware;
+use Services\InformationService;
 
+require_once "./app/middleware/AuthMiddleware.php";
+require_once "./app/services/informationService.php";
 require_once __DIR__ . '/../../services/informationService.php';
+
 class Information extends Controller
 {
     private $service;
@@ -13,7 +18,8 @@ class Information extends Controller
     }
     public function index()
     {
-        $information = $this->service->getInformationUser(11); // Thay 11 bằng userId thực tế từ session hoặc tham số
+         $userId = isset($_SESSION['user']['id']) ? $_SESSION['user']['id'] : null; // Lấy userId từ session
+        $information = $this->service->getInformationUser($userId); // Thay 11 bằng userId thực tế từ session hoặc tham số
         $viewFile = './app/views/customer/informationPage.php';
         $this->view('layout/customer/client', [
             'viewFile' => $viewFile,
@@ -48,12 +54,12 @@ class Information extends Controller
 
     public function updateFullName()
     {
-        session_start();
+        
         header('Content-Type: application/json');
 
         $fullName = $_POST['fullName'] ?? '';
         // $userId = $_SESSION['userId'] ?? null;
-        $userId = 11; // Thay 11 bằng userId thực tế từ session hoặc tham số
+        $userId = isset($_SESSION['user']['id']) ? $_SESSION['user']['id'] : null; // Lấy userId từ session
 
         if (!$userId) {
             echo json_encode(["success" => false, "message" => "Chưa đăng nhập"]);
@@ -70,12 +76,12 @@ class Information extends Controller
 
     public function updateBirthDate()
     {
-        session_start();
+        
         header('Content-Type: application/json');
 
         $birthDate = $_POST['birthDate'] ?? '';
         // $userId = $_SESSION['userId'] ?? null;
-        $userId = 11; // Thay 11 bằng userId thực tế từ session hoặc tham số
+        $userId = isset($_SESSION['user']['id']) ? $_SESSION['user']['id'] : null; // Lấy userId từ session
 
         if (!$userId) {
             echo json_encode(["success" => false, "message" => "Chưa đăng nhập"]);
@@ -92,12 +98,12 @@ class Information extends Controller
 
     public function updateGender()
     {
-        session_start();
+        
         header('Content-Type: application/json');
 
         $gender = $_POST['gender'] ?? '';
         // $userId = $_SESSION['userId'] ?? null;
-        $userId = 11; // Thay 11 bằng userId thực tế từ session hoặc tham số
+        $userId = isset($_SESSION['user']['id']) ? $_SESSION['user']['id'] : null; // Lấy userId từ session
 
         if (!$userId) {
             echo json_encode(["success" => false, "message" => "Chưa đăng nhập"]);
@@ -114,11 +120,11 @@ class Information extends Controller
 
     public function updateEmail()
     {
-        session_start();
+        
         header('Content-Type: application/json');
 
         $email = $_POST['email'] ?? '';
-        $userId = $_SESSION['userId'] ?? 11;
+        $userId = isset($_SESSION['user']['id']) ? $_SESSION['user']['id'] : null; // Lấy userId từ session
 
         // Lấy email hiện tại
         $currentEmail = $this->service->getEmailByUserId($userId);
@@ -152,11 +158,11 @@ class Information extends Controller
 
     public function updatePhoneNumber()
     {
-        session_start();
+        
         header('Content-Type: application/json');
 
         $phone = $_POST['phone'] ?? '';
-        $userId = $_SESSION['userId'] ?? 11;
+         $userId = isset($_SESSION['user']['id']) ? $_SESSION['user']['id'] : null; // Lấy userId từ session
 
         // Lấy số điện thoại hiện tại
         $currentPhone = $this->service->getPhoneByUserId($userId);
@@ -190,14 +196,14 @@ class Information extends Controller
 
     public function updateAddress()
     {
-        session_start();
+        
         header('Content-Type: application/json');
 
         $address = $_POST['address'] ?? '';
         $cityId = $_POST['cityId'] ?? '';
         $wardId = $_POST['wardId'] ?? '';
         // $userId = $_SESSION['userId'] ?? null;
-        $userId = 11; // Thay 11 bằng userId thực tế từ session hoặc tham số
+        $userId = isset($_SESSION['user']['id']) ? $_SESSION['user']['id'] : null; // Lấy userId từ session
 
         if (!$userId) {
             echo json_encode(["success" => false, "message" => "Chưa đăng nhập"]);

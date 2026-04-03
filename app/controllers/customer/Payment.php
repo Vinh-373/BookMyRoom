@@ -35,9 +35,9 @@ class Payment extends Controller
         $this->bookingService = new BookingService();
         $this->paymentService = new PaymentService();
 
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
+        // if (session_status() === PHP_SESSION_NONE) {
+        //     session_start();
+        // }
     }
 
     /* ======================================================

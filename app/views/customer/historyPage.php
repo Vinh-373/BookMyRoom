@@ -1,15 +1,4 @@
 <!DOCTYPE html>
-<<<<<<< HEAD
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <h1>đây là trang lịch sử đặt phòng</h1>
-</body>
-=======
 <html lang="vi">
 
 <head>
@@ -400,7 +389,6 @@
         <div class="header">
             <div>
                 <h1>📜 Lịch sử đặt phòng</h1>
-                <p>Xem chi tiết lịch sử giao dịch</p>
             </div>
         </div>
 
@@ -427,6 +415,7 @@
                         <th>Trạng thái</th>
                         <th>Tổng tiền</th>
                         <th>Ngày đặt</th>
+                        <th>Tiền cọc</th>
                         <th>Thao tác</th>
                     </tr>
                 </thead>
@@ -491,6 +480,7 @@
                 <td><span class="status ${getStatusClass(b.status)}">${b.status}</span></td>
                 <td><b>${formatMoney(b.totalAmount)}</b></td>
                 <td>${b.createdAt}</td>
+                <td>${formatMoney(b.deposit)}</td>
                 <td>
                     <button class="btn-detail" onclick="loadDetail(${b.id}, ${i})">Chi tiết</button>
                 </td>
@@ -508,9 +498,7 @@
             });
         }
 
-        function detail(id) {
-            alert("Xem chi tiết booking " + id);
-        }
+     
 
         function calcTotal() {
             const total = bookings.reduce((sum, b) => sum + Number(b.totalAmount), 0);
@@ -613,6 +601,7 @@
                     <span>💵 Thành tiền</span>
                     <b>${formatMoney(d.amount)}</b>
                 </div>
+                
             </div>
             <!-- REVIEW BUTTON -->
                 ${status === "COMPLETED" ? `
@@ -698,16 +687,16 @@
                     console.log(data);
 
                     if (data.success) {
-                        alert("Đánh giá thành công!");
+                        Swal.fire('Thành công!', 'Đánh giá thành công!', 'success');
                         closeReview();
                         updateReviewedUI(currentDetailId);
                     } else {
-                        alert("Lưu thất bại!");
+                        Swal.fire('Thất bại!', 'Lưu thất bại!', 'error');
                     }
                 })
                 .catch(err => {
                     console.error(err);
-                    alert("Lỗi server!");
+                    Swal.fire('Lỗi!', 'Server có vấn đề', 'error');
                 });
         }
 
@@ -750,9 +739,9 @@
                 }
             });
         }
+      
 
     </script>
 </body>
 
->>>>>>> origin/tu
 </html>

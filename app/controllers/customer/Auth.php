@@ -17,6 +17,7 @@ require_once "./app/services/JwtService.php";
 require_once "./app/middleware/AuthMiddleware.php";
 require 'vendor/autoload.php';
 require_once "./app/services/userService.php";
+// define('URLROOT', 'http://localhost/BookMyRoom');
 require_once __DIR__ . '/../../../vendor/autoload.php';
 
 class Auth extends Controller
@@ -28,11 +29,13 @@ class Auth extends Controller
     {
         $this->authService = new AuthService();
         $this->initializeGoogleClient();
-         if (session_status() === PHP_SESSION_NONE) session_start();
+        
     }
 
     private function initializeGoogleClient()
     {
+        $dotenv = \Dotenv\Dotenv::createImmutable(__DIR__ . '/../../../');
+        $dotenv->load();
         $this->googleClient = new Client();
         $this->googleClient->setClientId($_ENV['CLIENT_ID']);
         $this->googleClient->setClientSecret($_ENV['CLIENT_SECRET']);
@@ -53,6 +56,7 @@ class Auth extends Controller
 
     public function index()
     {
+
         $this->view('layout/customer/client', [
             'viewFile' => './app/views/customer/auth/authPage.php'
         ]);
@@ -84,6 +88,7 @@ class Auth extends Controller
             }
 
             $this->authService->register($data);
+
             $this->jsonResponse(['status' => 'success', 'message' => 'Đăng ký thành công!']);
         } catch (Exception $e) {
             $this->jsonResponse(['status' => 'error', 'message' => $e->getMessage()], 400);
@@ -117,40 +122,53 @@ class Auth extends Controller
                 'redirect' => $redirect,
                 'user'     => $user
             ]);
+        if (session_status() === PHP_SESSION_NONE) session_start();
+
+            $_SESSION['user'] = $user; // Lưu thông tin user vào session sau khi đăng nhập thành công
+
         } catch (Exception $e) {
             $this->jsonResponse(['status' => 'error', 'message' => $e->getMessage()], 400);
         }
     }
 
     public function googleLogin()
-    {
-        try {
-            $idToken  = $_POST['google_token'] ?? '';
-            $remember = isset($_POST['remember']);
-            $payload = $this->verifyGoogleToken($idToken);
+{
+    try {
+        $idToken  = $_POST['google_token'] ?? '';
+        $remember = isset($_POST['remember']);
+        $payload = $this->verifyGoogleToken($idToken);
 
-            if (!$payload) throw new Exception("Token Google không hợp lệ.");
+        if (!$payload) throw new Exception("Token Google không hợp lệ.");
 
-            $user = $this->authService->findOrCreateGoogleUser([
-                'googleId' => $payload['sub'],
-                'email'    => $payload['email'],
-                'fullName' => $payload['name'],
-                'avatar'   => $payload['picture'] ?? null
-            ]);
+        $user = $this->authService->findOrCreateGoogleUser([
+            'googleId' => $payload['sub'],
+            'email'    => $payload['email'],
+            'fullName' => $payload['name'],
+            'avatar'   => $payload['picture'] ?? null
+        ]);
 
-            $jwtService = new JwtService();
-            $token = $jwtService->generateToken($user, $remember);
+        // --- BỔ SUNG DÒNG NÀY ---
+        if (session_status() === PHP_SESSION_NONE) session_start();
+        $_SESSION['user'] = $user; 
+        // -----------------------
 
-            $this->jsonResponse(['status' => 'success', 'token' => $token, 'user' => $user]);
-        } catch (Exception $e) {
-            $this->jsonResponse(['status' => 'error', 'message' => $e->getMessage()], 400);
-        }
+        $jwtService = new JwtService();
+        $token = $jwtService->generateToken($user, $remember);
+
+        $this->jsonResponse(['status' => 'success', 'token' => $token, 'user' => $user]);
+
+    } catch (Exception $e) {
+        $this->jsonResponse(['status' => 'error', 'message' => $e->getMessage()], 400);
     }
+}
 
     public function logout()
     {
+
         $this->authService->logout();
         $this->jsonResponse(['status' => 'success', 'message' => 'Đăng xuất thành công']);
+        
+
     }
 
     public function forgot()

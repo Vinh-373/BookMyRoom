@@ -1,8 +1,8 @@
 <?php
-echo '<pre>';
-print_r($data);
-print_r($_SESSION['booking']);
-echo '</pre>';
+// echo '<pre>';
+// print_r($data);
+// print_r($_SESSION['booking']);
+// echo '</pre>';
 ?>
 
 <head>
@@ -353,8 +353,9 @@ echo '</pre>';
                                     <span class="material-symbols-outlined text-tertiary-fixed-dim">confirmation_number</span>
                                     <span class="text-sm font-medium">Chọn hoặc nhập mã</span>
                                 </div>
-                                <div class="flex items-center text-xs text-white/50">
-                                    <span id="selected-voucher-name">Ưu đãi</span>
+                                <div class="flex items-center gap-2">
+                                    <span id="selected-voucher-name" class="text-white/50">Ưu đãi</span>
+                                    <span class="material-symbols-outlined text-sm" onclick="event.stopPropagation(); removeVoucher()" style="cursor: pointer;">close</span>
                                     <span class="material-symbols-outlined text-sm">chevron_right</span>
                                 </div>
                             </div>
@@ -658,86 +659,318 @@ echo '</pre>';
     }
 
     function validateForm() {
-        const userId = JSON.parse(localStorage.getItem("user"))?.id;
+        // ========== 1. LẤY DỮ LIỆU TỪ FORM ==========
+
+        // Lấy thông tin user từ localStorage
+        const user = JSON.parse(localStorage.getItem("user"));
+        const userId = user?.id || null;
+
+        // Lấy các input fields
         const nameInput = document.getElementById("input-name");
         const emailInput = document.getElementById("input-email");
         const phoneInput = document.getElementById("input-phone");
 
-        const name = nameInput?.classList.contains("hidden") ?
-            document.getElementById("view-name").textContent.trim() :
-            nameInput.value.trim();
+        // Lấy giá trị Họ tên (ưu tiên input đang edit, nếu không thì lấy view)
+        let name = "";
+        if (nameInput && !nameInput.classList.contains("hidden")) {
+            name = nameInput.value.trim();
+        } else {
+            name = document.getElementById("view-name")?.textContent.trim() || "";
+        }
 
-        const email = emailInput?.classList.contains("hidden") ?
-            document.getElementById("view-email").textContent.trim() :
-            emailInput.value.trim();
+        // Lấy giá trị Email
+        let email = "";
+        if (emailInput && !emailInput.classList.contains("hidden")) {
+            email = emailInput.value.trim();
+        } else {
+            email = document.getElementById("view-email")?.textContent.trim() || "";
+        }
 
-        const phone = phoneInput?.classList.contains("hidden") ?
-            document.getElementById("view-phone").textContent.trim() :
-            phoneInput.value.trim();
+        // Lấy giá trị Số điện thoại
+        let phone = "";
+        if (phoneInput && !phoneInput.classList.contains("hidden")) {
+            phone = phoneInput.value.trim();
+        } else {
+            phone = document.getElementById("view-phone")?.textContent.trim() || "";
+        }
 
-        const payment = document.querySelector('input[name="paymentMethod"]:checked');
-        const specialNote = document.getElementById("special-note").value.trim();
+        // Lấy phương thức thanh toán được chọn
+        const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked');
+        const payment = paymentMethod ? paymentMethod.value : null;
+
+        // Lấy ghi chú đặc biệt
+        const specialNote = document.getElementById("special-note")?.value.trim() || "";
+
+        // Lấy dữ liệu booking từ PHP
         const bookingData = <?= json_encode($bookingData) ?>;
+
+        // Lấy tổng tiền từ PHP (chưa bao gồm thuế và voucher)
         const totalAll = <?= $data['totalAll'] ?>;
-        const deposit = (totalAll + totalAll * 0.01) * 0.3; // Tính tiền đặt cọc dựa trên tổng giá trị
 
+        // ========== 2. TÍNH TOÁN TIỀN ==========
 
-        // ===== VALIDATE =====
-        if (!name) {
-            Swal.fire("Lỗi", "Vui lòng nhập họ tên", "warning");
-            nameInput.focus();
+        // Tính thuế VAT (1%)
+        const tax = totalAll * 0.01;
+
+        // Tổng tiền trước khi áp dụng voucher
+        const totalBeforeVoucher = totalAll + tax;
+
+        // Khởi tạo biến giảm giá
+        let discountAmount = 0;
+        let finalTotal = totalBeforeVoucher;
+
+        // Áp dụng voucher nếu có
+        if (currentSelectedVoucher) {
+            const voucher = currentSelectedVoucher;
+
+            if (voucher.type === 'PERCENT') {
+                // Giảm theo phần trăm
+                discountAmount = totalBeforeVoucher * (voucher.amount / 100);
+            } else if (voucher.type === 'FIXED') {
+                // Giảm theo số tiền cố định
+                discountAmount = voucher.amount;
+            }
+
+            // Đảm bảo số tiền giảm không vượt quá tổng tiền
+            discountAmount = Math.min(discountAmount, totalBeforeVoucher);
+
+            // Tổng tiền sau giảm giá
+            finalTotal = totalBeforeVoucher - discountAmount;
+        }
+
+        // Tính tiền đặt cọc (30% của tổng tiền sau giảm)
+        const deposit = finalTotal * 0.3;
+
+        // ========== 3. VALIDATE CÁC TRƯỜNG ==========
+
+        // Validate Họ tên
+        if (!name || name.length === 0) {
+            Swal.fire({
+                title: "Lỗi",
+                text: "Vui lòng nhập họ và tên",
+                icon: "warning",
+                confirmButtonText: "Đã hiểu"
+            });
+            if (nameInput) nameInput.focus();
             return false;
         }
 
-        if (!email || !/^\S+@\S+\.\S+$/.test(email)) {
-            Swal.fire("Lỗi", "Email không hợp lệ", "warning");
-            emailInput.focus();
+        // Validate độ dài họ tên (tối thiểu 2 ký tự, tối đa 100 ký tự)
+        if (name.length < 2) {
+            Swal.fire({
+                title: "Lỗi",
+                text: "Họ và tên phải có ít nhất 2 ký tự",
+                icon: "warning"
+            });
+            if (nameInput) nameInput.focus();
             return false;
         }
 
-        if (!phone || !/^[0-9]{9,11}$/.test(phone)) {
-            Swal.fire("Lỗi", "Số điện thoại không hợp lệ", "warning");
-            phoneInput.focus();
+        if (name.length > 100) {
+            Swal.fire({
+                title: "Lỗi",
+                text: "Họ và tên không được vượt quá 100 ký tự",
+                icon: "warning"
+            });
+            if (nameInput) nameInput.focus();
             return false;
         }
 
+        // Validate Email
+        if (!email || email.length === 0) {
+            Swal.fire({
+                title: "Lỗi",
+                text: "Vui lòng nhập địa chỉ email",
+                icon: "warning"
+            });
+            if (emailInput) emailInput.focus();
+            return false;
+        }
+
+        // Regex kiểm tra email hợp lệ
+        const emailRegex = /^[^\s@]+@([^\s@]+\.)+[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            Swal.fire({
+                title: "Lỗi",
+                text: "Email không đúng định dạng (ví dụ: ten@example.com)",
+                icon: "warning"
+            });
+            if (emailInput) emailInput.focus();
+            return false;
+        }
+
+        // Validate Số điện thoại
+        if (!phone || phone.length === 0) {
+            Swal.fire({
+                title: "Lỗi",
+                text: "Vui lòng nhập số điện thoại",
+                icon: "warning"
+            });
+            if (phoneInput) phoneInput.focus();
+            return false;
+        }
+
+        // Loại bỏ các ký tự đặc biệt, chỉ giữ số
+        const phoneClean = phone.replace(/[^0-9]/g, '');
+
+        // Kiểm tra số điện thoại Việt Nam (9-11 số, bắt đầu bằng 0 hoặc +84)
+        const phoneRegex = /^(0[3|5|7|8|9]|(\+84)[3|5|7|8|9])[0-9]{8}$/;
+        if (!phoneRegex.test(phoneClean) && !phoneRegex.test(phone)) {
+            Swal.fire({
+                title: "Lỗi",
+                text: "Số điện thoại không hợp lệ (VD: 0912345678 hoặc +84912345678)",
+                icon: "warning"
+            });
+            if (phoneInput) phoneInput.focus();
+            return false;
+        }
+
+        // Validate phương thức thanh toán
         if (!payment) {
-            Swal.fire("Lỗi", "Vui lòng chọn phương thức thanh toán", "warning");
+            Swal.fire({
+                title: "Lỗi",
+                text: "Vui lòng chọn phương thức thanh toán",
+                icon: "warning"
+            });
             return false;
         }
+
+        // Validate booking data (kiểm tra có phòng nào không)
         if (!bookingData || bookingData.length === 0) {
-            Swal.fire("Lỗi", "Không có phòng nào trong giỏ hàng", "warning");
+            Swal.fire({
+                title: "Lỗi",
+                text: "Không có phòng nào trong giỏ hàng. Vui lòng chọn phòng trước khi đặt.",
+                icon: "warning"
+            });
             return false;
         }
-        if (deposit < 0) { // Giới hạn đặt cọc tối thiểu
-            Swal.fire("Lỗi", "Tổng giá trị đặt phòng quá thấp, không đủ để đặt cọc", "warning");
+
+        // Validate số lượng phòng (kiểm tra từng phòng)
+        for (let i = 0; i < bookingData.length; i++) {
+            const room = bookingData[i];
+            if (!room.quantity || room.quantity < 1) {
+                Swal.fire({
+                    title: "Lỗi",
+                    text: `Phòng "${room.roomConfig?.hotelName || 'Không xác định'}" có số lượng không hợp lệ`,
+                    icon: "warning"
+                });
+                return false;
+            }
+
+            if (room.quantity > room.availableRooms) {
+                Swal.fire({
+                    title: "Lỗi",
+                    text: `Phòng "${room.roomConfig?.hotelName || 'Không xác định'}" chỉ còn ${room.availableRooms} phòng trống`,
+                    icon: "warning"
+                });
+                return false;
+            }
+        }
+
+        // Validate tiền đặt cọc
+        if (deposit <= 0) {
+            Swal.fire({
+                title: "Lỗi",
+                text: "Tổng giá trị đặt phòng quá thấp, không đủ để đặt cọc (tối thiểu 1,000đ)",
+                icon: "warning"
+            });
             return false;
         }
+
+        if (deposit > 50000000) { // Giới hạn đặt cọc tối đa 50 triệu
+            Swal.fire({
+                title: "Cảnh báo",
+                text: "Số tiền đặt cọc vượt quá giới hạn cho phép. Vui lòng liên hệ hỗ trợ.",
+                icon: "warning"
+            });
+            return false;
+        }
+
+        // Validate ghi chú đặc biệt
         if (specialNote.length > 500) {
-            Swal.fire("Lỗi", "Yêu cầu đặc biệt không được vượt quá 500 ký tự", "warning");
-            document.getElementById("special-note").focus();
+            Swal.fire({
+                title: "Lỗi",
+                text: "Yêu cầu đặc biệt không được vượt quá 500 ký tự",
+                icon: "warning"
+            });
+            document.getElementById("special-note")?.focus();
             return false;
         }
+
+        // Validate user đã đăng nhập
         if (!userId) {
-            Swal.fire("Lỗi", "Vui lòng đăng nhập để đặt phòng", "warning");
+            Swal.fire({
+                title: "Chưa đăng nhập",
+                text: "Vui lòng đăng nhập để tiếp tục đặt phòng",
+                icon: "info",
+                confirmButtonText: "Đăng nhập ngay"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = "<?= BASE_URL ?>login";
+                }
+            });
             return false;
         }
 
+        // ========== 4. LOG THÔNG TIN (Debug) ==========
 
-        // console.log("Form data is valid:", { userId,name, email, phone, payment: payment.value });
+        console.log("===== VALIDATION SUCCESS =====");
+        console.log("User ID:", userId);
+        console.log("Họ tên:", name);
+        console.log("Email:", email);
+        console.log("SĐT:", phone);
+        console.log("Phương thức TT:", payment);
+        console.log("Ghi chú:", specialNote || "(không có)");
+        console.log("Số lượng phòng:", bookingData.length);
+        console.log("Tổng tiền gốc:", totalAll);
+        console.log("Thuế (1%):", tax);
+        console.log("Tổng trước voucher:", totalBeforeVoucher);
+
+        if (currentSelectedVoucher) {
+            console.log("Voucher áp dụng:", currentSelectedVoucher.code);
+            console.log("Loại voucher:", currentSelectedVoucher.type);
+            console.log("Giá trị giảm:", currentSelectedVoucher.amount);
+            console.log("Số tiền giảm:", discountAmount);
+        } else {
+            console.log("Không áp dụng voucher");
+        }
+
+        console.log("Tổng sau giảm:", finalTotal);
+        console.log("Tiền đặt cọc (30%):", deposit);
+        console.log("Tiền thanh toán sau (70%):", finalTotal * 0.7);
+        console.log("==============================");
+
+        // ========== 5. TRẢ VỀ DỮ LIỆU ==========
 
         return {
-            userId,
-            name,
-            email,
-            phone,
-            payment: payment.value,
-            specialNote,
-            bookingData,
-            totalAll,
-            deposit
+            // Thông tin user
+            userId: userId,
 
+            // Thông tin khách hàng
+            name: name,
+            email: email,
+            phone: phone,
+            specialNote: specialNote,
 
+            // Thông tin thanh toán
+            payment: payment,
+
+            // Thông tin booking
+            bookingData: bookingData,
+
+            // Thông tin tiền
+            totalAll: totalAll, // Tổng tiền gốc
+            tax: tax, // Thuế
+            totalBeforeVoucher: totalBeforeVoucher, // Tổng trước voucher
+            discountAmount: discountAmount, // Số tiền được giảm
+            finalTotal: finalTotal, // Tổng sau giảm
+            deposit: deposit, // Tiền cọc 30%
+            remainingAtHotel: finalTotal * 0.7, // Tiền thanh toán tại khách sạn
+
+            // Thông tin voucher
+            voucherCode: currentSelectedVoucher?.code || null,
+            voucherType: currentSelectedVoucher?.type || null,
+            voucherAmount: currentSelectedVoucher?.amount || null
         };
     }
     // validateForm()
@@ -755,7 +988,6 @@ echo '</pre>';
         });
 
         try {
-            // ===== CHECKOUT =====
             const response = await fetch('<?= BASE_URL ?>booking/checkout', {
                 method: 'POST',
                 headers: {
@@ -768,8 +1000,6 @@ echo '</pre>';
             const result = await response.json();
 
             if (result.status === 'success') {
-
-                // ===== PAYMENT =====
                 const paymentRes = await fetch('<?= BASE_URL ?>payment/createPayment', {
                     method: 'POST',
                     headers: {
@@ -777,13 +1007,14 @@ echo '</pre>';
                     },
                     body: JSON.stringify({
                         bookingId: result.bookingId,
-                        amount: result.deposit,
-                        method: formData.payment
+                        amount: formData.deposit, // Đã là tiền sau voucher
+                        method: formData.payment,
+                        voucherCode: formData.voucherCode,
+                        discountAmount: formData.discountAmount
                     })
                 });
 
                 const paymentData = await paymentRes.json();
-
                 Swal.close();
 
                 if (paymentData.payUrl) {
@@ -791,16 +1022,36 @@ echo '</pre>';
                 } else {
                     Swal.fire("Lỗi", "Không tạo được link thanh toán", "error");
                 }
-
             } else {
                 Swal.close();
                 Swal.fire("Lỗi", result.message, "error");
             }
-
         } catch (e) {
             Swal.close();
             Swal.fire("Lỗi", "Không thể kết nối server", "error");
         }
+    }
+
+    function removeVoucher() {
+        currentSelectedVoucher = null;
+
+        // Reset hiển thị
+        const voucherNameTag = document.getElementById('selected-voucher-name');
+        if (voucherNameTag) {
+            voucherNameTag.innerHTML = 'Ưu đãi';
+            voucherNameTag.classList.replace('text-white', 'text-white/50');
+        }
+
+        // Reset các item trong modal
+        document.querySelectorAll('.voucher-item').forEach(item => {
+            item.classList.remove('border-primary', 'bg-primary/5');
+            const badge = item.querySelector('.selected-badge');
+            const dot = item.querySelector('.inner-dot');
+            if (badge) badge.classList.add('hidden');
+            if (dot) dot.classList.add('hidden');
+        });
+
+        updateTotalWithVoucher();
     }
 
     function cancelBooking() {
@@ -832,97 +1083,153 @@ echo '</pre>';
         });
     }
 
-   /**
- * Quản lý logic Voucher và Modal
- */
+    /**
+     * Quản lý logic Voucher và Modal
+     */
 
-// Biến toàn cục lưu trữ voucher đang được chọn
-let currentSelectedVoucher = null;
+    // Biến toàn cục lưu trữ voucher đang được chọn
+    let currentSelectedVoucher = null;
 
-/**
- * Mở Popup chọn Voucher
- */
-function openVoucherModal() {
-    const modal = document.getElementById('voucherModal');
-    if (modal) {
-        modal.classList.remove('hidden');
-        // Chặn cuộn trang web khi đang mở modal
-        document.body.style.overflow = 'hidden';
+    /**
+     * Mở Popup chọn Voucher
+     */
+    function openVoucherModal() {
+        const modal = document.getElementById('voucherModal');
+        if (modal) {
+            modal.classList.remove('hidden');
+            // Chặn cuộn trang web khi đang mở modal
+            document.body.style.overflow = 'hidden';
+        }
     }
-}
 
-/**
- * Đóng Popup chọn Voucher
- */
-function closeVoucherModal() {
-    const modal = document.getElementById('voucherModal');
-    if (modal) {
-        modal.classList.add('hidden');
-        // Trả lại trạng thái cuộn trang
-        document.body.style.overflow = 'auto';
+    /**
+     * Đóng Popup chọn Voucher
+     */
+    function closeVoucherModal() {
+        const modal = document.getElementById('voucherModal');
+        if (modal) {
+            modal.classList.add('hidden');
+            // Trả lại trạng thái cuộn trang
+            document.body.style.overflow = 'auto';
+        }
     }
-}
 
-/**
- * Logic khi người dùng nhấn chọn một Voucher từ danh sách
- * @param {HTMLElement} element - Thẻ div voucher được click
- * @param {string} code - Mã voucher (VD: 'SUMMER')
- * @param {string} type - Loại voucher ('PERCENT' hoặc 'FIXED')
- * @param {number} amount - Giá trị giảm
- */
-function selectVoucher(element, code, type, amount) {
-    // 1. Reset trạng thái hiển thị của tất cả voucher trong danh sách
-    document.querySelectorAll('.voucher-item').forEach(item => {
-        item.classList.remove('border-primary', 'bg-primary/5');
-        item.classList.add('border-gray-100');
-        
-        // Ẩn các dấu hiệu "đã chọn" (badge và chấm tròn)
-        const badge = item.querySelector('.selected-badge');
-        const dot = item.querySelector('.inner-dot');
-        if (badge) badge.classList.add('hidden');
-        if (dot) dot.classList.add('hidden');
+    /**
+     * Logic khi người dùng nhấn chọn một Voucher từ danh sách
+     * @param {HTMLElement} element - Thẻ div voucher được click
+     * @param {string} code - Mã voucher (VD: 'SUMMER')
+     * @param {string} type - Loại voucher ('PERCENT' hoặc 'FIXED')
+     * @param {number} amount - Giá trị giảm
+     */
+    function selectVoucher(element, code, type, amount) {
+        // Reset tất cả voucher
+        document.querySelectorAll('.voucher-item').forEach(item => {
+            item.classList.remove('border-primary', 'bg-primary/5');
+            const badge = item.querySelector('.selected-badge');
+            const dot = item.querySelector('.inner-dot');
+            if (badge) badge.classList.add('hidden');
+            if (dot) dot.classList.add('hidden');
+        });
+
+        // Kích hoạt voucher được chọn
+        element.classList.add('border-primary', 'bg-primary/5');
+        const currentBadge = element.querySelector('.selected-badge');
+        const currentDot = element.querySelector('.inner-dot');
+        if (currentBadge) currentBadge.classList.remove('hidden');
+        if (currentDot) currentDot.classList.remove('hidden');
+
+        // Lưu voucher
+        currentSelectedVoucher = {
+            code,
+            type,
+            amount: parseInt(amount)
+        };
+
+        // Cập nhật hiển thị tên voucher
+        const formattedAmount = type === 'PERCENT' ? `${parseInt(amount)}%` : new Intl.NumberFormat('vi-VN').format(amount) + 'đ';
+        const voucherNameTag = document.getElementById('selected-voucher-name');
+        if (voucherNameTag) {
+            voucherNameTag.innerHTML = `<span class="text-tertiary-fixed-dim font-bold">${code}</span> (Giảm ${formattedAmount})`;
+            voucherNameTag.classList.replace('text-white/50', 'text-white');
+        }
+
+        // Cập nhật lại tổng tiền
+        updateTotalWithVoucher();
+
+        setTimeout(closeVoucherModal, 300);
+    }
+    // Thêm hàm này vào trong thẻ <script>
+    function calculateTotalWithVoucher(totalBeforeVoucher, voucher) {
+        if (!voucher) return totalBeforeVoucher;
+
+        let discount = 0;
+        if (voucher.type === 'PERCENT') {
+            discount = totalBeforeVoucher * (voucher.amount / 100);
+        } else if (voucher.type === 'FIXED') {
+            discount = voucher.amount;
+        }
+
+        // Giới hạn discount không vượt quá tổng tiền
+        discount = Math.min(discount, totalBeforeVoucher);
+
+        return {
+            totalAfterDiscount: totalBeforeVoucher - discount,
+            discountAmount: discount
+        };
+    }
+
+    function updateTotalWithVoucher() {
+        const totalAll = <?= $data['totalAll'] ?>;
+        const tax = totalAll * 0.01;
+        const totalBeforeVoucher = totalAll + tax;
+
+        // Tính giảm giá
+        let discountAmount = 0;
+        if (currentSelectedVoucher) {
+            if (currentSelectedVoucher.type === 'PERCENT') {
+                discountAmount = totalBeforeVoucher * (currentSelectedVoucher.amount / 100);
+            } else if (currentSelectedVoucher.type === 'FIXED') {
+                discountAmount = currentSelectedVoucher.amount;
+            }
+            discountAmount = Math.min(discountAmount, totalBeforeVoucher);
+        }
+
+        const finalTotal = totalBeforeVoucher - discountAmount;
+        const deposit = finalTotal * 0.3;
+        const remainingAtHotel = finalTotal * 0.7;
+
+        // Cập nhật DOM
+        const totalElement = document.querySelector('.pt-4.border-t.border-white\\/10 .text-lg.font-bold');
+        const depositElement = document.querySelector('.mt-8 .text-3xl.font-headline');
+        const remainingElement = document.querySelector('.mt-8 .text-\\[11px\\].text-white\\/50');
+
+        if (totalElement) {
+            totalElement.textContent = new Intl.NumberFormat('vi-VN').format(finalTotal) + ' VND';
+        }
+
+        if (depositElement) {
+            depositElement.textContent = new Intl.NumberFormat('vi-VN').format(deposit) + ' VND';
+        }
+
+        if (remainingElement && remainingElement.nextSibling) {
+            remainingElement.textContent = `Còn lại ${new Intl.NumberFormat('vi-VN').format(remainingAtHotel)} VND trả tại khách sạn`;
+        }
+
+        // Lưu lại để submit
+        window.currentFinalTotal = finalTotal;
+        window.currentDeposit = deposit;
+    }
+
+    /**
+     * Xử lý đóng modal khi click vào vùng tối bên ngoài (Overlay)
+     */
+    window.addEventListener('click', function(event) {
+        const modal = document.getElementById('voucherModal');
+        // Nếu click đúng vào vùng overlay (không phải nội dung bên trong) thì đóng
+        if (event.target === modal) {
+            closeVoucherModal();
+        }
     });
-
-    // 2. Kích hoạt trạng thái "Đang chọn" cho voucher hiện tại
-    element.classList.remove('border-gray-100');
-    element.classList.add('border-primary', 'bg-primary/5');
-    
-    const currentBadge = element.querySelector('.selected-badge');
-    const currentDot = element.querySelector('.inner-dot');
-    if (currentBadge) currentBadge.classList.remove('hidden');
-    if (currentDot) currentDot.classList.remove('hidden');
-
-    // 3. Xử lý chuỗi hiển thị số tiền giảm
-    const formattedAmount = new Intl.NumberFormat('vi-VN').format(amount);
-    const displayPrice = (type === 'PERCENT') ? `Giảm ${parseInt(amount)}%` : `-${formattedAmount}đ`;
-
-    // 4. Cập nhật nội dung hiển thị ở màn hình Tóm tắt đặt phòng (bên ngoài modal)
-    const voucherNameTag = document.getElementById('selected-voucher-name');
-    if (voucherNameTag) {
-        // Cập nhật text: CODE (Giảm...)
-        voucherNameTag.innerHTML = `<span class="text-tertiary-fixed-dim font-bold">${code}</span> (${displayPrice})`;
-        
-        // Đổi màu text từ mờ (white/50) sang rõ (white)
-        voucherNameTag.classList.replace('text-white/50', 'text-white');
-    }
-
-    // 5. Lưu dữ liệu voucher đã chọn để xử lý gửi Form/Thanh toán
-    currentSelectedVoucher = { code, type, amount };
-
-    // 6. Đóng popup sau 300ms để khách hàng kịp thấy hiệu ứng phản hồi
-    setTimeout(closeVoucherModal, 300);
-}
-
-/**
- * Xử lý đóng modal khi click vào vùng tối bên ngoài (Overlay)
- */
-window.addEventListener('click', function(event) {
-    const modal = document.getElementById('voucherModal');
-    // Nếu click đúng vào vùng overlay (không phải nội dung bên trong) thì đóng
-    if (event.target === modal) {
-        closeVoucherModal();
-    }
-});
 </script>
 
 </html>

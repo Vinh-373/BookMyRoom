@@ -75,6 +75,7 @@
 
         nav.innerHTML = `
             <div><a href="${BASE_URL}booking/confirm">Giỏ hàng</a></div>
+            <div><a href="${BASE_URL}history">Lịch sử</a></div>
             <span>VND</span>
             <img src="https://flagcdn.com/w20/vn.png" alt="VN">
             <i class="fa-regular fa-question-circle"></i>
@@ -87,10 +88,21 @@
         `;
     }
 
-    function logout() {
+   function logout() {
+    fetch(BASE_URL + 'auth/logout', {
+        method: 'POST'
+    })
+    .then(res => res.json())
+    .then(data => {
+        // Xóa local
         localStorage.removeItem("token");
-        window.location.reload();
-    }
+        localStorage.removeItem("user");
+
+        // Redirect về login
+        window.location.href = BASE_URL + 'auth/login';
+    })
+    .catch(err => console.error(err));
+}
 
     // Nút login
     document.addEventListener("click", function(e) {
