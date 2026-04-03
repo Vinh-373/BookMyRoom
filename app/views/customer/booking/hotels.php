@@ -56,7 +56,7 @@
             color: white;
         }
 
-        .hero h1 { font-size: 40px; margin-top: 30px; }
+        .hero h1 { font-size: 40px; margin-top: 30px; } 
 
         .search-wrapper {
             background: white;

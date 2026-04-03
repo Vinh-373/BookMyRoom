@@ -1,4 +1,5 @@
 <?php
+require_once 'C:\xampp\htdocs\BookMyRoom\app\core\Database.php';
 abstract class myModels extends Database
 {
     protected $table; // ⚠️ BẮT BUỘC: class con phải khai báo tên bảng

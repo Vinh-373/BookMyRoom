@@ -1,0 +1,316 @@
+/* Reset & Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: #ffffff;
+    color: #1a1a1a;
+    line-height: 1.5;
+}
+
+/* Main Content */
+main {
+    max-width: 896px;
+    margin: 0 auto;
+    padding: 48px 24px;
+}
+
+.profile-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 32px;
+}
+
+.profile-title h1 {
+    font-size: 36px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.profile-title p {
+    color: #4b5563;
+}
+
+.avatar-container {
+    position: relative;
+}
+
+.avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background-color: #e0565b;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #ffffff;
+    font-size: 30px;
+    font-weight: 700;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.camera-icon {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background-color: #ffffff;
+    border-radius: 50%;
+    padding: 4px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    border: 1px solid #f3f4f6;
+    display: flex;
+}
+
+/* Profile Rows */
+.profile-section {
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 0 24px;
+    background-color: #ffffff;
+}
+
+.profile-row {
+    padding: 24px 0;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.profile-row:last-child {
+    border-bottom: none;
+}
+
+.row-content {
+    flex: 1;
+    padding-right: 32px;
+}
+
+.row-main {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.label {
+    font-size: 18px;
+    font-weight: 500;
+    width: 160px;
+    flex-shrink: 0;
+}
+
+.value {
+    color: #374151;
+}
+
+.placeholder {
+    color: #6b7280;
+}
+
+.description {
+    font-size: 14px;
+    color: #6b7280;
+    margin-left: 160px;
+    margin-top: 4px;
+}
+
+.btn-edit {
+    color: #006ce4;
+    font-weight: 700;
+    background: none;
+    border: none;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.btn-edit:hover {
+    text-decoration: underline;
+}
+
+/* Email Specific */
+.badge-verified {
+    background-color: #008009;
+    color: #ffffff;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 2px;
+    text-transform: uppercase;
+    margin-left: 8px;
+}
+
+.email-box {
+    margin-left: 160px;
+    margin-top: 16px;
+    background-color: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 24px;
+    max-width: 512px;
+}
+
+.email-box p {
+    color: #374151;
+    margin-bottom: 16px;
+}
+
+.btn-link {
+    color: #006ce4;
+    font-weight: 700;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+.btn-link:hover {
+    text-decoration: underline;
+}
+
+/* --- TRẠNG THÁI CHỈNH SỬA (Theo sơ đồ của bạn) --- */
+.edit-mode {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 16px;
+    animation: fadeIn 0.3s ease;
+}
+
+/* Hàng 1: Tiêu đề và nút Hủy */
+.edit-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.edit-header .label {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 0;
+}
+
+
+/* Hàng 2: Input căn giữa */
+.edit-inputs {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* Căn giữa nội dung hàng 2 */
+    width: 100%;
+}
+
+.input-group {
+    width: 100%;
+    max-width: 500px;
+    /* Độ rộng tối đa của ô input */
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.input-group label {
+    font-size: 13px;
+    font-weight: 500;
+    color: #595959;
+    text-align: left;
+}
+
+.input-field {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #868686;
+    border-radius: 6px;
+    font-size: 15px;
+    transition: border-color 0.2s;
+}
+
+.input-field:focus {
+    border-color: #006ce4;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(0, 108, 228, 0.1);
+}
+
+/* Hàng 3: Nút Lưu bên phải */
+.action-buttons,
+.edit-footer {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+}
+
+/* Thiết lập chung cho cả hai nút để loại bỏ viền và nền */
+.btn-cancel,
+.btn-save {
+    background: none !important;
+    /* Loại bỏ màu nền */
+    border: none !important;
+    /* Loại bỏ viền */
+    color: #006ce4 !important;
+    /* Màu xanh (Blue) chủ đạo */
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+    padding: 5px 10px;
+    transition: color 0.2s ease;
+    text-decoration: none;
+    /* Mặc định không gạch chân */
+    font-family: 'Inter', sans-serif;
+}
+
+/* Hiệu ứng khi di chuột vào (Hover) */
+.btn-cancel:hover,
+.btn-save:hover {
+    text-decoration: underline;
+    /* Hiện gạch chân khi hover */
+    color: #004fad !important;
+    /* Đậm hơn một chút khi hover để tạo cảm giác click */
+}
+
+/* Căn chỉnh lại vị trí hàng nút Lưu cho khớp sơ đồ */
+.action-buttons,
+.edit-footer {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    margin-top: 10px;
+}
+
+/* Nếu bạn muốn nút Lưu nằm chính xác ở vị trí hàng thứ 3 (phía dưới bên phải input) */
+.edit-mode .action-buttons {
+    padding-right: calc(20% + 5px);
+    /* Căn lề phải để khớp với mép của ô input (nếu input rộng 60%) */
+}   
+
+/* --- Tiện ích khác --- */
+.badge-verified {
+    background-color: #e7f4ee;
+    color: #008009;
+    font-size: 12px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-left: 10px;
+}
+
+.description {
+    font-size: 13px;
+    color: #595959;
+    margin-top: 4px;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

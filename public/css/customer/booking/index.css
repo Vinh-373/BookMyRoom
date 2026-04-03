@@ -1,11 +1,4 @@
-:root {
-    --primary-blue: #003580;
-    --accent-blue: #006ce4;
-    --yellow-gold: #ffb700;
-    --bg-gray: #f5f5f5;
-    --text-main: #1a1a1a;
-    --text-sub: #6b6b6b;
-}
+
 
 * {
     box-sizing: border-box;
