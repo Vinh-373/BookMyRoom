@@ -1,0 +1,338 @@
+.btn-login {
+    background: transparent;
+    border: 1px solid white;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-login:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* Hero & Search */
+.hero {
+    background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1350&q=80');
+    background-size: cover;
+    background-position: center;
+    padding: 60px 8% 100px;
+    text-align: center;
+    color: white;
+}
+
+.hero h1 {
+    font-size: 40px;
+    margin-top: 30px;
+}
+
+.search-wrapper {
+    background: white;
+    padding: 4px;
+    border-radius: 8px;
+    display: flex;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    border: 4px solid var(--yellow-gold);
+    max-width: 1000px;
+    margin: -30px auto 0;
+}
+
+.search-box {
+    flex: 1;
+    padding: 10px 15px;
+    border-right: 1px solid #eee;
+    text-align: left;
+    color: #333;
+}
+
+.search-box label {
+    display: block;
+    font-size: 12px;
+    color: #666;
+    font-weight: 600;
+}
+
+.search-box input {
+    width: 100%;
+    border: none;
+    outline: none;
+    font-size: 15px;
+    padding-top: 5px;
+}
+
+/* Layout Main */
+.main-content {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 25px;
+    padding: 40px 8%;
+}
+
+/* Sidebar Filter */
+.sidebar {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    height: fit-content;
+}
+
+.sidebar h3 {
+    font-size: 18px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+.filter-section {
+    margin-bottom: 25px;
+}
+
+.filter-section label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+.price-inputs {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.price-inputs input {
+    width: 50%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 14px;
+}
+
+/* Hotel Cards */
+.hotel-card {
+    background: white;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    display: flex;
+    margin-bottom: 20px;
+    overflow: hidden;
+    transition: transform 0.2s;
+}
+
+.hotel-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.hotel-img {
+    width: 320px;
+    position: relative;
+}
+
+.hotel-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.hotel-details {
+    flex: 1;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.hotel-name {
+    color: var(--accent-blue);
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 5px;
+    cursor: pointer;
+}
+
+.stars {
+    color: var(--yellow-gold);
+    font-size: 14px;
+}
+
+.location {
+    font-size: 13px;
+    color: var(--accent-blue);
+    margin-bottom: 15px;
+    text-decoration: underline;
+}
+
+.badge {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: auto;
+}
+
+.score {
+    background: var(--primary-blue);
+    color: white;
+    padding: 5px 8px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+.rating-text {
+    font-size: 14px;
+}
+
+.hotel-pricing {
+    width: 220px;
+    padding: 20px;
+    border-left: 1px solid #eee;
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.price-label {
+    font-size: 12px;
+    color: #666;
+}
+
+.price-value {
+    font-size: 24px;
+    font-weight: 800;
+}
+
+.price-tax {
+    font-size: 11px;
+    color: #666;
+    margin-bottom: 15px;
+}
+
+.btn-check {
+    background-color: var(--accent-blue);
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 4px;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+}
+
+.btn-check:hover {
+    background-color: #005bbd;
+}
+/* Container bao quanh phân trang */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 40px 0;
+    gap: 5px; /* Khoảng cách nhỏ giữa các nút */
+    font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+}
+
+/* Style chung cho các nút (link) */
+.page-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+    height: 40px;
+    padding: 0 10px;
+    text-decoration: none;
+    color: #003580; /* Màu xanh đặc trưng của ngành du lịch */
+    background-color: #fff;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s ease-in-out;
+}
+
+/* Hiệu ứng khi di chuột qua nút */
+.page-link:hover {
+    background-color: #f0f6ff;
+    border-color: #003580;
+    color: #003580;
+    z-index: 1;
+}
+
+/* Trạng thái trang hiện tại (Active) */
+.page-link.active {
+    background-color: #003580;
+    border-color: #003580;
+    color: #ffffff;
+    cursor: default;
+    font-weight: bold;
+}
+
+/* Nút "Trước" và "Sau" */
+.page-link:first-child, 
+.page-link:last-child {
+    font-size: 18px;
+    font-weight: bold;
+    background-color: #f8f9fa;
+}
+
+/* Trạng thái nút bị vô hiệu hóa (nếu cần dùng sau này) */
+.page-link.disabled {
+    color: #6c757d;
+    pointer-events: none;
+    background-color: #fff;
+    border-color: #dee2e6;
+    opacity: 0.6;
+}
+
+/* Dấu ba chấm (...) */
+.dots {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    color: #6c757d;
+    font-weight: bold;
+}
+
+/* Responsive cho điện thoại */
+@media (max-width: 576px) {
+    .page-link {
+        min-width: 35px;
+        height: 35px;
+        font-size: 13px;
+        padding: 0 5px;
+    }
+}
+
+@media (max-width: 992px) {
+    .main-content {
+        grid-template-columns: 1fr;
+    }
+
+    .sidebar {
+        display: none;
+    }
+
+    .hotel-card {
+        flex-direction: column;
+    }
+
+    .hotel-img {
+        width: 100%;
+        height: 200px;
+    }
+
+    .hotel-pricing {
+        width: 100%;
+        border-left: none;
+        border-top: 1px solid #eee;
+    }
+}
