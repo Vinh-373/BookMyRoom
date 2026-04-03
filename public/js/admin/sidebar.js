@@ -18,6 +18,7 @@ document.querySelector('.sidebar-nav').addEventListener('click', function(e) {
                 const content = document.querySelector('.main-content');
                 if (content) {
                     content.innerHTML = html;
+                    window.dispatchEvent(new CustomEvent('adminPartialLoad', { detail: { page } }));
                 } else {
                     console.warn('Không tìm thấy .main-content, đường dẫn admin chưa cấu hình đúng.');
                 }

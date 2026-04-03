@@ -154,5 +154,4 @@
         </a>
 
     </nav>
-    <script src="public/js/admin/sidebar.js"></script>
 </aside>

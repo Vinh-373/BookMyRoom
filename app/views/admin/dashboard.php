@@ -1,289 +1,509 @@
-﻿<div class="px-12 py-10">
-<!-- Page Header -->
-<div class="mb-10">
-<h1 class="text-3xl font-extrabold text-primary dark:text-blue-400 tracking-tight mb-2">Bảng điều khiển hệ thống</h1>
-<p class="text-slate-500 font-medium">Chào mừng trở lại! Đây là tóm tắt hoạt động của Grand Plaza trong 30 ngày qua.</p>
+﻿<div class="page-container">
+    <!-- Chart.js Library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Header -->
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">Tổng quan hệ thống</h1>
+            <p class="page-subtitle">
+                Theo dõi hiệu suất kinh doanh, tình trạng đặt phòng và hoạt động khách sạn trên toàn hệ thống.
+            </p>
+        </div>
+
+        <div class="header-actions">
+            <button class="btn-secondary">Xuất báo cáo</button>
+            <button class="btn-primary">+ Tạo đơn đặt phòng</button>
+        </div>
+    </div>
+
+    <!-- Revenue Selection Tabs -->
+    <div class="stats-grid" style="margin-bottom: 20px;">
+        <div class="stat-card tab-button active" onclick="switchRevenueView('day')" style="cursor: pointer; text-align: center;">
+            <p class="stat-label">Theo Ngày</p>
+            <p style="font-size: 12px; margin: 10px 0 0 0;">Hôm nay</p>
+        </div>
+
+        <div class="stat-card tab-button" onclick="switchRevenueView('month')" style="cursor: pointer; text-align: center;">
+            <p class="stat-label">Theo Tháng</p>
+            <p style="font-size: 12px; margin: 10px 0 0 0;">Tháng này</p>
+        </div>
+
+        <div class="stat-card tab-button" onclick="switchRevenueView('year')" style="cursor: pointer; text-align: center;">
+            <p class="stat-label">Theo Năm</p>
+            <p style="font-size: 12px; margin: 10px 0 0 0;">Năm nay</p>
+        </div>
+
+        <div class="stat-card" style="text-align: center;">
+            <p class="stat-label">Tùy chọn</p>
+            <input type="date" id="revenue-date-picker" style="width: 100%; padding: 8px; margin-top: 5px;" onchange="loadCustomRevenue()">
+        </div>
+    </div>
+
+    <!-- Revenue Stats -->
+    <div class="stats-grid" id="revenue-stats">
+        <div class="stat-card">
+            <p class="stat-label">Tổng doanh thu</p>
+            <h2 id="total-revenue">0đ</h2>
+            <span class="trend">Từ các giao dịch</span>
+        </div>
+
+        <div class="stat-card">
+            <p class="stat-label">Doanh thu hoàn thành</p>
+            <h2 id="completed-revenue">0đ</h2>
+            <span class="trend up">Đã thanh toán</span>
+        </div>
+
+        <div class="stat-card">
+            <p class="stat-label">Đơn đặt phòng</p>
+            <h2 id="booking-count">0</h2>
+            <span class="trend">Số lượng đơn</span>
+        </div>
+
+        <div class="stat-card highlight">
+            <p class="stat-label">Khách hàng</p>
+            <h2 id="customer-count">0</h2>
+            <span class="trend">Khách hàng khác nhau</span>
+        </div>
+    </div>
+
+    <!-- Charts -->
+    <div class="dashboard-grid">
+        <div class="card">
+            <h3>Biểu đồ doanh thu</h3>
+            <p class="card-sub">Doanh thu theo thời gian</p>
+            <canvas id="revenue-chart" style="max-height: 300px;"></canvas>
+        </div>
+
+        <div class="card">
+            <h3>Doanh thu theo nguồn</h3>
+            <p class="card-sub">Phân bố theo kênh đặt phòng</p>
+            <div id="revenue-source-list" style="max-height: 300px; overflow-y: auto;">
+                <p style="text-align: center; color: #999;">Đang tải...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Top Hotels Chart -->
+    <div class="card">
+        <h3>Top khách sạn theo doanh thu</h3>
+        <p class="card-sub">Khách sạn có doanh thu cao nhất</p>
+        <canvas id="hotels-chart" style="max-height: 300px;"></canvas>
+    </div>
+
 </div>
-<!-- KPI Bento Grid -->
-<div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
-<!-- KPI Revenue -->
-<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-transparent hover:border-primary/5 transition-all">
-<div class="flex justify-between items-start mb-4">
-<div class="p-3 bg-primary-fixed rounded-xl text-primary">
-<span class="material-symbols-outlined" data-icon="payments">payments</span>
-</div>
-<span class="text-on-tertiary-container text-xs font-bold bg-on-tertiary-container/10 px-2 py-1 rounded-lg flex items-center">
-<span class="material-symbols-outlined text-xs mr-1" data-icon="trending_up">trending_up</span>
-                                +12.5%
-                            </span>
-</div>
-<p class="text-slate-500 text-sm font-medium mb-1">Doanh thu tháng này</p>
-<h3 class="text-3xl font-bold text-primary">2.450.000.000đ</h3>
-<p class="text-[11px] text-slate-400 mt-2 uppercase tracking-wider font-semibold">Dự kiến đạt: 3.2 tỷ đ</p>
-</div>
-<!-- KPI Bookings -->
-<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-transparent hover:border-primary/5 transition-all">
-<div class="flex justify-between items-start mb-4">
-<div class="p-3 bg-secondary-container rounded-xl text-secondary">
-<span class="material-symbols-outlined" data-icon="calendar_month">calendar_month</span>
-</div>
-<span class="text-on-tertiary-container text-xs font-bold bg-on-tertiary-container/10 px-2 py-1 rounded-lg flex items-center">
-<span class="material-symbols-outlined text-xs mr-1" data-icon="trending_up">trending_up</span>
-                                +8.2%
-                            </span>
-</div>
-<p class="text-slate-500 text-sm font-medium mb-1">Tổng lượt đặt phòng</p>
-<h3 class="text-3xl font-bold text-primary">1,284</h3>
-<p class="text-[11px] text-slate-400 mt-2 uppercase tracking-wider font-semibold">Tỷ lệ lấp đầy: 88%</p>
-</div>
-<!-- KPI Partners -->
-<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-transparent hover:border-primary/5 transition-all">
-<div class="flex justify-between items-start mb-4">
-<div class="p-3 bg-tertiary-fixed rounded-xl text-tertiary">
-<span class="material-symbols-outlined" data-icon="handshake">handshake</span>
-</div>
-<span class="text-on-error-container text-xs font-bold bg-error-container/20 px-2 py-1 rounded-lg flex items-center">
-<span class="material-symbols-outlined text-xs mr-1" data-icon="trending_down">trending_down</span>
-                                -2.1%
-                            </span>
-</div>
-<p class="text-slate-500 text-sm font-medium mb-1">Đối tác hoạt động</p>
-<h3 class="text-3xl font-bold text-primary">42</h3>
-<p class="text-[11px] text-slate-400 mt-2 uppercase tracking-wider font-semibold">Kênh OTA chủ lực: Agoda, Booking</p>
-</div>
-</div>
-<!-- Charts Section -->
-<div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-10">
-<!-- Line Chart Area -->
-<div class="lg:col-span-2 bg-surface-container-lowest p-8 rounded-xl shadow-sm overflow-hidden">
-<div class="flex justify-between items-center mb-8">
-<div>
-<h3 class="text-lg font-bold text-primary">Xu hướng Doanh thu &amp; Đặt phòng</h3>
-<p class="text-xs text-slate-400">Dữ liệu tổng hợp từ 01/10 - 30/10</p>
-</div>
-<div class="flex items-center space-x-2">
-<button class="px-4 py-1.5 text-xs font-bold bg-surface-container-low text-primary rounded-lg">30 ngày qua</button>
-<button class="px-4 py-1.5 text-xs font-bold text-slate-400 hover:bg-surface-container-low rounded-lg transition-colors">90 ngày qua</button>
-</div>
-</div>
-<!-- Visual Mock of Line Chart -->
-<div class="relative h-64 w-full">
-<div class="absolute inset-0 flex items-end justify-between px-2">
-<!-- Chart Grid Lines -->
-<div class="absolute inset-0 flex flex-col justify-between">
-<div class="w-full border-t border-slate-50"></div>
-<div class="w-full border-t border-slate-50"></div>
-<div class="w-full border-t border-slate-50"></div>
-<div class="w-full border-t border-slate-50"></div>
-<div class="w-full border-t border-slate-100"></div>
-</div>
-<!-- Bar/Path Simulation -->
-<div class="w-full h-full flex items-end justify-around pb-4">
-<div class="w-2 bg-primary/10 rounded-t h-[40%]"></div>
-<div class="w-2 bg-primary/10 rounded-t h-[55%]"></div>
-<div class="w-2 bg-primary/20 rounded-t h-[45%]"></div>
-<div class="w-2 bg-primary/30 rounded-t h-[70%]"></div>
-<div class="w-2 bg-primary/40 rounded-t h-[60%]"></div>
-<div class="w-2 bg-primary/50 rounded-t h-[85%]"></div>
-<div class="w-2 bg-primary rounded-t h-[75%]"></div>
-<div class="w-2 bg-primary/10 rounded-t h-[30%]"></div>
-<div class="w-2 bg-primary/20 rounded-t h-[50%]"></div>
-<div class="w-2 bg-primary/40 rounded-t h-[65%]"></div>
-<div class="w-2 bg-primary/60 rounded-t h-[90%]"></div>
-<div class="w-2 bg-primary/30 rounded-t h-[55%]"></div>
-</div>
-<!-- SVG Line Overlay Simulation -->
-<svg 
-  viewBox="0 0 800 256" 
-  class="absolute inset-0 h-64 w-full" 
-  preserveAspectRatio="none"
-  style="overflow: visible;"
->
-  <path 
-    d="M0 180 Q 50 150, 100 165 T 200 130 T 300 150 T 400 115 T 500 140 T 600 90 T 700 120 T 800 85" 
-    fill="none" 
-    stroke="#002045" 
-    stroke-linecap="round" 
-    stroke-width="3"
-  ></path>
-  
-  <path 
-    d="M0 210 Q 50 190, 100 200 T 200 165 T 300 195 T 400 150 T 500 180 T 600 110 T 700 140 T 800 60" 
-    fill="none" 
-    stroke="#00b47d" 
-    stroke-dasharray="4" 
-    stroke-linecap="round" 
-    stroke-width="2"
-  ></path>
-</svg>
-</div>
-</div>
-<div class="flex items-center justify-center space-x-8 mt-6">
-<div class="flex items-center">
-<span class="w-3 h-3 bg-primary rounded-full mr-2"></span>
-<span class="text-xs font-bold text-slate-600">Doanh thu (VNĐ)</span>
-</div>
-<div class="flex items-center">
-<span class="w-3 h-3 rounded-full mr-2" style="background-color: #00b47d;"></span>
-<span class="text-xs font-bold text-slate-600">Lượt đặt phòng</span>
-</div>
-</div>
-</div>
-<!-- Donut Chart Area -->
-<div class="bg-surface-container-lowest p-8 rounded-xl shadow-sm flex flex-col items-center">
-<div class="w-full text-left mb-8">
-<h3 class="text-lg font-bold text-primary">Nguồn đặt phòng</h3>
-<p class="text-xs text-slate-400">Phân bổ kênh bán hàng</p>
-</div>
-<div class="relative w-48 h-48 mb-8">
-<!-- Visual Mock of Donut Chart -->
-<svg class="w-full h-full transform -rotate-90" viewbox="0 0 36 36">
-<circle cx="18" cy="18" fill="transparent" r="15.915" stroke="#e6e8ea" stroke-width="4"></circle>
-<circle cx="18" cy="18" fill="transparent" r="15.915" stroke="#002045" stroke-dasharray="45 100" stroke-dashoffset="0" stroke-width="4"></circle>
-<circle cx="18" cy="18" fill="transparent" r="15.915" stroke="#00b47d" stroke-dasharray="30 100" stroke-dashoffset="-45" stroke-width="4"></circle>
-<circle cx="18" cy="18" fill="transparent" r="15.915" stroke="#86a0cd" stroke-dasharray="25 100" stroke-dashoffset="-75" stroke-width="4"></circle>
-</svg>
-<div class="absolute inset-0 flex flex-col items-center justify-center">
-<span class="text-2xl font-extrabold text-primary">100%</span>
-<span class="text-[10px] text-slate-400 font-bold uppercase">Tổng quan</span>
-</div>
-</div>
-<div class="w-full space-y-3">
-<div class="flex items-center justify-between">
-<div class="flex items-center">
-<span class="w-2.5 h-2.5 bg-primary rounded-full mr-2"></span>
-<span class="text-xs font-medium text-slate-600">OTA (Booking, Agoda)</span>
-</div>
-<span class="text-xs font-bold text-primary">45%</span>
-</div>
-<div class="flex items-center justify-between">
-<div class="flex items-center">
-<span class="w-2.5 h-2.5 bg-on-tertiary-container rounded-full mr-2"></span>
-<span class="text-xs font-medium text-slate-600">Trực tiếp (Website)</span>
-</div>
-<span class="text-xs font-bold text-primary">30%</span>
-</div>
-<div class="flex items-center justify-between">
-<div class="flex items-center">
-<span class="w-2.5 h-2.5 bg-on-primary-container rounded-full mr-2"></span>
-<span class="text-xs font-medium text-slate-600">Mạng xã hội</span>
-</div>
-<span class="text-xs font-bold text-primary">25%</span>
-</div>
-</div>
-</div>
-</div>
-<!-- Recent Activity & Table Section -->
-<div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
-<!-- Data Table -->
-<div class="xl:col-span-2 bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden">
-<div class="p-6 border-b border-slate-50 flex justify-between items-center">
-<h3 class="text-lg font-bold text-primary">Đặt phòng gần đây</h3>
-<button class="text-xs font-bold text-on-primary-container hover:text-primary transition-colors flex items-center">
-                                Xem tất cả <span class="material-symbols-outlined text-sm ml-1" data-icon="chevron_right">chevron_right</span>
-</button>
-</div>
-<div class="overflow-x-auto">
-<table class="w-full">
-<thead>
-<tr class="bg-surface-container-low/50">
-<th class="px-6 py-4 text-left text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">Khách hàng</th>
-<th class="px-6 py-4 text-left text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">Loại phòng</th>
-<th class="px-6 py-4 text-left text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">Ngày đến</th>
-<th class="px-6 py-4 text-left text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">Trạng thái</th>
-<th class="px-6 py-4 text-right text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">Giá trị</th>
-</tr>
-</thead>
-<tbody class="divide-y divide-slate-50">
-<tr class="hover:bg-surface-container-high/30 transition-colors">
-<td class="px-6 py-4">
-<div class="flex items-center">
-<div class="w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center text-secondary font-bold text-xs mr-3">NH</div>
-<span class="text-sm font-bold text-slate-700">Nguyễn Huy Hoàn</span>
-</div>
-</td>
-<td class="px-6 py-4 text-sm text-slate-600">Deluxe Sea View</td>
-<td class="px-6 py-4 text-sm text-slate-600">12/11/2023</td>
-<td class="px-6 py-4">
-<span class="px-3 py-1 bg-emerald-500 text-on-tertiary-container rounded-full text-[10px] font-bold">ĐÃ XÁC NHẬN</span>
-</td>
-<td class="px-6 py-4 text-right text-sm font-bold text-primary">4.250.000đ</td>
-</tr>
-<tr class="hover:bg-surface-container-high/30 transition-colors">
-<td class="px-6 py-4">
-<div class="flex items-center">
-<div class="w-8 h-8 rounded-full bg-primary-fixed flex items-center justify-center text-primary font-bold text-xs mr-3">TL</div>
-<span class="text-sm font-bold text-slate-700">Trần Lan Anh</span>
-</div>
-</td>
-<td class="px-6 py-4 text-sm text-slate-600">Executive Suite</td>
-<td class="px-6 py-4 text-sm text-slate-600">14/11/2023</td>
-<td class="px-6 py-4">
-<span class="px-3 py-1 bg-secondary-container text-secondary rounded-full text-[10px] font-bold">CHỜ THANH TOÁN</span>
-</td>
-<td class="px-6 py-4 text-right text-sm font-bold text-primary">8.900.000đ</td>
-</tr>
-<tr class="hover:bg-surface-container-high/30 transition-colors">
-<td class="px-6 py-4">
-<div class="flex items-center">
-<div class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center text-slate-500 font-bold text-xs mr-3">PM</div>
-<span class="text-sm font-bold text-slate-700">Phạm Minh Quân</span>
-</div>
-</td>
-<td class="px-6 py-4 text-sm text-slate-600">Standard King</td>
-<td class="px-6 py-4 text-sm text-slate-600">15/11/2023</td>
-<td class="px-6 py-4">
-<span class="px-3 py-1 bg-emerald-500 text-on-tertiary-container rounded-full text-[10px] font-bold">ĐÃ XÁC NHẬN</span>
-</td>
-<td class="px-6 py-4 text-right text-sm font-bold text-primary">2.100.000đ</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<!-- Recent Activity Timeline -->
-<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm">
-<h3 class="text-lg font-bold text-primary mb-6">Hoạt động hệ thống</h3>
-<div class="space-y-6">
-<div class="flex space-x-4">
-<div class="relative">
-<div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white z-10 relative">
-<span class="material-symbols-outlined text-sm" data-icon="add_task">add_task</span>
-</div>
-<div class="absolute top-8 left-1/2 -translate-x-1/2 w-0.5 h-10 bg-slate-100"></div>
-</div>
-<div class="flex-1">
-<p class="text-sm font-bold text-slate-700">Đặt phòng mới #GP-8829</p>
-<p class="text-xs text-slate-500 mt-1">Khách hàng John Doe vừa hoàn tất thanh toán từ Booking.com</p>
-<p class="text-[10px] text-slate-400 mt-1 uppercase font-bold tracking-wider">2 phút trước</p>
-</div>
-</div>
-<div class="flex space-x-4">
-<div class="relative">
-<div class="w-8 h-8 rounded-full bg-on-tertiary-container flex items-center justify-center text-white z-10 relative">
-<span class="material-symbols-outlined text-sm" data-icon="check_circle">check_circle</span>
-</div>
-<div class="absolute top-8 left-1/2 -translate-x-1/2 w-0.5 h-10 bg-slate-100"></div>
-</div>
-<div class="flex-1">
-<p class="text-sm font-bold text-slate-700">Check-out thành công</p>
-<p class="text-xs text-slate-500 mt-1">Phòng 402 đã được dọn dẹp và sẵn sàng đón khách.</p>
-<p class="text-[10px] text-slate-400 mt-1 uppercase font-bold tracking-wider">45 phút trước</p>
-</div>
-</div>
-<div class="flex space-x-4">
-<div class="relative">
-<div class="w-8 h-8 rounded-full bg-on-primary-container flex items-center justify-center text-white z-10 relative">
-<span class="material-symbols-outlined text-sm" data-icon="rate_review">rate_review</span>
-</div>
-</div>
-<div class="flex-1">
-<p class="text-sm font-bold text-slate-700">Đánh giá mới 5 sao</p>
-<p class="text-xs text-slate-500 mt-1">"Dịch vụ tuyệt vời, nhân viên rất thân thiện." - Khách hàng Lee Min-ho</p>
-<p class="text-[10px] text-slate-400 mt-1 uppercase font-bold tracking-wider">2 giờ trước</p>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
+
+<script>
+    // Revenue data storage
+    let currentRevenueView = 'month';
+    let revenueChartInstance = null;
+
+    // Format number to VND
+    function formatVND(number) {
+        return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(number);
+    }
+
+    // Switch revenue view
+    function switchRevenueView(period) {
+        currentRevenueView = period;
+        
+        // Update active tab
+        document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+        event.target.closest('.tab-button').classList.add('active');
+
+        loadRevenueData(period);
+    }
+
+    // Load revenue data
+    async function loadRevenueData(period) {
+        try {
+            let endpoint = `/BookMyRoom/api/revenue.php?action=getRevenueBy`;
+            
+            if (period === 'day') {
+                endpoint += `Day&date=${new Date().toISOString().split('T')[0]}`;
+            } else if (period === 'month') {
+                // For testing: Use March 2026 as current month data
+                // In production, this would use current month
+                let monthDate = new Date();
+                if (monthDate.getFullYear() === 2026 && monthDate.getMonth() === 3) {
+                    // We're in April 2026, use March data for demo
+                    endpoint += `Month&month=2026-03`;
+                } else {
+                    endpoint += `Month&month=${new Date().toISOString().slice(0, 7)}`;
+                }
+            } else if (period === 'year') {
+                endpoint += `Year&year=${new Date().getFullYear()}`;
+            }
+
+            const response = await fetch(endpoint);
+            const result = await response.json();
+
+            if (result.success) {
+                updateRevenueStats(result.data, period);
+                loadChartData(period);
+                loadRevenueBySource(period);
+                loadTopHotels(period);
+            }
+        } catch (error) {
+            console.error('Error loading revenue:', error);
+        }
+    }
+
+    // Update revenue stats on UI
+    function updateRevenueStats(data, period) {
+        document.getElementById('total-revenue').textContent = formatVND(data.totalRevenue || 0);
+        document.getElementById('completed-revenue').textContent = formatVND(data.completedRevenue || 0);
+        document.getElementById('booking-count').textContent = data.bookingCount || 0;
+        document.getElementById('customer-count').textContent = data.uniqueCustomers || data.bookingCount || 0;
+    }
+
+    // Load chart data
+    async function loadChartData(period) {
+        try {
+            let action = period === 'day' ? 'getDailyRevenueChart' : 
+                        period === 'month' ? 'getDailyRevenueChart' : 'getMonthlyRevenueChart';
+            
+            let params;
+            if (period === 'day') {
+                params = `&month=${new Date().toISOString().slice(0, 7)}`;
+            } else if (period === 'month') {
+                // Use March 2026 for April testing
+                let monthDate = new Date();
+                if (monthDate.getFullYear() === 2026 && monthDate.getMonth() === 3) {
+                    params = `&month=2026-03`;
+                } else {
+                    params = `&month=${new Date().toISOString().slice(0, 7)}`;
+                }
+            } else {
+                params = `&year=${new Date().getFullYear()}`;
+            }
+
+            const response = await fetch(`/BookMyRoom/api/revenue.php?action=${action}${params}`);
+            const result = await response.json();
+
+            if (result.success && result.data && result.data.labels) {
+                if (result.data.labels.length > 0) {
+                    displayChart(result.data);
+                } else {
+                    // No data for this period, show message
+                    const canvas = document.getElementById('revenue-chart');
+                    canvas.parentElement.innerHTML = '<p style="text-align: center; color: #999; padding: 40px 0;">Không có dữ liệu cho giai đoạn này</p>';
+                }
+            }
+        } catch (error) {
+            console.error('Error loading chart:', error);
+        }
+    }
+
+    // Display chart
+    function displayChart(chartData) {
+        const canvas = document.getElementById('revenue-chart');
+        const ctx = canvas.getContext('2d');
+
+        if (revenueChartInstance) {
+            revenueChartInstance.destroy();
+        }
+
+        // Create bar chart using Chart.js
+        revenueChartInstance = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: chartData.labels || [],
+                datasets: [
+                    {
+                        label: 'Doanh thu (VND)',
+                        data: chartData.data || [],
+                        backgroundColor: 'rgba(0, 123, 255, 0.6)',
+                        borderColor: 'rgba(0, 123, 255, 1)',
+                        borderWidth: 1,
+                        borderRadius: 4
+                    },
+                    {
+                        label: 'Số đơn đặt',
+                        data: chartData.counts || [],
+                        backgroundColor: 'rgba(40, 167, 69, 0.6)',
+                        borderColor: 'rgba(40, 167, 69, 1)',
+                        borderWidth: 1,
+                        yAxisID: 'y1',
+                        borderRadius: 4
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed.y !== null) {
+                                    if (context.dataset.yAxisID === 'y1') {
+                                        label += context.parsed.y;
+                                    } else {
+                                        label += formatVND(context.parsed.y);
+                                    }
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        type: 'linear',
+                        display: true,
+                        position: 'left',
+                        ticks: {
+                            callback: function(value) {
+                                return 'đ' + (value / 1000000).toFixed(0) + 'M';
+                            }
+                        }
+                    },
+                    y1: {
+                        type: 'linear',
+                        display: true,
+                        position: 'right',
+                        grid: {
+                            drawOnChartArea: false
+                        },
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // Load revenue by source
+    let sourceChartInstance = null;
+
+    async function loadRevenueBySource(period) {
+        try {
+            let date;
+            if (period === 'day') {
+                date = new Date().toISOString().split('T')[0];
+            } else if (period === 'month') {
+                let monthDate = new Date();
+                if (monthDate.getFullYear() === 2026 && monthDate.getMonth() === 3) {
+                    date = '2026-03'; // Use March for April testing
+                } else {
+                    date = monthDate.toISOString().slice(0, 7);
+                }
+            } else {
+                date = new Date().getFullYear();
+            }
+
+            const response = await fetch(`/BookMyRoom/api/revenue.php?action=getRevenueBySource&period=${period}&date=${date}`);
+            const result = await response.json();
+
+            if (result.success && result.data.sources && result.data.sources.length > 0) {
+                displaySourceChart(result.data);
+            }
+        } catch (error) {
+            console.error('Error loading revenue by source:', error);
+        }
+    }
+
+    // Display revenue source as pie chart
+    function displaySourceChart(sourceData) {
+        const container = document.getElementById('revenue-source-list');
+        
+        // Create canvas for pie chart
+        if (!document.getElementById('source-chart')) {
+            container.innerHTML = '<canvas id="source-chart" style="max-height: 300px;"></canvas>';
+        }
+
+        const canvas = document.getElementById('source-chart');
+        const ctx = canvas.getContext('2d');
+
+        if (sourceChartInstance) {
+            sourceChartInstance.destroy();
+        }
+
+        const sources = sourceData.sources || [];
+        const totalRevenue = sources.reduce((sum, s) => sum + (s.revenue || 0), 0);
+        const colors = [
+            'rgba(0, 123, 255, 0.7)',
+            'rgba(40, 167, 69, 0.7)',
+            'rgba(255, 193, 7, 0.7)',
+            'rgba(220, 53, 69, 0.7)',
+            'rgba(111, 66, 193, 0.7)',
+            'rgba(23, 162, 184, 0.7)'
+        ];
+
+        sourceChartInstance = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: sources.map(s => s.source || 'Unknown'),
+                datasets: [{
+                    data: sources.map(s => s.revenue || 0),
+                    backgroundColor: colors.slice(0, sources.length),
+                    borderColor: '#fff',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const percentage = ((context.parsed || 0) / totalRevenue * 100).toFixed(1);
+                                return context.label + ': ' + formatVND(context.parsed) + ' (' + percentage + '%)';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // Load top hotels
+    let hotelsChartInstance = null;
+
+    async function loadTopHotels(period) {
+        try {
+            let date;
+            if (period === 'day') {
+                date = new Date().toISOString().split('T')[0];
+            } else if (period === 'month') {
+                let monthDate = new Date();
+                if (monthDate.getFullYear() === 2026 && monthDate.getMonth() === 3) {
+                    date = '2026-03'; // Use March for April testing
+                } else {
+                    date = monthDate.toISOString().slice(0, 7);
+                }
+            } else {
+                date = new Date().getFullYear();
+            }
+
+            const response = await fetch(`/BookMyRoom/api/revenue.php?action=getTopHotels&period=${period}&date=${date}&limit=5`);
+            const result = await response.json();
+
+            if (result.success && result.data.hotels) {
+                displayHotelsChart(result.data.hotels);
+            }
+        } catch (error) {
+            console.error('Error loading top hotels:', error);
+        }
+    }
+
+    // Display top hotels as bar chart
+    function displayHotelsChart(hotels) {
+        const canvas = document.getElementById('hotels-chart');
+        const ctx = canvas.getContext('2d');
+
+        if (hotelsChartInstance) {
+            hotelsChartInstance.destroy();
+        }
+
+        hotelsChartInstance = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: hotels.map(h => h.hotelName || 'Unknown'),
+                datasets: [{
+                    label: 'Doanh thu (VND)',
+                    data: hotels.map(h => h.revenue || 0),
+                    backgroundColor: [
+                        'rgba(0, 123, 255, 0.7)',
+                        'rgba(40, 167, 69, 0.7)',
+                        'rgba(255, 193, 7, 0.7)',
+                        'rgba(220, 53, 69, 0.7)',
+                        'rgba(111, 66, 193, 0.7)'
+                    ],
+                    borderColor: [
+                        'rgba(0, 123, 255, 1)',
+                        'rgba(40, 167, 69, 1)',
+                        'rgba(255, 193, 7, 1)',
+                        'rgba(220, 53, 69, 1)',
+                        'rgba(111, 66, 193, 1)'
+                    ],
+                    borderWidth: 1,
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        position: 'top'
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return 'Doanh thu: ' + formatVND(context.parsed.x);
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        ticks: {
+                            callback: function(value) {
+                                return 'đ' + (value / 1000000).toFixed(0) + 'M';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // Load custom revenue by date
+    function loadCustomRevenue() {
+        const date = document.getElementById('revenue-date-picker').value;
+        if (!date) return;
+
+        // Switch to single day view
+        currentRevenueView = 'day';
+        document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.tab-button')[0].classList.add('active');
+
+        fetch(`/BookMyRoom/api/revenue.php?action=getRevenueByDay&date=${date}`)
+            .then(r => r.json())
+            .then(result => {
+                if (result.success) {
+                    updateRevenueStats(result.data, 'day');
+                    loadRevenueBySource('day');
+                    loadTopHotels('day');
+                }
+            });
+    }
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        loadRevenueData('month');
+    });
+</script>
+
+<style>
+    .tab-button {
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+    }
+
+    .tab-button.active {
+        background: #007bff !important;
+        color: white !important;
+        border-color: #0056b3;
+    }
+
+    .tab-button:hover {
+        border-color: #007bff;
+    }
+</style>

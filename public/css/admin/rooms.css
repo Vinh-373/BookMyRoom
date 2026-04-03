@@ -1,0 +1,75 @@
+.stats-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.stat-card {
+    background: white;
+    padding: 16px;
+    border-radius: 12px;
+}
+
+.stat-card.success { color: green; }
+.stat-card.primary { color: blue; }
+.stat-card.danger { color: red; }
+
+.filter-container {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.room-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.room-card {
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.room-img img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+
+.badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 4px 10px;
+    border-radius: 8px;
+    color: white;
+    font-size: 12px;
+}
+
+.available { background: green; }
+.booked { background: orange; }
+.maintenance { background: red; }
+
+.room-body {
+    padding: 12px;
+}
+
+.price {
+    font-weight: bold;
+    color: #007bff;
+}
+
+.room-info {
+    display: flex;
+    gap: 10px;
+    margin: 10px 0;
+}
+
+.room-actions {
+    display: flex;
+    justify-content: space-between;
+}

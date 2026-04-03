@@ -1,274 +1,309 @@
 <?php
-abstract class myModels extends Database
-{
-    protected $table; // ⚠️ BẮT BUỘC: class con phải khai báo tên bảng
+namespace Models;
 
-    public function __construct()
-    {
-        parent::__construct();
+// Load Database class
+require_once __DIR__ . '/../core/Database.php';
 
-        // Kiểm tra nếu chưa set table thì báo lỗi
-        if (empty($this->table)) {
-            die("Model chưa khai báo table");
-        }
+class myModels {
+    
+    protected $table;
+    protected $conn;
+
+    /**
+     * Constructor - Initialize database connection
+     */
+    public function __construct() {
+        $db = new \Database();
+        $this->conn = $db->conn;
     }
-    //myModels->select_array("categories", "*", ['status' => 1]);
-    function select_array($data = '*', $where = NULL, $order = NULL, $limit = NULL)
-    {
-        // 1. Kiểm tra đầu vào tối thiểu
-        if (empty($this->table)) {
-            return [];
-        }
 
-        $sql = "SELECT $data FROM $this->table";
-        $params = [];
-        $types = "";
-
-        // 2. Xử lý điều kiện WHERE (Giữ nguyên logic linh hoạt của bạn)
-        if ($where !== NULL && is_array($where)) {
-            $conditions = [];
-            foreach ($where as $field => $value) {
-                if (is_array($value)) {
-                    // Xử lý điều kiện IN (ví dụ: id IN (1,2,3))
-                    if (!empty($value)) {
-                        $placeholders = implode(',', array_fill(0, count($value), '?'));
-                        $conditions[] = "$field IN ($placeholders)";
-                        foreach ($value as $item) {
-                            $params[] = $item;
-                            $types .= is_int($item) ? 'i' : 's';
-                        }
+    /**
+     * Lấy mảng dữ liệu đơn giản
+     * Ví dụ: select_array('*', ['status' => 'active'])
+     */
+    public function select_array(string $select = '*', array $where = [], ?string $orderBy = null, ?int $limit = null): array {
+        try {
+            $sql = "SELECT {$select} FROM {$this->table}";
+            
+            // Xây dựng WHERE clause
+            if (!empty($where)) {
+                $conditions = [];
+                foreach ($where as $column => $value) {
+                    if ($value === null) {
+                        $conditions[] = "{$column} IS NULL";
+                    } else {
+                        $conditions[] = "{$column} = ?";
                     }
-                } else {
-                    // Xử lý điều kiện = 
-                    $conditions[] = "$field = ?";
-                    $params[] = $value;
-                    $types .= is_int($value) ? 'i' : 's';
                 }
-            }
-            if (!empty($conditions)) {
                 $sql .= " WHERE " . implode(" AND ", $conditions);
             }
-        }
-
-        // 3. BỔ SUNG: Xử lý ORDER BY (Sắp xếp)
-        // Ví dụ truyền vào: "id DESC" hoặc "price ASC, id DESC"
-        if ($order !== NULL) {
-            $sql .= " ORDER BY " . $order;
-        }
-
-        // 4. BỔ SUNG: Xử lý LIMIT (Phân trang hoặc giới hạn số lượng)
-        // Ví dụ truyền vào: 10 hoặc "0, 10"
-        if ($limit !== NULL) {
-            $sql .= " LIMIT " . $limit;
-        }
-
-        // 5. Chuẩn bị và thực thi truy vấn
-        $stmt = $this->conn->prepare($sql);
-        if ($stmt === false) {
-            error_log("Prepare failed: " . $this->conn->error . " | SQL: $sql");
+            
+            // ORDER BY
+            if ($orderBy) {
+                $sql .= " ORDER BY {$orderBy}";
+            }
+            
+            // LIMIT
+            if ($limit) {
+                $sql .= " LIMIT {$limit}";
+            }
+            
+            // Prepare statement
+            $stmt = $this->conn->prepare($sql);
+            
+            // Bind params
+            if (!empty($where)) {
+                $params = [];
+                $types = '';
+                foreach ($where as $column => $value) {
+                    if ($value !== null) {
+                        $params[] = $value;
+                        $types .= is_int($value) ? 'i' : 's';
+                    }
+                }
+                
+                if (!empty($params)) {
+                    $stmt->bind_param($types, ...$params);
+                }
+            }
+            
+            $stmt->execute();
+            $result = $stmt->get_result();
+            
+            return $result->fetch_all(MYSQLI_ASSOC);
+            
+        } catch (\Exception $e) {
             return [];
         }
-
-        // Bind parameters động
-        if (!empty($params)) {
-            $stmt->bind_param($types, ...$params);
-        }
-
-        $stmt->execute();
-        $result = $stmt->get_result();
-
-        // 6. Lấy dữ liệu trả về
-        $res_data = [];
-        while ($row = $result->fetch_assoc()) {
-            $res_data[] = $row;
-        }
-
-        $stmt->close();
-        return $res_data;
     }
-    /*
-    $model->join_multi(
-    joins: [
-        [
-            'table' => 'customers',
-            'type'  => 'LEFT',
-            'on'    => 'orders.customer_id = customers.id'
-        ],
-        [
-            'table' => 'districts',
-            'type'  => 'LEFT',
-            'on'    => 'orders.district_id = districts.id'
-        ]
-    ],
-    select: 'orders.id, customers.name, districts.name as district_name',
-    where: [
-        'orders.id' => [1,2,3]
-    ]
-);
-    */
-    public function join_multi($joins = [], $select = '*', $where = [], $orderBy = null, $limit = null)
-    {
-        $sql = "SELECT $select FROM $this->table";
-        $params = [];
-        $types = '';
 
-        // 1. JOIN
-        foreach ($joins as $join) {
-            $table = $join['table'] ?? '';
-            $type = strtoupper($join['type'] ?? 'INNER');
-            $on   = $join['on'] ?? '';
-
-            // Validate cơ bản để tránh SQL Injection
-            if (!preg_match('/^[a-zA-Z0-9_\.= ]+$/', $on)) {
-                die("JOIN condition không hợp lệ");
-            }
-
-            $sql .= " $type JOIN $table ON $on";
-        }
-
-        // 2. WHERE
-        if (!empty($where)) {
-            $conditions = [];
-
-            foreach ($where as $field => $value) {
-                if (is_array($value)) {
-                    // IN (...)
-                    $placeholders = implode(',', array_fill(0, count($value), '?'));
-                    $conditions[] = "$field IN ($placeholders)";
-
-                    foreach ($value as $v) {
-                        $params[] = $v;
-                        $types .= is_int($v) ? 'i' : 's';
+    /**
+     * Join nhiều bảng
+     * Ví dụ:
+     * join_multi(
+     *     joins: [
+     *         ['table' => 'cities', 'type' => 'LEFT', 'on' => 'hotels.cityId = cities.id'],
+     *         ['table' => 'users', 'type' => 'LEFT', 'on' => 'hotels.partnerId = users.id']
+     *     ],
+     *     select: 'hotels.id, hotels.name, cities.name as cityName',
+     *     where: ['hotels.deletedAt' => null],
+     *     orderBy: 'hotels.createdAt DESC'
+     * )
+     * @param string|int|null $limit SQL LIMIT: số hoặc "offset, count"
+     */
+    public function join_multi(array $joins = [], string $select = '*', array $where = [], ?string $orderBy = null, $limit = null): array {
+        try {
+            $sql = "SELECT {$select} FROM {$this->table}";
+            
+            // Xây dựng JOIN clauses
+            if (!empty($joins)) {
+                foreach ($joins as $join) {
+                    $type = $join['type'] ?? 'LEFT';
+                    $table = $join['table'] ?? '';
+                    $on = $join['on'] ?? '';
+                    
+                    if ($table && $on) {
+                        $sql .= " {$type} JOIN {$table} ON {$on}";
                     }
+                }
+            }
+            
+            // Xây dựng WHERE clause
+            if (!empty($where)) {
+                $conditions = [];
+                $values = [];
+                $types = '';
+                
+                foreach ($where as $column => $value) {
+                    if ($value === null) {
+                        $conditions[] = "{$column} IS NULL";
+                    } else {
+                        $conditions[] = "{$column} = ?";
+                        $values[] = $value;
+                        $types .= is_int($value) ? 'i' : 's';
+                    }
+                }
+                
+                if (!empty($conditions)) {
+                    $sql .= " WHERE " . implode(" AND ", $conditions);
+                }
+            }
+            
+            // ORDER BY
+            if ($orderBy) {
+                $sql .= " ORDER BY {$orderBy}";
+            }
+            
+            // LIMIT (int hoặc chuỗi "offset, count")
+            if ($limit !== null && $limit !== '') {
+                $sql .= ' LIMIT ' . (is_int($limit) ? (string) $limit : $limit);
+            }
+            
+            // Prepare statement
+            $stmt = $this->conn->prepare($sql);
+            
+            // Bind params if any
+            if (!empty($values)) {
+                $stmt->bind_param($types, ...$values);
+            }
+            
+            $stmt->execute();
+            $result = $stmt->get_result();
+            
+            return $result->fetch_all(MYSQLI_ASSOC);
+            
+        } catch (\Exception $e) {
+            error_log("SQL Error: " . $e->getMessage());
+            return [];
+        }
+    }
+
+    /**
+     * Insert dữ liệu
+     */
+    public function insert(array $data = []): array {
+        try {
+            if (empty($data) || !is_array($data)) {
+                return ['success' => false, 'error' => 'No data provided'];
+            }
+            
+            $columns = implode(', ', array_keys($data));
+            $placeholders = implode(', ', array_fill(0, count($data), '?'));
+            $values = array_values($data);
+            
+            $sql = "INSERT INTO {$this->table} ({$columns}) VALUES ({$placeholders})";
+            
+            $stmt = $this->conn->prepare($sql);
+            
+            // Build type string
+            $types = '';
+            foreach ($values as $value) {
+                $types .= is_int($value) ? 'i' : 's';
+            }
+            
+            $stmt->bind_param($types, ...$values);
+            $stmt->execute();
+            
+            return ['success' => true, 'id' => $this->conn->insert_id, 'affectedRows' => $stmt->affected_rows];
+            
+        } catch (\Exception $e) {
+            return ['success' => false, 'error' => $e->getMessage()];
+        }
+    }
+
+    /**
+     * Update dữ liệu
+     */
+    public function update(array $data = [], array $where = []): array {
+        try {
+            if (empty($data) || !is_array($data) || empty($where) || !is_array($where)) {
+                return ['success' => false, 'error' => 'Missing data or conditions'];
+            }
+            
+            $sets = [];
+            $values = [];
+            $types = '';
+            
+            foreach ($data as $column => $value) {
+                $sets[] = "{$column} = ?";
+                $values[] = $value;
+                $types .= is_int($value) ? 'i' : 's';
+            }
+            
+            $conditions = [];
+            foreach ($where as $column => $value) {
+                if ($value === null) {
+                    $conditions[] = "{$column} IS NULL";
                 } else {
-                    // =
-                    $conditions[] = "$field = ?";
-                    $params[] = $value;
+                    $conditions[] = "{$column} = ?";
+                    $values[] = $value;
                     $types .= is_int($value) ? 'i' : 's';
                 }
             }
-
+            
+            $sql = "UPDATE {$this->table} SET " . implode(', ', $sets);
             $sql .= " WHERE " . implode(" AND ", $conditions);
-        }
-
-        // 3. ORDER BY
-        if ($orderBy) {
-            $sql .= " ORDER BY $orderBy";
-        }
-
-        // 4. LIMIT
-        if ($limit) {
-            $sql .= " LIMIT $limit";
-        }
-
-        // 5. Prepare & Execute
-        $stmt = $this->conn->prepare($sql);
-        if ($stmt === false) {
-            die("SQL Error: " . $this->conn->error);
-        }
-
-        if (!empty($params)) {
-            $stmt->bind_param($types, ...$params);
-        }
-
-        $stmt->execute();
-        $result = $stmt->get_result();
-
-        return $result->fetch_all(MYSQLI_ASSOC);
-    }
-    function insert($table, $data = NULL)
-    {
-        $fields = array_keys($data);
-        $field_list = implode(',', $fields);
-        $values = array_values($data);
-        $qr = str_repeat('?,', count($values) - 1) . '?';
-        $sql = "INSERT INTO $table ($field_list) VALUES ($qr)";
-
-        $stmt = $this->conn->prepare($sql);
-        if ($stmt->execute($values)) {
-            return json_encode([
-                "type" => "success",
-                "message" => "isert success",
-                "data" => $this->conn->insert_id
-            ]);
-        } else {
-            return  json_encode([
-                "type" => "error",
-                "message" => "insert failed: " . $this->conn->error
-            ]);
+            
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bind_param($types, ...$values);
+            $stmt->execute();
+            
+            return ['success' => true, 'affectedRows' => $stmt->affected_rows];
+            
+        } catch (\Exception $e) {
+            return ['success' => false, 'error' => $e->getMessage()];
         }
     }
 
-    function update($data = NULL, $where = NULL)
-    {
-        // Kiểm tra đầu vào
-        if (empty($this->table) || !is_array($data) || empty($data) || $where === NULL) {
-            return json_encode([
-                "type" => "error",
-                "message" => "Dữ liệu không hợp lệ hoặc thiếu điều kiện WHERE"
-            ]);
-        }
-
-        // Xây dựng danh sách cột và giá trị cần cập nhật
-        $set = [];
-        $params = [];
-        foreach ($data as $field => $value) {
-            $set[] = "$field = ?";
-            $params[] = $value;
-        }
-        $set_clause = implode(", ", $set);
-
-        // Xây dựng điều kiện WHERE
-        $where_conditions = [];
-        foreach ($where as $field => $value) {
-            $where_conditions[] = "$field = ?";
-            $params[] = $value;
-        }
-        $where_clause = implode(" AND ", $where_conditions);
-
-        // Chuẩn bị câu SQL
-        $sql = "UPDATE $this->table SET $set_clause WHERE $where_clause";
-        $stmt = $this->conn->prepare($sql);
-
-        if ($stmt === false) {
-            return json_encode([
-                "type" => "error",
-                "message" => "Prepare failed: " . $this->conn->error
-            ]);
-        }
-
-        // Bind parameters
-        if (!empty($params)) {
-            $types = str_repeat('s', count($params)); // Giả định tất cả là string, điều chỉnh nếu cần
-            $bind_params = array_merge([$types], $params);
-            $ref_params = [];
-            foreach ($params as $key => $value) {
-                $ref_params[$key] = &$params[$key];
+    /**
+     * Delete dữ liệu
+     */
+    public function delete(array $where = []): array {
+        try {
+            if (empty($where) || !is_array($where)) {
+                return ['success' => false, 'error' => 'Missing conditions'];
             }
-            call_user_func_array([$stmt, 'bind_param'], array_merge([$types], $ref_params));
-        }
-
-        // Thực thi và trả kết quả
-        if ($stmt->execute()) {
-            $affected_rows = $stmt->affected_rows;
-            $stmt->close();
-            if ($affected_rows === 0) {
-                return json_encode([
-                    "type" => "warning",
-                    "message" => "No rows updated"
-                ]);
+            
+            $conditions = [];
+            $values = [];
+            $types = '';
+            
+            foreach ($where as $column => $value) {
+                if ($value === null) {
+                    $conditions[] = "{$column} IS NULL";
+                } else {
+                    $conditions[] = "{$column} = ?";
+                    $values[] = $value;
+                    $types .= is_int($value) ? 'i' : 's';
+                }
             }
-            return json_encode([
-                "type" => "success",
-                "message" => "Update success",
-                "data" => $affected_rows
-            ]);
-        } else {
-            $stmt->close();
-            return json_encode([
-                "type" => "error",
-                "message" => "Update failed: " . $stmt->error
-            ]);
+            
+            $sql = "DELETE FROM {$this->table} WHERE " . implode(" AND ", $conditions);
+            
+            $stmt = $this->conn->prepare($sql);
+            if (!empty($values)) {
+                $stmt->bind_param($types, ...$values);
+            }
+            $stmt->execute();
+            
+            return ['success' => true, 'affectedRows' => $stmt->affected_rows];
+            
+        } catch (\Exception $e) {
+            return ['success' => false, 'error' => $e->getMessage()];
+        }
+    }
+
+    /**
+     * Lấy kết nối database
+     */
+    public function getConnection(): \mysqli {
+        return $this->conn;
+    }
+
+    /**
+     * Search hotels
+     */
+    public function searchHotels(string $pattern): array {
+        try {
+            $sql = "SELECT hotels.id, hotels.hotelName, hotels.rating, hotels.address,
+                           cities.name as cityName, users.email as partnerEmail
+                    FROM hotels
+                    LEFT JOIN cities ON hotels.cityId = cities.id
+                    LEFT JOIN users ON hotels.partnerId = users.id
+                    WHERE (hotels.hotelName LIKE ? OR hotels.address LIKE ?)
+                    AND hotels.deletedAt IS NULL
+                    ORDER BY hotels.hotelName
+                    LIMIT 20";
+            
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bind_param('ss', $pattern, $pattern);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            
+            return $result->fetch_all(MYSQLI_ASSOC);
+            
+        } catch (\Exception $e) {
+            return [];
         }
     }
 }

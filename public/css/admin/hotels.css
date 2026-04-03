@@ -1,0 +1,137 @@
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.page-title {
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.page-subtitle {
+    color: #6b7280;
+    font-size: 14px;
+}
+
+.btn-primary {
+    background: #0f172a;
+    color: white;
+    padding: 10px 16px;
+    border-radius: 8px;
+    border: none;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.stat-card {
+    background: white;
+    padding: 16px;
+    border-radius: 12px;
+}
+
+.stat-card.highlight {
+    background: #0f172a;
+    color: white;
+}
+
+.filter-bar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.filter-bar input, .filter-bar select {
+    padding: 8px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+.table-container {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+}
+
+thead {
+    background: #f3f4f6;
+}
+
+.progress {
+    background: #eee;
+    height: 6px;
+    border-radius: 6px;
+    margin-bottom: 4px;
+}
+
+.progress-bar {
+    height: 6px;
+    background: #10b981;
+    border-radius: 6px;
+}
+
+.status {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+}
+
+.status.active {
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+.status.pending {
+    background: #fef9c3;
+    color: #ca8a04;
+}
+
+.status.pause {
+    background: #e5e7eb;
+    color: #6b7280;
+}
+
+.pagination {
+    margin-top: 16px;
+    text-align: right;
+}
+
+.pagination button {
+    margin: 2px;
+    padding: 6px 10px;
+    border-radius: 6px;
+    border: none;
+}
+
+.pagination .active {
+    background: #0f172a;
+    color: white;
+}
+.btn-secondary {
+    background: #e5e7eb;
+    color: #333;
+    border-radius: 8px;
+    padding: 8px 14px;
+    border: none;
+    cursor: pointer;
+}
+
+.filter-bar button {
+    height: 38px;
+}

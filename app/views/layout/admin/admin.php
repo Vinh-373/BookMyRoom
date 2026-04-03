@@ -4,94 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel</title>
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-    <script id="tailwind-config">
-      tailwind.config = {
-        darkMode: "class",
-        theme: {
-          extend: {
-            colors: {
-              "primary-fixed-dim": "#adc7ff",
-              "on-error": "#ffffff",
-              "error": "#ba1a1a",
-              "surface": "#f7f9fb",
-              "on-tertiary-fixed-variant": "#7c2e00",
-              "secondary": "#305ea4",
-              "surface-dim": "#d8dadc",
-              "tertiary-fixed": "#ffdbcc",
-              "on-primary-container": "#fefcff",
-              "on-background": "#191c1e",
-              "on-secondary-fixed": "#001b3f",
-              "tertiary": "#9e3d00",
-              "on-secondary": "#ffffff",
-              "tertiary-fixed-dim": "#ffb695",
-              "surface-container-low": "#f2f4f6",
-              "on-primary": "#ffffff",
-              "secondary-container": "#87b1fd",
-              "on-error-container": "#93000a",
-              "primary-fixed": "#d8e2ff",
-              "on-tertiary-container": "#fffbff",
-              "background": "#f7f9fb",
-              "outline-variant": "#c1c6d7",
-              "surface-container-high": "#e6e8ea",
-              "surface-bright": "#f7f9fb",
-              "surface-container-highest": "#e0e3e5",
-              "on-tertiary-fixed": "#351000",
-              "tertiary-container": "#c64f00",
-              "on-secondary-container": "#044287",
-              "secondary-fixed": "#d7e3ff",
-              "outline": "#717786",
-              "on-tertiary": "#ffffff",
-              "inverse-surface": "#2d3133",
-              "surface-variant": "#e0e3e5",
-              "primary-container": "#0070ea",
-              "surface-tint": "#005bc0",
-              "on-primary-fixed": "#001a41",
-              "on-secondary-fixed-variant": "#0c458b",
-              "on-surface": "#191c1e",
-              "inverse-on-surface": "#eff1f3",
-              "inverse-primary": "#adc7ff",
-              "surface-container-lowest": "#ffffff",
-              "secondary-fixed-dim": "#abc7ff",
-              "on-surface-variant": "#414754",
-              "on-primary-fixed-variant": "#004493",
-              "error-container": "#ffdad6",
-              "surface-container": "#eceef0",
-              "primary": "#0059bb"
-            },
-            fontFamily: {
-              "headline": ["Manrope"],
-              "body": ["Inter"],
-              "label": ["Inter"]
-            },
-            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
-          },
-        },
-      }
-    </script>
-    <style>
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    <?php
+    $adminPublicBase = '/BookMyRoom/';
+    if (defined('BASE_URL')) {
+        $path = parse_url(BASE_URL, PHP_URL_PATH);
+        if (is_string($path) && $path !== '' && $path !== '/') {
+            $adminPublicBase = rtrim($path, '/') . '/';
         }
-        body { font-family: 'Inter', sans-serif; }
-        h1, h2, h3 { font-family: 'Manrope', sans-serif; }
-    </style>
-    <style>
-    html, body {
-      height: 100%;
-      margin: 0;
-      min-height: 100dvh;
-      overflow: hidden;
     }
-
-    body {
-      font-family: 'Inter', sans-serif;
-      background-color: #f7f9fb;
-    }
-  </style>
-    <link rel="stylesheet" href="../../../../public/css/admin/admin.css">
+    $adminPublicBaseEsc = htmlspecialchars($adminPublicBase, ENT_QUOTES, 'UTF-8');
+    ?>
+    <link rel="stylesheet" href="<?php echo $adminPublicBaseEsc; ?>public/css/admin/variables.css">
+    <link rel="stylesheet" href="<?php echo $adminPublicBaseEsc; ?>public/css/admin/main.css">
+    <link rel="stylesheet" href="<?php echo $adminPublicBaseEsc; ?>public/css/admin/admin.css">
+    <link rel="stylesheet" href="<?php echo $adminPublicBaseEsc; ?>public/css/admin/hotels.css">
+    <link rel="stylesheet" href="<?php echo $adminPublicBaseEsc; ?>public/css/admin/rooms.css">
+    <link rel="stylesheet" href="<?php echo $adminPublicBaseEsc; ?>public/css/admin/bookings.css">
+    <link rel="stylesheet" href="<?php echo $adminPublicBaseEsc; ?>public/css/admin/settings.css">
+    <link rel="stylesheet" href="<?php echo $adminPublicBaseEsc; ?>public/css/admin/dashboard.css">
 </head>
 <body class="bg-background text-on-background antialiased">
 <?php
@@ -102,7 +34,17 @@ require_once 'sidebar.php';
 require_once 'header.php';
 ?>
 
-<main class="main-content" style="margin-left: 240px; margin-top: 70px; width: calc(100% - 240px); min-height: calc(100dvh - 70px); background-color: #f7f9fb; box-sizing: border-box; overflow-y: auto;">
+<?php
+// Detect current page from viewFile
+$pageName = 'dashboard';
+if (isset($viewFile)) {
+    preg_match('/admin\/([a-z_]+)\.php/', $viewFile, $matches);
+    if (isset($matches[1])) {
+        $pageName = $matches[1];
+    }
+}
+?>
+<main class="main-content" data-page="<?php echo $pageName; ?>" style="margin-left: 240px; margin-top: 70px; width: calc(100% - 240px); min-height: calc(100dvh - 70px); background-color: #f7f9fb; box-sizing: border-box; overflow-y: auto;">
 <?php
 if (isset($viewFile) && file_exists($viewFile)) {
     require_once $viewFile;
@@ -111,6 +53,22 @@ if (isset($viewFile) && file_exists($viewFile)) {
 }
 ?>
 </main>
-<script src="../../../../public/js/admin/sidebar.js"></script>
+
+<?php
+$apiBasePath = rtrim($adminPublicBase, '/') . '/api';
+$apiBasePathJson = json_encode($apiBasePath, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);
+?>
+<!-- Trùng khớp với BASE_URL (App.php); JS dùng cho fetch API, tránh URL /api sai khi suy từ script.src -->
+<script>window.BOOKMYROOM_API_BASE = <?php echo $apiBasePathJson; ?>;</script>
+
+<!-- Admin Scripts: đường dẫn tuyệt đối từ web root (tránh resolve sai từ index.php?url=...) -->
+<script src="<?php echo $adminPublicBaseEsc; ?>public/js/admin/sidebar.js"></script>
+<script src="<?php echo $adminPublicBaseEsc; ?>public/js/admin/utils.js"></script>
+<script src="<?php echo $adminPublicBaseEsc; ?>public/js/admin/init.js"></script>
+<script src="<?php echo $adminPublicBaseEsc; ?>public/js/admin/hotels.js"></script>
+<script src="<?php echo $adminPublicBaseEsc; ?>public/js/admin/rooms.js"></script>
+<script src="<?php echo $adminPublicBaseEsc; ?>public/js/admin/bookings.js"></script>
+<script src="<?php echo $adminPublicBaseEsc; ?>public/js/admin/settings.js"></script>
+<script src="<?php echo $adminPublicBaseEsc; ?>public/js/admin/dashboard.js"></script>
 </body>
 </html>

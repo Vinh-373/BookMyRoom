@@ -35,3 +35,18 @@
         </div>
     </div>
 </header>
+
+<script>
+    // Load user info from localStorage and update header
+    document.addEventListener('DOMContentLoaded', function() {
+        const savedName = localStorage.getItem('userFullName');
+        const savedEmail = localStorage.getItem('userEmail');
+
+        if (savedName) {
+            document.querySelector('.user-name').textContent = savedName;
+        }
+        if (savedEmail) {
+            document.querySelector('.user-email').textContent = savedEmail;
+        }
+    });
+</script>
