@@ -1,0 +1,344 @@
+/* --- SCOPED PORTFOLIO CSS --- */
+.portfolio-wrapper {
+    padding: 24px;
+    position: relative;
+    min-height: 100vh;
+}
+
+.portfolio-wrapper .dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+}
+
+.portfolio-wrapper .welcome-msg h1 { 
+    font-size: 1.8rem; 
+    font-weight: 700;
+    color: #101828;
+    margin-bottom: 8px; 
+}
+.portfolio-wrapper .welcome-msg p { color: #667085; }
+
+.portfolio-wrapper .btn-add-property {
+    background: #2261E0;
+    color: #fff;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.portfolio-wrapper .btn-add-property:hover { background: #1a4db3; }
+
+/* Hotel Grid */
+.portfolio-wrapper .hotel-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 24px;
+    padding-bottom: 120px; /* Tạo khoảng trống để không bị Bottom Bar đè */
+}
+
+.portfolio-wrapper .hotel-card {
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #EAECF0;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.portfolio-wrapper .hotel-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 16px -4px rgba(0, 0, 0, 0.08);
+}
+
+.portfolio-wrapper .card-thumb {
+    position: relative;
+    height: 180px;
+}
+.portfolio-wrapper .card-thumb img { width: 100%; height: 100%; object-fit: cover; }
+
+.portfolio-wrapper .btn-more {
+    position: absolute; top: 12px; right: 12px;
+    background: rgba(255,255,255,0.9);
+    border: none; border-radius: 50%; width: 32px; height: 32px; cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.portfolio-wrapper .card-body { padding: 20px; }
+.portfolio-wrapper .card-body h3 { font-size: 1.2rem; margin-bottom: 8px; color: #101828; }
+.portfolio-wrapper .location { font-size: 0.85rem; color: #667085; margin-bottom: 16px; }
+
+.portfolio-wrapper .card-stats {
+    display: flex; gap: 12px; margin-bottom: 20px;
+}
+
+.portfolio-wrapper .stat-box {
+    flex: 1;
+    background: #F9FAFB;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #F2F4F7;
+}
+.portfolio-wrapper .stat-box .label { font-size: 0.65rem; font-weight: 700; color: #667085; display: block; }
+.portfolio-wrapper .stat-box .val { font-size: 1rem; font-weight: 600; color: #101828; margin-top: 4px; display: block; }
+
+.portfolio-wrapper .btn-manage {
+    display: block;
+    text-align: center;
+    background: #F2F4F7;
+    color: #344054;
+    text-decoration: none;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: 0.2s;
+}
+.portfolio-wrapper .btn-manage:hover { background: #EAECF0; color: #101828; }
+
+/* Empty State */
+.portfolio-wrapper .empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px;
+    background: #fff;
+    border-radius: 12px;
+    border: 2px dashed #EAECF0;
+}
+
+/* --- GLOBAL STATS BAR (Sticky Bottom) --- */
+.portfolio-wrapper .global-stats-bar {
+    position: fixed;
+    bottom: 24px;
+    /* Tự động tính toán dựa trên độ rộng Sidebar của bạn */
+    left: calc(var(--sidebar-width, 260px) + 24px); 
+    right: 24px;
+    background: #fff;
+    padding: 14px 28px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    border: 1px solid #EAECF0;
+    z-index: 998;
+}
+
+.portfolio-wrapper .stat-group { display: flex; align-items: center; gap: 14px; }
+.portfolio-wrapper .stat-icon { font-size: 1.3rem; background: #F9FAFB; padding: 10px; border-radius: 12px; }
+.portfolio-wrapper .stat-info .label { font-size: 0.65rem; font-weight: 700; color: #667085; }
+.portfolio-wrapper .stat-info .value { display: block; font-size: 1.2rem; font-weight: 700; color: #101828; }
+
+.portfolio-wrapper .portfolio-health { display: flex; align-items: center; gap: 16px; flex: 0.4; }
+.portfolio-wrapper .health-meta { text-align: right; min-width: 120px; }
+.portfolio-wrapper .health-meta .percentage { font-weight: 700; font-size: 1rem; color: #2261E0; }
+
+.portfolio-wrapper .progress-bar {
+    flex: 1; height: 8px; background: #EAECF0; border-radius: 10px; overflow: hidden;
+}
+.portfolio-wrapper .progress-fill { height: 100%; background: #2261E0; border-radius: 10px; }
+
+.portfolio-wrapper .btn-download {
+    background: #F9FAFB; border: 1px solid #EAECF0; padding: 8px; border-radius: 8px; cursor: pointer; transition: 0.2s;
+}
+.portfolio-wrapper .btn-download:hover { background: #F2F4F7; }
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .portfolio-wrapper .global-stats-bar {
+        left: 24px; /* Tràn lấp khi không có sidebar trên mobile */
+    }
+}
+
+/* Custom Modal Styling - Scoped to Portfolio */
+
+.portfolio-wrapper .custom-modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    align-items: center;
+    justify-content: center;
+}
+
+.portfolio-wrapper .modal-content {
+    background-color: #fff;
+    width: 90%;
+    max-width: 600px;
+    border-radius: 16px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    animation: slideInPortfolio 0.3s ease-out;
+}
+
+@keyframes slideInPortfolio {
+    from { transform: translateY(-20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.portfolio-wrapper .modal-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid #edf2f7;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.portfolio-wrapper .modal-header h3 { 
+    font-size: 1.25rem; 
+    color: #1a202c; 
+    margin: 0; 
+}
+
+.portfolio-wrapper .close-modal {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #a0aec0;
+    cursor: pointer;
+}
+
+.portfolio-wrapper .modal-body { 
+    padding: 24px; 
+}
+
+.portfolio-wrapper .form-row { 
+    margin-bottom: 16px; 
+}
+
+.portfolio-wrapper .form-row label { 
+    display: block; 
+    font-size: 0.875rem; 
+    font-weight: 600; 
+    color: #4a5568; 
+    margin-bottom: 6px; 
+}
+
+.portfolio-wrapper .form-row input, 
+.portfolio-wrapper .form-row select, 
+.portfolio-wrapper .form-row textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 1rem;
+}
+
+.portfolio-wrapper .form-grid { 
+    display: grid; 
+    grid-template-columns: 1fr 1fr; 
+    gap: 16px; 
+}
+
+.portfolio-wrapper .modal-footer {
+    padding: 16px 24px;
+    background-color: #f8fafc;
+    border-bottom-left-radius: 16px;
+    border-bottom-right-radius: 16px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.portfolio-wrapper .btn-cancel { 
+    padding: 10px 20px; 
+    background: #fff; 
+    border: 1px solid #e2e8f0; 
+    border-radius: 8px; 
+    cursor: pointer; 
+}
+
+.portfolio-wrapper .btn-submit { 
+    padding: 10px 20px; 
+    background: #2261E0; 
+    color: #fff; 
+    border: none; 
+    border-radius: 8px; 
+    cursor: pointer; 
+    font-weight: 600; 
+}
+
+.portfolio-wrapper .btn-submit:hover { 
+    background: #1a4db3; 
+}
+
+.portfolio-wrapper .card-thumb {
+    position: relative;
+}
+
+.portfolio-wrapper .hotel-action-menu {
+    display: none;
+    position: absolute;
+    top: 45px;
+    right: 10px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    z-index: 100;
+    min-width: 180px;
+    padding: 8px 0;
+    border: 1px solid #edf2f7;
+}
+
+.portfolio-wrapper .hotel-action-menu a {
+    display: block;
+    padding: 10px 16px;
+    color: #4a5568;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: background 0.2s;
+}
+
+.portfolio-wrapper .hotel-action-menu a:hover {
+    background: #f7fafc;
+}
+
+.portfolio-wrapper .hotel-action-menu .divider {
+    height: 1px;
+    background: #edf2f7;
+    margin: 4px 0;
+}
+
+.portfolio-wrapper .hotel-action-menu .text-danger {
+    color: #e53e3e;
+}
+
+/*  */
+.portfolio-wrapper .hotel-status-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    z-index: 10;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    pointer-events: none;
+}
+
+.portfolio-wrapper .badge-active {
+    background-color: rgba(18, 183, 106, 0.9);
+    color: white;
+}
+
+.portfolio-wrapper .badge-pending {
+    background-color: rgba(247, 144, 9, 0.9);
+    color: white;
+}
+
+.portfolio-wrapper .badge-stopped {
+    background-color: rgba(240, 68, 56, 0.9);
+    color: white;
+}
+
+.portfolio-wrapper .hotel-card.status-stopped img {
+    filter: grayscale(100%);
+    opacity: 0.7;
+}

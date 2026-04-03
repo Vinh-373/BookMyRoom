@@ -1,0 +1,695 @@
+.room-wrapper {
+    font-family: 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background-color: #f4f7fe;
+    padding: 24px;
+    color: #333;
+    line-height: 1.5;
+    min-height: 100vh;
+}
+
+.room-wrapper * {
+    box-sizing: border-box;
+}
+
+.room-wrapper .rooms-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.room-wrapper .rooms-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    gap: 20px;
+}
+
+.room-wrapper .rooms-header__text h1 {
+    font-size: 1.75rem;
+    font-weight: 800;
+    margin: 0;
+    color: #101828;
+}
+
+.room-wrapper .rooms-header__text p {
+    margin: 4px 0 0;
+    color: #667085;
+    font-size: 0.95rem;
+}
+
+.room-wrapper .rooms-header__actions {
+    display: flex;
+    gap: 12px;
+}
+
+.room-wrapper .filter-select {
+    padding: 10px 16px;
+    border: 1px solid #d0d5dd;
+    border-radius: 10px;
+    background-color: #fff;
+    color: #344054;
+    outline: none;
+    cursor: pointer;
+    min-width: 160px;
+    font-size: 0.875rem;
+    transition: border-color 0.2s;
+}
+
+.room-wrapper .filter-select:focus {
+    border-color: #2261E0;
+}
+
+.room-wrapper .btn {
+    padding: 10px 20px;
+    border-radius: 10px;
+    border: none;
+    font-weight: 600;
+    font-size: 0.875rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+}
+
+.room-wrapper .btn-map {
+    background-color: #f1f5f9;
+    color: #475569;
+    border: 1px solid #e2e8f0;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.room-wrapper .btn-map i {
+    font-size: 1rem;
+    color: #2261E0;
+}
+
+.room-wrapper .btn-map:hover {
+    background-color: #e2e8f0;
+    color: #1e293b;
+    border-color: #cbd5e1;
+}
+
+.room-wrapper .btn-add {
+    background-color: #2261E0;
+    color: #ffffff;
+}
+
+.room-wrapper .btn-add:hover {
+    background-color: #1a4db4;
+    box-shadow: 0 4px 12px rgba(34, 97, 224, 0.2);
+}
+
+.room-wrapper .rooms-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 24px;
+    margin-bottom: 40px;
+}
+
+.room-wrapper .room-card {
+    background: #ffffff;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid #eaecf0;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.room-wrapper .room-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 16px -4px rgba(16, 24, 40, 0.08);
+}
+
+.room-wrapper .room-card__image-wrapper {
+    position: relative;
+    height: 220px;
+    overflow: hidden;
+}
+
+.room-wrapper .room-card__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.room-wrapper .badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.7rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    line-height: 1.4;
+}
+
+.room-wrapper .room-card__image-wrapper .badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    z-index: 5;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.room-wrapper .units-table td .badge {
+    position: static; 
+}
+
+.room-wrapper .badge.essential { background: #ecfdf3; color: #027a48; border: 1px solid #abefc6; }
+.room-wrapper .badge.exclusive { background: #fffaeb; color: #b54708; border: 1px solid #fdecbe; }
+.room-wrapper .badge.premium { background: #f0f9ff; color: #026aa2; border: 1px solid #b9e6fe; }
+
+.room-wrapper .badge.AVAILABLE { background: #dcfce7; color: #166534; }
+.room-wrapper .badge.MAINTENANCE { background: #fee2e2; color: #991b1b; }
+
+.room-wrapper .room-card__title-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 30px 16px 12px;
+    background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+    color: #fff;
+    z-index: 2;
+}
+
+.room-wrapper .room-card__title-overlay h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+.room-wrapper .btn-delete-icon {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    border-radius: 8px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    transition: all 0.2s;
+}
+
+.room-wrapper .btn-delete-icon:hover {
+    background: #fee2e2;
+    color: #d33;
+}
+
+.room-wrapper .room-card__details {
+    padding: 20px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.room-wrapper .amenities-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 20px;
+}
+
+.room-wrapper .amenities-tags span {
+    background: #f9fafb;
+    color: #344054;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    border: 1px solid #f2f4f7;
+    font-weight: 500;
+}
+
+.room-wrapper .inventory-price-row {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 16px;
+    border-top: 1px solid #f2f4f7;
+    margin-bottom: 20px;
+}
+
+.room-wrapper .inventory-price-row .label {
+    display: block;
+    font-size: 0.65rem;
+    color: #98a2b3;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.room-wrapper .inventory-price-row .val {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: #101828;
+}
+
+.room-wrapper .inventory-price-row .val--price {
+    color: #2261E0;
+    font-size: 1.25rem;
+}
+
+.room-wrapper .val--price small {
+    font-size: 0.8rem;
+    color: #667085;
+    font-weight: 400;
+}
+
+.room-wrapper .room-card__actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: auto;
+}
+
+.room-wrapper .btn-edit-outline {
+    background: white;
+    border: 1px solid #d0d5dd;
+    color: #344054;
+}
+
+.room-wrapper .btn-edit-outline:hover {
+    background: #f9fafb;
+    border-color: #2261E0;
+    color: #2261E0;
+}
+
+.room-wrapper .btn-manage-units {
+    background: #101828;
+    color: white;
+}
+
+.room-wrapper .btn-manage-units:hover {
+    background: #000;
+}
+
+.room-wrapper .inventory-health-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #eaecf0;
+}
+
+.room-wrapper .inventory-health-card__left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.room-wrapper .ih-icon {
+    font-size: 1.5rem;
+    background: #f2f4f7;
+    width: 56px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+}
+
+.room-wrapper .ih-text h4 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.room-wrapper .ih-text p {
+    margin: 4px 0 0;
+    font-size: 0.9rem;
+    color: #667085;
+}
+
+.room-wrapper .ih-stat-item {
+    padding-left: 32px;
+    border-left: 1px solid #f2f4f7;
+    text-align: right;
+}
+
+.room-wrapper .ih-val {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: #101828;
+    display: block;
+}
+
+.room-wrapper .ih-lab {
+    font-size: 0.65rem;
+    color: #667085;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.room-wrapper .custom-modal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(16, 24, 40, 0.6);
+    backdrop-filter: blur(4px);
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+}
+
+.room-wrapper .modal-content {
+    background: #fff;
+    width: 95%;
+    max-width: 550px;
+    border-radius: 16px;
+    box-shadow: 0 24px 48px -12px rgba(16, 24, 40, 0.18);
+    overflow: hidden;
+    animation: roomModalSlideUp 0.3s ease-out;
+}
+
+@keyframes roomModalSlideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.room-wrapper .modal-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid #eaecf0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.room-wrapper .modal-header h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.room-wrapper .modal-body {
+    padding: 24px;
+}
+
+.room-wrapper .modal-body label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #344054;
+    margin-bottom: 6px;
+}
+
+.room-wrapper .form-control {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid #d0d5dd;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    transition: all 0.2s;
+    box-sizing: border-box;
+}
+
+.room-wrapper .form-control:focus {
+    border-color: #2261E0;
+    box-shadow: 0 0 0 4px rgba(34, 97, 224, 0.1);
+    outline: none;
+}
+
+.room-wrapper .modal-footer {
+    padding: 20px 24px;
+    border-top: 1px solid #eaecf0;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    background: #f9fafb;
+}
+
+.room-wrapper .btn-primary { background: #2261E0; color: #fff; border: none; padding: 10px 24px; border-radius: 8px; cursor: pointer; font-weight: 600; }
+.room-wrapper .btn-secondary { background: white; color: #344054; border: 1px solid #d0d5dd; padding: 10px 24px; border-radius: 8px; cursor: pointer; font-weight: 600; }
+
+.room-wrapper .close-modal {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #667085;
+    line-height: 1;
+}
+
+
+.swal2-container {
+    z-index: 100000 !important;
+}
+
+/* Container chính cho Modal Sơ đồ phòng */
+.room-wrapper .custom-modal {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(5px);
+    align-items: center;
+    justify-content: center;
+}
+
+/* Nội dung Modal */
+.room-wrapper .modal-content {
+    background-color: #fff;
+    width: 90%;
+    max-width: 950px;
+    border-radius: 20px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    overflow: hidden;
+    animation: modalFadeIn 0.3s ease-out;
+}
+
+@keyframes modalFadeIn {
+    from { transform: translateY(-30px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+/* Header của Modal */
+.room-wrapper .modal-header {
+    padding: 20px 28px;
+    border-bottom: 1px solid #f1f5f9;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #ffffff;
+}
+
+.room-wrapper .modal-header h3 {
+    font-size: 1.4rem;
+    color: #1e293b;
+    margin: 0;
+    font-weight: 700;
+}
+
+.room-wrapper .close-modal {
+    background: #f1f5f9;
+    border: none;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    color: #64748b;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.room-wrapper .close-modal:hover {
+    background: #e2e8f0;
+    color: #0f172a;
+}
+
+/* Body Modal - Khu vực sơ đồ */
+.room-wrapper .modal-body {
+    padding: 28px;
+    background-color: #f8fafc;
+}
+
+.room-wrapper .room-map-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+/* Nhóm theo tầng */
+.room-wrapper .floor-group {
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+    position: relative;
+}
+
+/* Nhãn tầng (ví dụ: Tầng G, Tầng 1) */
+.room-wrapper .floor-tag {
+    min-width: 85px;
+    background: #2261E0;
+    color: #ffffff;
+    padding: 10px;
+    border-radius: 12px;
+    text-align: center;
+    font-weight: 700;
+    font-size: 0.95rem;
+    box-shadow: 0 4px 6px -1px rgba(34, 97, 224, 0.2);
+}
+
+/* Danh sách phòng trong một tầng */
+.room-wrapper .floor-rooms {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    flex: 1;
+}
+
+/* Từng ô phòng vật lý */
+.room-wrapper .room-item {
+    width: 95px;
+    height: 75px;
+    background: #ffffff;
+    border: 2px solid #e2e8f0;
+    border-radius: 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+}
+
+.room-wrapper .room-item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    border-color: #2261E0;
+}
+
+.room-wrapper .room-item .r-num {
+    font-weight: 800;
+    font-size: 1.15rem;
+    color: #1e293b;
+    margin-bottom: 2px;
+}
+
+.room-wrapper .room-item .r-type {
+    font-size: 0.6rem;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    text-align: center;
+    padding: 0 4px;
+}
+
+/* Trạng thái phòng (Màu sắc) */
+.room-wrapper .room-item.status-available {
+    border-left: 5px solid #10b981; /* Xanh lá */
+}
+
+.room-wrapper .room-item.status-occupied {
+    background: #fff1f2;
+    border-color: #fecdd3;
+    border-left: 5px solid #f43f5e; /* Đỏ */
+}
+
+.room-wrapper .room-item.status-occupied .r-num { color: #e11d48; }
+
+.room-wrapper .room-item.status-cleaning {
+    border-left: 5px solid #f59e0b; /* Vàng cam */
+    background: #fffbeb;
+}
+
+/* Footer Modal */
+.room-wrapper .modal-footer {
+    padding: 16px 28px;
+    border-top: 1px solid #f1f5f9;
+    display: flex;
+    justify-content: flex-end;
+    background: #ffffff;
+}
+
+.room-wrapper .btn-cancel {
+    padding: 10px 24px;
+    background: #f1f5f9;
+    border: none;
+    border-radius: 10px;
+    color: #475569;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.room-wrapper .btn-cancel:hover {
+    background: #e2e8f0;
+}
+
+.room-wrapper .room-item.status-maintenance {
+    background-color: #f1f5f9;
+    border-color: #cbd5e1;
+    border-left: 5px solid #64748b;
+    cursor: pointer;
+}
+
+.room-wrapper .room-item.status-maintenance .r-num {
+    color: #475569;
+}
+
+.room-wrapper .room-item.status-maintenance .r-type {
+    color: #94a3b8;
+}
+
+
+.room-wrapper .maintenance-icon {
+    position: absolute;
+    top: 5px;
+    right: 8px;
+    font-size: 0.7rem;
+    color: #64748b;
+}
+
+.room-wrapper .room-item.status-maintenance:hover {
+    background-color: #e2e8f0;
+    border-color: #94a3b8;
+}
+
+@media print {
+    /* Ẩn tất cả các thành phần không liên quan */
+    .main-sidebar, .main-header, .booking-filter-card, 
+    .pagination-area, .insight-cards-grid, .btn-secondary, 
+    .close-modal, .modal-footer, .btn-more {
+        display: none !important;
+    }
+
+    /* Đưa Modal ra giữa trang và bỏ background mờ */
+    .custom-modal {
+        position: relative !important;
+        display: block !important;
+        background: none !important;
+        padding: 0 !important;
+    }
+
+    .modal-content {
+        width: 100% !important;
+        border: none !important;
+        box-shadow: none !important;
+    }
+
+    /* Thêm tiêu đề hóa đơn khi in */
+    .modal-header h3::before {
+        content: "HOTEL INVOICE - ";
+    }
+}

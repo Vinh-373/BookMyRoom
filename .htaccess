@@ -1,8 +1,19 @@
-RewriteEngine On
+# Bật module rewrite
+<IfModule mod_rewrite.c>
+    Options -Multiviews
+    RewriteEngine On
 
-# 🔥 THÊM ĐOẠN NÀY (QUAN TRỌNG)
-RewriteCond %{HTTP:Authorization} .
-RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.+)$ index.php?url=$1 [QSA,L]
+    # 🔥 Giữ Authorization header cho PHP (quan trọng cho API)
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+    # Bảo mật: chặn truy cập trực tiếp vào thư mục app
+    RewriteRule ^app/.*$ - [F,L]
+
+    # Nếu file hoặc thư mục tồn tại thì bỏ qua
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+
+    # Đẩy tất cả request còn lại vào index.php với tham số url
+    RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]
+</IfModule>

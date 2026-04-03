@@ -125,6 +125,9 @@ class Auth extends Controller
         if (session_status() === PHP_SESSION_NONE) session_start();
 
             $_SESSION['user'] = $user; // Lưu thông tin user vào session sau khi đăng nhập thành công
+            $_SESSION['role'] = $user['role']; // Lưu role vào session để kiểm tra phân quyền sau này
+            echo "User logged in: " . $_SESSION['role']; // Debug: Kiểm tra xem session đã lưu đúng chưa
+            die(); // Dừng chương trình để xem kết quả debug
 
         } catch (Exception $e) {
             $this->jsonResponse(['status' => 'error', 'message' => $e->getMessage()], 400);

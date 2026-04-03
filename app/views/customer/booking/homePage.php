@@ -1,8 +1,9 @@
 <?php
 
-// echo "<pre>";
-// print_r($data);
-// echo "</pre>";
+echo "<pre>";
+
+print_r($_SESSION ?? 'No role set in session');
+echo "</pre>";
 ?>
 
 <head>
