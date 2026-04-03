@@ -7,4 +7,4 @@ $app = new App();
 <!--   http://localhost//BookMyRoom   -->
 
 
-<!--   http://localhost//BookMyRoom//admin   -->
+<!--   http://localhost/BookMyRoom/admin   -->

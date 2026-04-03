@@ -1,5 +1,4 @@
-// Admin Bootstrap Script
-// Đảm bảo các scripts core được load trước khi thực thi trang admin cụ thể
+// Admin Bootstrap Script — tải helper khi layout dùng entry này (tùy chọn)
 (function() {
     function loadScript(src) {
         if (!src) return;
@@ -17,7 +16,6 @@
         document.head.appendChild(script);
     }
 
-    // Load helper và page router script
     loadScript('/BookMyRoom/public/js/admin/utils.js');
     loadScript('/BookMyRoom/public/js/admin/init.js');
 })();

@@ -1,0 +1,334 @@
+/* ===== GLOBAL ===== */
+.reviews-content {
+  padding: 30px;
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #eef2ff, #f0f9ff);
+  min-height: 100vh;
+}
+
+/* ===== HEADER ===== */
+.reviews-header {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  margin-bottom: 30px;
+}
+
+.reviews-header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.reviews-sum-review{
+  padding:15px;
+  background-color: #2665bc;
+  border-radius: 10px;
+  color:#ffffff;
+  font-size: 20px;
+}
+.reviews-title {
+  font-size: 35px;
+  font-weight: 800;
+  background: linear-gradient(90deg, #6366f1, #06b6d4);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* rating */
+#mediumRating {
+  font-size: 22px;
+  font-weight: bold;
+  color: #f59e0b;
+}
+
+/* ===== SUMMARY ===== */
+.reviews-summary {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.reviews-summary-item {
+  border-radius: 14px;
+  padding: 14px 20px;
+  min-width: 120px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 10px 16px rgba(0,0,0,0.08);
+      background: linear-gradient(135deg, #6366f1, #06b6d4);
+
+}
+
+.reviews-summary-item:hover {
+  transform: translateY(-5px) scale(1.05);
+  background: linear-gradient(135deg, #6366f1, #06b6d4);
+  color: #fff;
+}
+.reviews-summary-item li[data-rating="5"] {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: white;
+  padding: 8px;
+  border-radius: 6px;
+}
+
+.reviews-summary-item li[data-rating="4"] {
+  background: linear-gradient(135deg, #22c55e, #4ade80);
+  color: white;
+  padding: 8px;
+  border-radius: 6px;
+}
+
+.reviews-summary-item li[data-rating="3"] {
+  background: linear-gradient(135deg, #f59e0b, #fbbf24);
+  color: white;
+  padding: 8px;
+  border-radius: 6px;
+}
+
+.reviews-summary-item li[data-rating="2"] {
+  background: linear-gradient(135deg, #3b82f6, #60a5fa);
+  color: white;
+  padding: 8px;
+  border-radius: 6px;
+}
+
+.reviews-summary-item li[data-rating="1"] {
+  background: linear-gradient(135deg, #ef4444, #f87171);
+  color: white;
+  padding: 8px;
+  border-radius: 6px;
+}
+
+.reviews-summary li:first-child {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.reviews-summary li:last-child {
+  font-size: 13px;
+  opacity: 0.85;
+}
+
+/* active */
+.reviews-summary li.active {
+  color: #fff;
+  font-weight: bold;
+}
+
+/* ===== FILTER ===== */
+.reviews-filter {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.reviews-search,
+.reviews-partners {
+  flex: 1;
+  padding: 12px 16px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  outline: none;
+  transition: 0.25s;
+  background: #fff;
+}
+
+.reviews-search:focus,
+.reviews-partners:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99,102,241,0.2);
+}
+
+/* button */
+.reviews-clear-btn {
+  background: linear-gradient(135deg, #ef4444, #f87171);
+  color: #fff;
+  border: none;
+  padding: 12px 18px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.reviews-clear-btn:hover {
+  transform: scale(1.08);
+  box-shadow: 0 6px 14px rgba(239,68,68,0.4);
+}
+
+/* ===== LIST ===== */
+.reviews-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+}
+
+/* item */
+.reviews-item {
+  border-bottom: 1px solid #f1f5f9;
+  padding: 16px 10px;
+  transition: all 0.25s ease;
+  border-radius: 10px;
+}
+
+.reviews-item:hover {
+  background: linear-gradient(135deg, #eef2ff, #f0f9ff);
+  transform: translateX(5px);
+}
+
+.reviews-item:last-child {
+  border-bottom: none;
+}
+
+/* head */
+.review-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.reviews-name {
+  font-weight: 700;
+  color: #1e293b;
+}
+
+/* rating badge */
+.reviews-rating {
+  font-weight: bold;
+  color: #fff;
+  background: linear-gradient(135deg, #f59e0b, #fbbf24);
+  padding: 5px 10px;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+/* content */
+.reviews-text {
+  margin: 8px 0;
+  color: #475569;
+  line-height: 1.6;
+}
+
+/* footer */
+.reviews-footer {
+  font-size: 12px;
+  color: #64748b;
+  display: flex;
+  justify-content: space-between;
+}
+
+/* ===== BUTTONS ===== */
+.reviews-item button {
+  margin-top: 10px;
+  margin-right: 8px;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.25s;
+}
+
+.reviews-btn-view {
+  background: linear-gradient(135deg, #3b82f6, #06b6d4);
+  color: #fff;
+}
+
+.reviews-btn-view:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 10px rgba(59,130,246,0.4);
+}
+
+.reviews-btn-delete {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: #fff;
+}
+
+.reviews-btn-delete:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 10px rgba(239,68,68,0.4);
+}
+
+/* ===== MODAL ===== */
+.reviews-detail-content {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: rgba(15,23,42,0.6);
+}
+
+.review-detail-box {
+  margin: 0 auto;
+  background: #fff;
+  padding: 25px;
+  width: 420px;
+  border-radius: 14px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.2);
+  animation: scaleIn 0.3s ease;
+    position: relative;
+  top: 30%;
+}
+
+.review-detail-box h2 {
+  margin-bottom: 15px;
+  color: #4f46e5;
+}
+
+.review-detail-box p {
+  margin: 8px 0;
+  color: #374151;
+}
+
+#d-content {
+  background: #f1f5f9;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+/* close button */
+#reviews-closeDetail {
+  margin-top: 15px;
+  padding: 10px 14px;
+  border: none;
+  background: linear-gradient(135deg, #6366f1, #06b6d4);
+  color: #fff;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+#reviews-closeDetail:hover {
+  transform: scale(1.05);
+}
+
+
+
+
+
+.reviews-summary li.active {
+    font-weight: bold;
+    color: #000000; /* Màu vàng nổi bật */
+}
+
+
+
+
+
+/* ===== ANIMATION ===== */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}

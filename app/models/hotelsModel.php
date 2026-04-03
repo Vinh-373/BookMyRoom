@@ -1,6 +1,6 @@
 <?php
 namespace Models;
 
-class hotelsModel extends myModels {
+class hotelsModel extends \myModels {
     protected $table = "hotels";
 }

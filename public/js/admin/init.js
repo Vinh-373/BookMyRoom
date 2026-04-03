@@ -3,30 +3,41 @@
  * Load tất cả các script cần thiết dựa trên trang hiện tại
  */
 
+function adminJsBasePath() {
+    var b = (typeof window.BOOKMYROOM_PUBLIC_BASE === 'string' && window.BOOKMYROOM_PUBLIC_BASE)
+        ? window.BOOKMYROOM_PUBLIC_BASE.replace(/\/$/, '')
+        : '/BookMyRoom';
+    return b + '/public/js/admin/';
+}
+
 document.addEventListener('DOMContentLoaded', function() {
-    const currentPage = document.body.getAttribute('data-page') || 
-                       document.querySelector('main').getAttribute('data-page') ||
-                       window.location.pathname.split('/').pop().replace('.php', '');
+    const main = document.querySelector('main.main-content');
+    const currentPage = document.body.getAttribute('data-page') ||
+        (main && main.getAttribute('data-page')) ||
+        window.location.pathname.split('/').pop().replace('.php', '');
 
     console.log('Current Page:', currentPage);
 
-    // Map page name với script cần load
-    // Note: Đường dẫn có thể cần điều chỉnh tùy theo cấu trúc server
+    const base = adminJsBasePath();
     const pageScripts = {
-        'dashboard': '/BookMyRoom/public/js/admin/dashboard.js',
-        'bookings': '/BookMyRoom/public/js/admin/bookings.js',
-        'hotels': '/BookMyRoom/public/js/admin/hotels.js',
-        'partner-moderation': '/BookMyRoom/public/js/admin/partner-moderation.js',
-        'partner_moderation': '/BookMyRoom/public/js/admin/partner-moderation.js',
-        'rooms': '/BookMyRoom/public/js/admin/rooms.js',
-        'settings': '/BookMyRoom/public/js/admin/settings.js',
-        'payments': '/BookMyRoom/public/js/admin/payments.js',
-        'reviews': '/BookMyRoom/public/js/admin/reviews.js',
-        'vouchers': '/BookMyRoom/public/js/admin/vouchers.js',
-        'accounts_staff': '/BookMyRoom/public/js/admin/accounts.js',
-        'accounts_partner': '/BookMyRoom/public/js/admin/accounts.js',
-        'accounts_customer': '/BookMyRoom/public/js/admin/accounts.js',
-        'accounts': '/BookMyRoom/public/js/admin/accounts.js'
+        'dashboard': base + 'dashboard.js',
+        'bookings': base + 'bookings.js',
+        'hotels': base + 'hotels.js',
+        'partner-moderation': base + 'partner-moderation.js',
+        'partner_moderation': base + 'partner-moderation.js',
+        'rooms': base + 'rooms.js',
+        'settings': base + 'settings.js',
+        'payments': base + 'payments.js',
+        'reviews': base + 'review.js',
+        'vouchers': base + 'voucher.js',
+        'staffs': base + 'staff.js',
+        'customers': base + 'customer.js',
+        'partners': base + 'partner.js',
+        'statisticals': base + 'dashboard.js',
+        'accounts_staff': base + 'accounts.js',
+        'accounts_partner': base + 'accounts.js',
+        'accounts_customer': base + 'accounts.js',
+        'accounts': base + 'accounts.js'
     };
 
     const scriptPath = pageScripts[currentPage];
@@ -36,6 +47,30 @@ document.addEventListener('DOMContentLoaded', function() {
         loadScript(scriptPath);
     } else {
         console.warn('No script found for page:', currentPage);
+    }
+});
+
+document.addEventListener('adminPartialLoad', function(e) {
+    const page = e.detail && e.detail.page ? e.detail.page : '';
+    if (!page) return;
+    const base = adminJsBasePath();
+    const pageScripts = {
+        'dashboard': base + 'dashboard.js',
+        'bookings': base + 'bookings.js',
+        'hotels': base + 'hotels.js',
+        'rooms': base + 'rooms.js',
+        'settings': base + 'settings.js',
+        'payments': base + 'payments.js',
+        'reviews': base + 'review.js',
+        'vouchers': base + 'voucher.js',
+        'staffs': base + 'staff.js',
+        'customers': base + 'customer.js',
+        'partners': base + 'partner.js',
+        'statisticals': base + 'dashboard.js'
+    };
+    const scriptPath = pageScripts[page];
+    if (scriptPath) {
+        loadScript(scriptPath);
     }
 });
 

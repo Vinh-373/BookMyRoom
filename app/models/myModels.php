@@ -1,7 +1,5 @@
 <?php
-namespace Models;
-
-// Load Database class
+// Load Database class (class myModels ở global namespace để các model *Model.php require được)
 require_once __DIR__ . '/../core/Database.php';
 
 class myModels {
@@ -78,24 +76,20 @@ class myModels {
     }
 
     /**
+     * Lấy tất cả bản ghi (có thể truyền điều kiện / order / limit như select_array)
+     */
+    public function findAll(array $where = [], ?string $orderBy = null, ?int $limit = null): array {
+        return $this->select_array('*', $where, $orderBy, $limit);
+    }
+
+    /**
      * Join nhiều bảng
-     * Ví dụ:
-     * join_multi(
-     *     joins: [
-     *         ['table' => 'cities', 'type' => 'LEFT', 'on' => 'hotels.cityId = cities.id'],
-     *         ['table' => 'users', 'type' => 'LEFT', 'on' => 'hotels.partnerId = users.id']
-     *     ],
-     *     select: 'hotels.id, hotels.name, cities.name as cityName',
-     *     where: ['hotels.deletedAt' => null],
-     *     orderBy: 'hotels.createdAt DESC'
-     * )
      * @param string|int|null $limit SQL LIMIT: số hoặc "offset, count"
      */
     public function join_multi(array $joins = [], string $select = '*', array $where = [], ?string $orderBy = null, $limit = null): array {
         try {
             $sql = "SELECT {$select} FROM {$this->table}";
             
-            // Xây dựng JOIN clauses
             if (!empty($joins)) {
                 foreach ($joins as $join) {
                     $type = $join['type'] ?? 'LEFT';
@@ -108,7 +102,6 @@ class myModels {
                 }
             }
             
-            // Xây dựng WHERE clause
             if (!empty($where)) {
                 $conditions = [];
                 $values = [];
@@ -129,20 +122,16 @@ class myModels {
                 }
             }
             
-            // ORDER BY
             if ($orderBy) {
                 $sql .= " ORDER BY {$orderBy}";
             }
             
-            // LIMIT (int hoặc chuỗi "offset, count")
             if ($limit !== null && $limit !== '') {
                 $sql .= ' LIMIT ' . (is_int($limit) ? (string) $limit : $limit);
             }
             
-            // Prepare statement
             $stmt = $this->conn->prepare($sql);
             
-            // Bind params if any
             if (!empty($values)) {
                 $stmt->bind_param($types, ...$values);
             }
@@ -175,7 +164,6 @@ class myModels {
             
             $stmt = $this->conn->prepare($sql);
             
-            // Build type string
             $types = '';
             foreach ($values as $value) {
                 $types .= is_int($value) ? 'i' : 's';
