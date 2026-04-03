@@ -5,17 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo $title ?? 'Partner Dashboard'; ?></title>
     <!-- Sử dụng URLROOT đã định nghĩa trong config.php -->
-    <link rel="stylesheet" href="<?= URLROOT ?>/public/partner/css/main-style.css">
-    <link rel="stylesheet" href="<?= URLROOT ?>/public/partner/css/portfolio.css">
-    <link rel="stylesheet" href="<?= URLROOT ?>/public/partner/css/dashboard.css">
-    <link rel="stylesheet" href="<?= URLROOT ?>/public/partner/css/bookings.css">
-    <link rel="stylesheet" href="<?= URLROOT ?>/public/partner/css/rooms.css">
-    <link rel="stylesheet" href="<?= URLROOT ?>/public/partner/css/inventory.css">
-    <link rel="stylesheet" href="<?= URLROOT ?>/public/partner/css/staff.css">
-    <link rel="stylesheet" href="<?= URLROOT ?>/public/partner/css/reviews.css">
-    <link rel="stylesheet" href="<?= URLROOT ?>/public/partner/css/reports.css">
-    <link rel="stylesheet" href="<?= URLROOT ?>/public/partner/css/transactions.css">
-    <link rel="stylesheet" href="<?= URLROOT ?>/public/partner/css/vouchers.css">
+    <link rel="stylesheet" href="<?= URLROOT ?>/public/css/partner/main-style.css">
+    <link rel="stylesheet" href="<?= URLROOT ?>/public/css/partner/portfolio.css">
+    <link rel="stylesheet" href="<?= URLROOT ?>/public/css/partner/dashboard.css">
+    <link rel="stylesheet" href="<?= URLROOT ?>/public/css/partner/bookings.css">
+    <link rel="stylesheet" href="<?= URLROOT ?>/public/css/partner/rooms.css">
+    <link rel="stylesheet" href="<?= URLROOT ?>/public/css/partner/inventory.css">
+    <link rel="stylesheet" href="<?= URLROOT ?>/public/css/partner/staff.css">
+    <link rel="stylesheet" href="<?= URLROOT ?>/public/css/partner/reviews.css">
+    <link rel="stylesheet" href="<?= URLROOT ?>/public/css/partner/reports.css">
+    <link rel="stylesheet" href="<?= URLROOT ?>/public/css/partner/transactions.css">
+    <link rel="stylesheet" href="<?= URLROOT ?>/public/css/partner/vouchers.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bootstrap-4/bootstrap-4.css">
