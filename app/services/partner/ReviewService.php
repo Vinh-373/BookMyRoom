@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../core/Service.php';
+// require_once __DIR__ . '/../../core/Service.php';
 class ReviewService extends Service {
     public function getReviewPageData($hotelId, $filters) {
         $reviewModel = $this->model('ReviewModel');

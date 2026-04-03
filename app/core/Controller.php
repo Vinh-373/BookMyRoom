@@ -7,8 +7,8 @@ class Controller {
 
     // 1. Nạp Model (Tương tác Database cơ bản)
     public function model($model) {
-        if (file_exists('../app/models/' . $model . '.php')) {
-            require_once '../app/models/' . $model . '.php';
+        if (file_exists('../app/models/partner/' . $model . '.php')) {
+            require_once '../app/models/partner/' . $model . '.php';
             return new $model();
         }
         die("Model " . $model . " không tồn tại.");
@@ -16,8 +16,8 @@ class Controller {
 
     // 2. Nạp Service (Xử lý logic nghiệp vụ phức tạp)
     public function service($service) {
-        if (file_exists('../app/services/' . $service . '.php')) {
-            require_once '../app/services/' . $service . '.php';
+        if (file_exists('../app/services/partner/' . $service . '.php')) {
+            require_once '../app/services/partner/' . $service . '.php';
             return new $service();
         }
         die("Service " . $service . " không tồn tại.");

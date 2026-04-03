@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../core/Service.php';
+// require_once __DIR__ . '/../../core/Service.php';
 class StaffService extends Service {
     public function getHotelStaff($hotelId) {
         $userModel = $this->model('UserModel');

@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../core/Service.php';
+// require_once __DIR__ . '/../../core/Service.php';
 
 class BookingService extends Service {
     public function getBookingPageData($hotelId, $filters) {

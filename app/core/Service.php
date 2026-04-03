@@ -16,7 +16,7 @@ class Service {
      * Giúp Service có thể gọi nhiều Model cùng lúc
      */
     public function model($modelName) {
-        $modelPath = '../app/models/' . $modelName . '.php';
+        $modelPath = '../app/models/partner/' . $modelName . '.php';
         if (file_exists($modelPath)) {
             require_once $modelPath;
             return new $modelName();

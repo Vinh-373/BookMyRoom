@@ -19,6 +19,7 @@ define('APPROOT', dirname(dirname(__FILE__)));
 // Giúp bạn gọi các file CSS/JS/Images một cách chính xác
 define('URLROOT', 'http://localhost:81/bookroom');
 define('URLIMAGE', 'http://localhost:81/bookroom/public/image');
+define('URLCORE', 'http://localhost:81/bookroom/app/core');
 
 // Tên website
 define('SITENAME', 'BookMyRoom - Hotel Management');

@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../core/Model.php';
+// require_once __DIR__ . '/../core/Model.php';
 class UserModel extends Model {
     // Lấy danh sách nhân viên của một khách sạn cụ thể
     public function getStaffByHotel($hotelId) {

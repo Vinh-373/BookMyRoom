@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../core/Model.php';
+// require_once __DIR__ . '/../core/Model.php';
 
 class InventoryModel extends Model {
     // Lấy giá tùy chỉnh trong khoảng ngày

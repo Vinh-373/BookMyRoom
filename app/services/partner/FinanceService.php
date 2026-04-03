@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../core/Service.php';
+// require_once __DIR__ . '/../../core/Service.php';
 class FinanceService extends Service {
     
     public function getFinanceStats($hotelId, $period) {
