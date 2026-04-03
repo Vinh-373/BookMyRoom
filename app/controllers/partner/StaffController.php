@@ -1,5 +1,5 @@
 <?php
-require_once '../app/controllers/PartnerController.php';
+require_once APPROOT . '/controllers/PartnerController.php';
 
 class StaffController extends PartnerController {
     

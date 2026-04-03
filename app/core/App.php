@@ -1,24 +1,22 @@
 <?php
 class App {
-    protected $controller = ""; 
+    protected $controller = "PartnerController"; // Controller mặc định
     protected $action = "index";
     protected $params = [];
 
     public function __construct() {
-        if(!empty($_SESSION['user_role']) && $_SESSION['user_role']=='Partner'){
-            //Di chuyển toàn bộ đoạn bên dưới lên đây khi gộp file
-
-        }
-        $this->controller = "PartnerController";
-        $this->action = "index";
         $url = $this->parseUrl();
-        $routes = require_once "../app/routes/web.php";
+        
+        // Nạp file routes sử dụng APPROOT
+        $routes = require_once APPROOT . '/routes/web.php';
         $path = '';
+
+        // Xử lý xác định Path từ URL để khớp với Route
         if (isset($url[0])) {
             $path = $url[0];
             if (isset($url[1]) && array_key_exists($url[0].'/'.$url[1], $routes)) {
                 $path = $url[0].'/'.$url[1];
-                unset($url[1]); // Xóa phần tử thứ 2 vì nó là một phần của Route key
+                unset($url[1]); 
             }
         }
 
@@ -28,29 +26,32 @@ class App {
             $this->action = $routes[$path][1];
             unset($url[0]);
             
-            // Tìm file ở cả 2 thư mục
-            if (file_exists("../app/controllers/partner/" . $this->controller . ".php")) {
-                require_once "../app/controllers/partner/" . $this->controller . ".php";
+            // Tìm và nạp file Controller
+            if (file_exists(APPROOT . "/controllers/partner/" . $this->controller . ".php")) {
+                require_once APPROOT . "/controllers/partner/" . $this->controller . ".php";
             } else {
-                require_once "../app/controllers/" . $this->controller . ".php";
+                require_once APPROOT . "/controllers/" . $this->controller . ".php";
             }
         } 
         // 2. NẾU KHÔNG CÓ TRONG ROUTES -> DÙNG AUTO-ROUTING
-        else if (isset($url[0])) {
+        else if (!empty($url[0])) {
             $name = ucfirst($url[0]) . "Controller";
-            if (file_exists("../app/controllers/partner/" . $name . ".php")) {
+            
+            if (file_exists(APPROOT . "/controllers/partner/" . $name . ".php")) {
                 $this->controller = $name;
-                require_once "../app/controllers/partner/" . $this->controller . ".php";
+                require_once APPROOT . "/controllers/partner/" . $this->controller . ".php";
                 unset($url[0]);
-            } elseif (file_exists("../app/controllers/" . $name . ".php")) {
+            } elseif (file_exists(APPROOT . "/controllers/" . $name . ".php")) {
                 $this->controller = $name;
-                require_once "../app/controllers/" . $this->controller . ".php";
+                require_once APPROOT . "/controllers/" . $this->controller . ".php";
                 unset($url[0]);
             } else {
-                require_once "../app/controllers/" . $this->controller . ".php";
+                // Nếu không tìm thấy controller nào khớp, nạp controller mặc định
+                require_once APPROOT . "/controllers/" . $this->controller . ".php";
             }
         } else {
-            require_once "../app/controllers/" . $this->controller . ".php";
+            // Trường hợp URL trống (Trang chủ)
+            require_once APPROOT . "/controllers/" . $this->controller . ".php";
         }
 
         // Khởi tạo Object Controller
@@ -59,14 +60,17 @@ class App {
         }
         $this->controller = new $this->controller;
 
-        // 2. XỬ LÝ ACTION (Reset chỉ số mảng)
+        // 3. XỬ LÝ ACTION
+        // Reset lại index của mảng $url để lấy action dễ hơn
         $url = array_values($url);
+        
+        // Ưu tiên action từ Route, nếu không có mới lấy từ URL
         if (isset($url[0]) && method_exists($this->controller, $url[0])) {
             $this->action = $url[0];
             unset($url[0]);
         }
 
-        // 3. XỬ LÝ PARAMS
+        // 4. XỬ LÝ PARAMS
         $this->params = $url ? array_values($url) : [];
 
         // THỰC THI

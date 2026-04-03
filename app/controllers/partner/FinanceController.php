@@ -1,5 +1,5 @@
 <?php
-require_once '../app/controllers/PartnerController.php';
+require_once APPROOT . '/controllers/PartnerController.php';
 class FinanceController extends PartnerController {
     public function __construct() {
         // Chạy construct của cha để kiểm tra quyền đăng nhập/role Partner

@@ -1,5 +1,5 @@
 <?php
-require_once '../app/controllers/PartnerController.php';
+require_once APPROOT . '/controllers/PartnerController.php';
 class RoomController extends PartnerController {
     public function __construct() {
         parent::__construct();

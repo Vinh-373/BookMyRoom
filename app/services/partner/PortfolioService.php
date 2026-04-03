@@ -8,7 +8,7 @@ class PortfolioService extends Service {
         parent::__construct();
         // Nạp Model thông qua hàm model() của Base Service (nếu bạn đã viết) 
         // hoặc require thủ công như bạn đang làm.
-        require_once '../app/models/partner/HotelModel.php';
+        require_once APPROOT . '/models/partner/HotelModel.php';
         $this->hotelModel = new HotelModel();
     }
 

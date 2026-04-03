@@ -1,9 +1,14 @@
 <IfModule mod_rewrite.c>
+    Options -Multiviews
     RewriteEngine On
 
-    # Chuyển hướng mọi yêu cầu vào thư mục public
-    RewriteRule ^$ public/ [L]
-    
-    # Nếu yêu cầu không phải là file hoặc thư mục có thật, đẩy vào public/index.php
-    RewriteRule (.*) public/$1 [L]
+    # Bảo mật: Chặn người dùng truy cập trực tiếp vào thư mục app
+    RewriteRule ^app/.*$ - [F,L]
+
+    # Nếu yêu cầu là một file hoặc thư mục có thật (ví dụ: public/css/style.css) thì bỏ qua
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+
+    # Đẩy mọi yêu cầu còn lại vào index.php tại gốc để xử lý Controller/Action
+    RewriteRule ^(.*)$ index.php?url=$1 [L,QSA]
 </IfModule>
