@@ -1,7 +1,12 @@
 <?php
+<<<<<<< HEAD
 namespace Models;
 use Database;
 abstract class MyModels extends Database
+=======
+require_once 'C:\xampp\htdocs\BookMyRoom\app\core\Database.php';
+abstract class myModels extends Database
+>>>>>>> origin/tu
 {
     protected $table; // ⚠️ BẮT BUỘC: class con phải khai báo tên bảng
 
@@ -178,19 +183,31 @@ abstract class MyModels extends Database
 
         return $result->fetch_all(MYSQLI_ASSOC);
     }
+<<<<<<< HEAD
     function insert( $data = NULL)
+=======
+    function insert($table, $data = NULL)
+>>>>>>> origin/tu
     {
         $fields = array_keys($data);
         $field_list = implode(',', $fields);
         $values = array_values($data);
         $qr = str_repeat('?,', count($values) - 1) . '?';
+<<<<<<< HEAD
         $sql = "INSERT INTO $this->table ($field_list) VALUES ($qr)";
+=======
+        $sql = "INSERT INTO $table ($field_list) VALUES ($qr)";
+>>>>>>> origin/tu
 
         $stmt = $this->conn->prepare($sql);
         if ($stmt->execute($values)) {
             return json_encode([
                 "type" => "success",
+<<<<<<< HEAD
                 "message" => "insert success",
+=======
+                "message" => "isert success",
+>>>>>>> origin/tu
                 "data" => $this->conn->insert_id
             ]);
         } else {
