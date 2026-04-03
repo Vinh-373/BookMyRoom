@@ -7,8 +7,8 @@ class BookingModel extends MyModels {
     public function createBooking($data)
     {
         $sql = "INSERT INTO bookings 
-                (userId, status, totalAmount, platformFee, partnerRevenue, deposit) 
-                VALUES (?, ?, ?, ?, ?, ?)";
+                (userId, status, totalAmount, platformFee, partnerRevenue, deposit,voucherId) 
+                VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         $stmt = $this->conn->prepare($sql);
 
@@ -17,13 +17,14 @@ class BookingModel extends MyModels {
         }
 
         $stmt->bind_param(
-            "isdddd",
+            "isdddds",
             $data['userId'],
             $data['status'],
             $data['totalAmount'],
             $data['platformFee'],
             $data['partnerRevenue'],
-            $data['deposit']
+            $data['deposit'],
+            $data['voucherId']
         );
 
         if (!$stmt->execute()) {
