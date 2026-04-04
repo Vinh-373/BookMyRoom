@@ -15,3 +15,9 @@ require_once 'app/core/partner/Model.php';
 require_once 'app/core/App.php';
 // 3. Khởi tạo ứng dụng
 $app = new App();
+?>
+
+<!--   http://localhost//BookMyRoom   -->
+
+
+<!--   http://localhost/BookMyRoom/admin   -->

@@ -180,6 +180,13 @@ abstract class MyModels extends Database
     }
     function insert( $data = NULL)
     {
+        if (empty($data) || !is_array($data)) {
+            return json_encode([
+                "type" => "error",
+                "message" => "Dữ liệu không hợp lệ"
+            ]);
+        }
+
         $fields = array_keys($data);
         $field_list = implode(',', $fields);
         $values = array_values($data);
@@ -187,7 +194,7 @@ abstract class MyModels extends Database
         $sql = "INSERT INTO $this->table ($field_list) VALUES ($qr)";
 
         $stmt = $this->conn->prepare($sql);
-        if ($stmt->execute($values)) {
+        if ($stmt === false) {
             return json_encode([
                 "type" => "success",
                 "message" => "insert success",
@@ -196,9 +203,72 @@ abstract class MyModels extends Database
         } else {
             return  json_encode([
                 "type" => "error",
-                "message" => "insert failed: " . $this->conn->error
+                "message" => "Prepare failed: " . $this->conn->error
             ]);
         }
+
+        // Bind parameters
+        $types = '';
+        foreach ($values as $value) {
+            $types .= is_int($value) ? 'i' : 's';
+        }
+
+        if (!empty($values)) {
+            $stmt->bind_param($types, ...$values);
+        }
+
+        if ($stmt->execute()) {
+            $insert_id = $this->conn->insert_id;
+            $stmt->close();
+            return json_encode([
+                "type" => "success",
+                "message" => "Insert success",
+                "data" => $insert_id
+            ]);
+        } else {
+            $error = $stmt->error;
+            $stmt->close();
+            return json_encode([
+                "type" => "error",
+                "message" => "Insert failed: " . $error
+            ]);
+        }
+    }
+
+
+
+    public function findOne($conditions)
+    {
+        $where = [];
+        foreach ($conditions as $field => $value) {
+            $where[] = "$field = ?";
+        }
+        $sql = "SELECT * FROM {$this->table} WHERE " . implode(" AND ", $where) . " LIMIT 1";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param(str_repeat("s", count($conditions)), ...array_values($conditions));
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result->fetch_assoc();
+    }
+
+
+     public function findAll($conditions = []) {
+        $sql = "SELECT * FROM {$this->table}";
+        if (!empty($conditions)) {
+            $where = [];
+            foreach ($conditions as $key => $value) {
+                $where[] = "$key = '" . $this->conn->real_escape_string($value) . "'";
+            }
+            $sql .= " WHERE " . implode(" AND ", $where);
+        }
+        $result = $this->conn->query($sql);
+        $rows = [];
+        if ($result) {
+            while ($row = $result->fetch_assoc()) {
+                $rows[] = $row;
+            }
+        }
+        return $rows;
     }
 
     function update($data = NULL, $where = NULL)
@@ -273,4 +343,36 @@ abstract class MyModels extends Database
             ]);
         }
     }
+
+public function delete($conditions)
+{
+    $where = [];
+    $params = [];
+    foreach ($conditions as $col => $val) {
+        $where[] = "$col = ?";
+        $params[] = $val;
+    }
+    $sql = "DELETE FROM {$this->table} WHERE " . implode(' AND ', $where);
+    $stmt = $this->conn->prepare($sql);
+
+    if ($stmt === false) {
+        return json_encode(['type' => 'error', 'message' => 'Prepare failed: ' . $this->conn->error]);
+    }
+
+    $types = str_repeat('s', count($params));
+    $ref_params = [];
+    foreach ($params as $key => $value) {
+        $ref_params[$key] = &$params[$key];
+    }
+    call_user_func_array([$stmt, 'bind_param'], array_merge([$types], $ref_params));
+
+    if ($stmt->execute()) {
+        $affected_rows = $stmt->affected_rows;
+        $stmt->close();
+        return json_encode(['type' => 'success', 'data' => $affected_rows]);
+    } else {
+        $stmt->close();
+        return json_encode(['type' => 'error', 'message' => 'Delete failed: ' . $stmt->error]);
+    }
+}
 }

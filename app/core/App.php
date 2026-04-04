@@ -224,8 +224,10 @@
 
 
 
-class App
-{
+// class App
+// {
+//     define('BASE_URL', 'http://localhost/BookMyRoom/');
+class App {
     protected $role = 'customer';
     protected $controller = 'booking';
     protected $method = 'index';

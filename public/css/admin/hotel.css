@@ -1,0 +1,137 @@
+.hotels-content {
+    padding: 20px;
+    font-family: 'Inter', sans-serif;
+    background: #f5f7fb;
+}
+
+/* HEADER */
+.hotels-title {
+    font-size: 26px;
+    font-weight: 700;
+}
+
+/* STATS */
+.hotels-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px,1fr));
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.hotels-stat-card {
+    background: white;
+    padding: 15px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+.hotels-stat-card .num {
+    font-size: 22px;
+    font-weight: bold;
+    color: #4f46e5;
+}
+
+.hotels-stat-card .label {
+    font-size: 13px;
+    color: #777;
+}
+
+/* TOOLBAR */
+.hotels-toolbar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.hotels-toolbar input,
+.hotels-toolbar select {
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+.btn-add {
+    background: #4f46e5;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 8px;
+    text-decoration: none;
+}
+
+/* GRID */
+.hotels-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px,1fr));
+    gap: 20px;
+}
+
+/* CARD */
+.hotel-card {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    transition: 0.3s;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+}
+
+.hotel-card:hover {
+    transform: translateY(-5px);
+}
+
+/* IMAGE */
+.hotel-card .img {
+    position: relative;
+}
+
+.hotel-card img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+}
+
+.rating {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #000;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 8px;
+}
+
+/* INFO */
+.hotel-card .info {
+    padding: 15px;
+}
+
+.hotel-card h3 {
+    margin: 0;
+    font-size: 18px;
+}
+
+.meta {
+    display: flex;
+    justify-content: space-between;
+    margin: 10px 0;
+    font-size: 13px;
+}
+
+/* ACTION */
+.actions {
+    display: flex;
+    justify-content: space-between;
+}
+
+.actions a {
+    text-decoration: none;
+    font-size: 13px;
+    padding: 6px 10px;
+    border-radius: 6px;
+    background: #eee;
+}
+
+.actions a:hover {
+    background: #4f46e5;
+    color: white;
+}
