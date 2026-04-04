@@ -62,16 +62,6 @@
             <span>Quản lý Khách sạn</span>
         </a>
 
-        <a href="http://localhost/BookMyRoom/admin/rooms" class="nav-item <?php echo $activePage === 'rooms' ? 'active' : ''; ?>" data-page="rooms">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                <circle cx="9" cy="7" r="4"></circle>
-                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-            </svg>
-            <span>Quản lý Phòng</span>
-        </a>
 
         <a href="http://localhost/BookMyRoom/admin/bookings" class="nav-item <?php echo $activePage === 'bookings' ? 'active' : ''; ?>" data-page="bookings">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
@@ -84,16 +74,6 @@
             <span>Quản lý Đặt phòng</span>
         </a>
 
-        <a href="http://localhost/BookMyRoom/admin/staffs" class="nav-item <?php echo $activePage === 'staffs' ? 'active' : ''; ?>" data-page="staffs">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                <circle cx="9" cy="7" r="4"></circle>
-                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-            </svg>
-            <span>Tài khoản nhân viên</span>
-        </a>
 
         <a href="http://localhost/BookMyRoom/admin/customers" class="nav-item <?php echo $activePage === 'customers' ? 'active' : ''; ?>" data-page="customers">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"

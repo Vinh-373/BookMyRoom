@@ -53,7 +53,6 @@ class Staffs extends Controller
             $staff['wardName'] = $wardMap[$staff['wardId']] ?? '';
         }
 
-role
         // 4️⃣ Truyền dữ liệu vào view
         $this->view('layout/admin/admin', [
             'viewFile' => './app/views/admin/staffs.php',

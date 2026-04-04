@@ -239,4 +239,105 @@ foreach ($paid as $p) {
         </table>
     </div>
 
+<div id="phantrang_statisticals"></div>
+
 </div>
+
+
+
+<script>
+const tableRows = Array.from(document.querySelectorAll('.statisticals-table tbody tr'));
+const itemsPerPage = 10; // số dòng mỗi trang
+let currentPage = 1;
+
+function showTablePage(page) {
+    const start = (page - 1) * itemsPerPage;
+    const end = start + itemsPerPage;
+    tableRows.forEach((row, index) => {
+        row.style.display = (index >= start && index < end) ? '' : 'none';
+    });
+    renderTablePagination();
+}
+
+function renderTablePagination() {
+    const totalPages = Math.ceil(tableRows.length / itemsPerPage);
+    const pagination = document.getElementById('phantrang_statisticals');
+    pagination.innerHTML = '';
+
+    // Nút "<" lùi trang
+    const prevBtn = document.createElement('button');
+    prevBtn.textContent = '<';
+    prevBtn.disabled = currentPage === 1;
+    prevBtn.addEventListener('click', () => {
+        if (currentPage > 1) {
+            currentPage--;
+            showTablePage(currentPage);
+        }
+    });
+    pagination.appendChild(prevBtn);
+
+    // Các nút số trang
+    for (let i = 1; i <= totalPages; i++) {
+        const btn = document.createElement('button');
+        btn.textContent = i;
+        if (i === currentPage) btn.classList.add('active');
+        btn.addEventListener('click', () => {
+            currentPage = i;
+            showTablePage(currentPage);
+        });
+        pagination.appendChild(btn);
+    }
+
+    // Nút ">" tới trang tiếp
+    const nextBtn = document.createElement('button');
+    nextBtn.textContent = '>';
+    nextBtn.disabled = currentPage === totalPages;
+    nextBtn.addEventListener('click', () => {
+        if (currentPage < totalPages) {
+            currentPage++;
+            showTablePage(currentPage);
+        }
+    });
+    pagination.appendChild(nextBtn);
+}
+
+// Khởi chạy phân trang
+showTablePage(currentPage);
+</script>
+
+<style>
+#phantrang_statisticals {
+    text-align: center;
+    margin-top: 15px;
+}
+
+#phantrang_statisticals button {
+    margin: 2px;
+    padding: 5px 10px;
+    border: 1px solid #007bff;
+    background-color: white;
+    color: #007bff;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+#phantrang_statisticals button:hover {
+    background-color: #007bff;
+    color: white;
+}
+
+#phantrang_statisticals button.active {
+    background-color: #007bff;
+    color: white;
+    cursor: default;
+}
+
+#phantrang_statisticals button:disabled {
+    background-color: #e0e0e0;
+    color: #888;
+    border-color: #ccc;
+    cursor: not-allowed;
+}
+</style>

@@ -5,6 +5,6 @@ import './customer.js';
 import './review.js';
 import './voucher.js';
 import './payment.js';
-import './dashboard.js';
 import './hotel.js';
-import './room.js';
+import './booking.js';
+import './dashboard.js';

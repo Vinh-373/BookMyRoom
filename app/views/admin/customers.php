@@ -357,7 +357,101 @@
     </div>
   </div>
 
+<div id="phantrang_customers"></div>
+
+</div>
 
   <script>
   window.customersData = <?php echo json_encode($customers); ?>;
+const customerRows = Array.from(document.querySelectorAll('#customersTableBody tr'));
+const itemsPerPage = 10;
+let currentPage = 1;
+
+function showCustomerPage(page) {
+    const start = (page - 1) * itemsPerPage;
+    const end = start + itemsPerPage;
+    customerRows.forEach((row, index) => {
+        row.style.display = (index >= start && index < end) ? '' : 'none';
+    });
+    renderCustomerPagination();
+}
+
+function renderCustomerPagination() {
+    const totalPages = Math.ceil(customerRows.length / itemsPerPage);
+    const pagination = document.getElementById('phantrang_customers');
+    pagination.innerHTML = '';
+
+    const prevBtn = document.createElement('button');
+    prevBtn.textContent = '<';
+    prevBtn.disabled = currentPage === 1;
+    prevBtn.addEventListener('click', () => {
+        if (currentPage > 1) {
+            currentPage--;
+            showCustomerPage(currentPage);
+        }
+    });
+    pagination.appendChild(prevBtn);
+
+    for (let i = 1; i <= totalPages; i++) {
+        const btn = document.createElement('button');
+        btn.textContent = i;
+        if (i === currentPage) btn.classList.add('active');
+        btn.addEventListener('click', () => {
+            currentPage = i;
+            showCustomerPage(currentPage);
+        });
+        pagination.appendChild(btn);
+    }
+
+    const nextBtn = document.createElement('button');
+    nextBtn.textContent = '>';
+    nextBtn.disabled = currentPage === totalPages;
+    nextBtn.addEventListener('click', () => {
+        if (currentPage < totalPages) {
+            currentPage++;
+            showCustomerPage(currentPage);
+        }
+    });
+    pagination.appendChild(nextBtn);
+}
+
+showCustomerPage(currentPage);
 </script>
+
+<style>
+#phantrang_customers {
+    text-align: center;
+    margin-top: 15px;
+}
+
+#phantrang_customers button {
+    margin: 2px;
+    padding: 5px 10px;
+    border: 1px solid #007bff;
+    background-color: white;
+    color: #007bff;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+#phantrang_customers button:hover {
+    background-color: #007bff;
+    color: white;
+}
+
+#phantrang_customers button.active {
+    background-color: #007bff;
+    color: white;
+    cursor: default;
+}
+
+#phantrang_customers button:disabled {
+    background-color: #e0e0e0;
+    color: #888;
+    border-color: #ccc;
+    cursor: not-allowed;
+}
+</style>
+

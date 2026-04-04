@@ -355,6 +355,112 @@
       </div>
     </div>
   </div>
+
+  <div id="phantrang_staffs"></div>
+
+  </div>
   <script>
   window.staffsData = <?php echo json_encode($staffs); ?>;
 </script>
+<script>  
+  // JS phân trang
+document.addEventListener("DOMContentLoaded", function () {
+  const tableBody = document.getElementById("staffsTableBody");
+  const paginationContainer = document.getElementById("phantrang_staffs");
+
+  const rowsPerPage = 5; // số hàng mỗi trang
+  let currentPage = 1;
+  const data = window.staffsData; // dữ liệu từ PHP
+
+  function renderTablePage(page) {
+    tableBody.innerHTML = "";
+    const start = (page - 1) * rowsPerPage;
+    const end = start + rowsPerPage;
+    const pageData = data.slice(start, end);
+
+    for (const staff of pageData) {
+      const tr = document.createElement("tr");
+      tr.dataset.userId = staff.id;
+
+      tr.innerHTML = `
+        <td>${staff.id}</td>
+        <td>${staff.fullName}</td>
+        <td>${staff.email}</td>
+        <td>********</td>
+        <td>${staff.phone}</td>
+        <td>${staff.status}</td>
+        <td>${staff.address || ''}</td>
+        <td>${staff.gender || ''}</td>
+        <td>${staff.birthDate || ''}</td>
+        <td>
+          <img src="/BookMyRoom/${staff.avatarUrl || '/public/images/avatars/default.jpg'}" class="staffs-avatar-img">
+        </td>
+        <td>${staff.cityName || ''}</td>
+        <td>${staff.wardName || ''}</td>
+        <td>${new Date(staff.createdAt).toISOString().split('T')[0]}</td>
+        <td>
+          ${staff.status === 'PENDING'
+            ? `<button class="staffs-approve-btn btn-approve" data-user-id="${staff.id}">Duyệt</button>`
+            : `<button class="staff-edit-btn btn-edit" data-user-id="${staff.id}">Sửa</button>
+               <button class="staff-toggle-status-btn ${staff.status === 'BLOCKED' ? 'btn-active' : 'btn-blocked'}"
+                 data-user-id="${staff.id}">${staff.status === 'ACTIVE' ? 'Khóa' : 'Mở'}</button>`
+          }
+        </td>
+      `;
+      tableBody.appendChild(tr);
+    }
+  }
+
+  function renderPagination() {
+    paginationContainer.innerHTML = "";
+    const totalPages = Math.ceil(data.length / rowsPerPage);
+
+    for (let i = 1; i <= totalPages; i++) {
+      const btn = document.createElement("button");
+      btn.textContent = i;
+      if (i === currentPage) btn.classList.add("active");
+
+      btn.addEventListener("click", () => {
+        currentPage = i;
+        renderTablePage(currentPage);
+        renderPagination();
+      });
+
+      paginationContainer.appendChild(btn);
+    }
+  }
+
+  // Hiển thị lần đầu
+  renderTablePage(currentPage);
+  renderPagination();
+});
+</script>
+<style>
+  /* CSS cho phân trang */
+#phantrang_staffs {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+#phantrang_staffs button {
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  background-color: white;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: 0.2s;
+}
+
+#phantrang_staffs button:hover {
+  background-color: #f0f0f0;
+}
+
+#phantrang_staffs button.active {
+  background-color: #3b82f6; /* xanh */
+  color: white;
+  border-color: #3b82f6;
+}
+</style>

@@ -98,7 +98,9 @@
        <?php endforeach; ?>
      </tbody>
    </table>
- </div>
+
+
+
  <!-- Modal thêm đối tác -->
  <div id="addPartnerModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
@@ -403,3 +405,100 @@
      </div>
    </div>
  </div>
+
+<div id="phantrang_partners"></div>
+  </div>
+
+  <script>
+const partnerRows = Array.from(document.querySelectorAll('#partnersTableBody tr'));
+const itemsPerPage = 10; // số dòng mỗi trang
+let currentPage = 1;
+
+function showPartnerPage(page) {
+    const start = (page - 1) * itemsPerPage;
+    const end = start + itemsPerPage;
+    partnerRows.forEach((row, index) => {
+        row.style.display = (index >= start && index < end) ? '' : 'none';
+    });
+    renderPartnerPagination();
+}
+
+function renderPartnerPagination() {
+    const totalPages = Math.ceil(partnerRows.length / itemsPerPage);
+    const pagination = document.getElementById('phantrang_partners');
+    pagination.innerHTML = '';
+
+    const prevBtn = document.createElement('button');
+    prevBtn.textContent = '<';
+    prevBtn.disabled = currentPage === 1;
+    prevBtn.addEventListener('click', () => {
+        if (currentPage > 1) {
+            currentPage--;
+            showPartnerPage(currentPage);
+        }
+    });
+    pagination.appendChild(prevBtn);
+
+    for (let i = 1; i <= totalPages; i++) {
+        const btn = document.createElement('button');
+        btn.textContent = i;
+        if (i === currentPage) btn.classList.add('active');
+        btn.addEventListener('click', () => {
+            currentPage = i;
+            showPartnerPage(currentPage);
+        });
+        pagination.appendChild(btn);
+    }
+
+    const nextBtn = document.createElement('button');
+    nextBtn.textContent = '>';
+    nextBtn.disabled = currentPage === totalPages;
+    nextBtn.addEventListener('click', () => {
+        if (currentPage < totalPages) {
+            currentPage++;
+            showPartnerPage(currentPage);
+        }
+    });
+    pagination.appendChild(nextBtn);
+}
+
+// Khởi chạy phân trang
+showPartnerPage(currentPage);
+</script>
+
+<style>
+#phantrang_partners {
+    text-align: center;
+    margin-top: 15px;
+}
+
+#phantrang_partners button {
+    margin: 2px;
+    padding: 5px 10px;
+    border: 1px solid #007bff;
+    background-color: white;
+    color: #007bff;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+#phantrang_partners button:hover {
+    background-color: #007bff;
+    color: white;
+}
+
+#phantrang_partners button.active {
+    background-color: #007bff;
+    color: white;
+    cursor: default;
+}
+
+#phantrang_partners button:disabled {
+    background-color: #e0e0e0;
+    color: #888;
+    border-color: #ccc;
+    cursor: not-allowed;
+}
+</style>
