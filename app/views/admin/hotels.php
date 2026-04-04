@@ -1,123 +1,94 @@
-<!-- HTML -->
 <div class="hotels-content">
-  <div class="hotels-filters">
-    <input type="text" class="hotels-search" placeholder="Tìm kiếm theo tên khách sạn, địa chỉ...">
-    <select class="hotels-city">
-      <option>Tất cả thành phố</option>
-      <option>Hồ Chí Minh</option>
-      <option>Phú Quốc</option>
-      <option>Hà Nội</option>
-    </select>
-    <select class="hotels-partner">
-      <option>Tất cả đối tác</option>
-    </select>
-    <select class="hotels-status">
-      <option>Tất cả trạng thái</option>
-    </select>
-  </div>
 
-  <div class="hotels-stats">
-    <div class="hotels-stat">
-      <div class="hotels-stat-icon">🏨</div>
-      <div class="hotels-stat-info">
-        <span class="hotels-stat-number">6</span>
-        <span class="hotels-stat-label">Tổng khách sạn</span>
-      </div>
-    </div>
-    <div class="hotels-stat">
-      <div class="hotels-stat-icon">✅</div>
-      <div class="hotels-stat-info">
-        <span class="hotels-stat-number">5</span>
-        <span class="hotels-stat-label">Đang hoạt động</span>
-      </div>
-    </div>
-    <div class="hotels-stat">
-      <div class="hotels-stat-icon">🛏️</div>
-      <div class="hotels-stat-info">
-        <span class="hotels-stat-number">985</span>
-        <span class="hotels-stat-label">Tổng phòng</span>
-      </div>
-    </div>
-    <div class="hotels-stat">
-      <div class="hotels-stat-icon">⭐</div>
-      <div class="hotels-stat-info">
-        <span class="hotels-stat-number">4.6</span>
-        <span class="hotels-stat-label">Rating TB</span>
-      </div>
-    </div>
-  </div>
+    <!-- HEADER -->
+    <div class="hotels-header">
+        <h2 class="hotels-title">Quản lý khách sạn</h2>
 
-  <div class="hotels-list">
-    <!-- Hotel Card 1 -->
-    <div class="hotels-card">
-      <div class="hotels-card-image">
-        <img src="https://via.placeholder.com/400x200" alt="Imperial Palace Hotel">
-        <span class="hotels-card-status">Hoạt động</span>
-        <span class="hotels-card-rating">4.9</span>
-      </div>
-      <div class="hotels-card-body">
-        <h3 class="hotels-card-title">Imperial Palace Hotel</h3>
-        <p class="hotels-card-location">Hồ Chí Minh</p>
-        <p class="hotels-card-partner">Sunrise Hotel Group</p>
-        <div class="hotels-card-stats">
-          <span>Phòng: 250</span>
-          <span>Booking: 1250</span>
-          <span>Doanh thu: 450M</span>
+        <!-- STATS -->
+        <div class="hotels-stats-grid">
+            <div class="hotels-stat-card">
+                <div class="num"><?php echo count($hotels); ?></div>
+                <div class="label">Tổng KS</div>
+            </div>
+
+            <div class="hotels-stat-card">
+                <div class="num">
+                    <?php 
+                        $ratings = array_column($hotels, 'rating');
+                        echo number_format(array_sum($ratings)/max(count($ratings),1),1);
+                    ?>
+                </div>
+                <div class="label">Rating</div>
+            </div>
+
+            <div class="hotels-stat-card">
+                <div class="num"><?php echo array_sum(array_column($hotels,'totalRooms')); ?></div>
+                <div class="label">Phòng</div>
+            </div>
+
+            <div class="hotels-stat-card">
+                <div class="num"><?php echo array_sum(array_column($hotels,'totalBookings')); ?></div>
+                <div class="label">Booking</div>
+            </div>
+
+            <div class="hotels-stat-card">
+                <div class="num"><?php echo number_format(array_sum(array_column($hotels,'totalRevenue'))); ?>đ</div>
+                <div class="label">Doanh thu</div>
+            </div>
         </div>
-        <div class="hotels-card-actions">
-          <button class="hotels-btn-detail">Chi tiết</button>
-          <button class="hotels-btn-edit">✏️</button>
-          <button class="hotels-btn-delete">🗑️</button>
+
+        <!-- TOOLBAR -->
+        <div class="hotels-toolbar">
+            <input type="text" id="search" placeholder="🔍 Tìm khách sạn...">
+
+            <select id="filterPartner">
+                <option value="">Tất cả đối tác</option>
+                <?php foreach ($partners as $p): ?>
+                    <option value="<?php echo $p['companyName']; ?>">
+                        <?php echo $p['companyName']; ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+
+            <a href="?action=create" class="btn-add">+ Thêm</a>
         </div>
-      </div>
     </div>
 
-    <!-- Hotel Card 2 -->
-    <div class="hotels-card">
-      <div class="hotels-card-image">
-        <img src="https://via.placeholder.com/400x200" alt="Gold Star Luxury Resort">
-        <span class="hotels-card-status">Hoạt động</span>
-        <span class="hotels-card-rating">4.8</span>
-      </div>
-      <div class="hotels-card-body">
-        <h3 class="hotels-card-title">Gold Star Luxury Resort</h3>
-        <p class="hotels-card-location">Phú Quốc</p>
-        <p class="hotels-card-partner">Gold Star Hotels & Resorts</p>
-        <div class="hotels-card-stats">
-          <span>Phòng: 180</span>
-          <span>Booking: 890</span>
-          <span>Doanh thu: 320M</span>
+    <!-- LIST -->
+    <div class="hotels-grid" id="hotelsList">
+        <?php foreach ($hotels as $hotel): ?>
+        <div class="hotel-card"
+            data-name="<?php echo strtolower($hotel['hotelName']); ?>"
+            data-partner="<?php echo $hotel['companyName']; ?>">
+
+            <div class="img">
+                <img src="<?php echo $hotel['image'] ?? 'default.jpg'; ?>">
+                <span class="rating">⭐ <?php echo $hotel['rating'] ?? 0; ?></span>
+            </div>
+
+            <div class="info">
+                <h3><?php echo $hotel['hotelName']; ?></h3>
+
+                <p>📍 <?php echo $hotel['address']; ?></p>
+                <p><?php echo $hotel['wardName']; ?>, <?php echo $hotel['cityName']; ?></p>
+                <p>🏢 <?php echo $hotel['companyName'] ?? '---'; ?></p>
+
+                <div class="meta">
+                    <span>🛏 <?php echo $hotel['totalRooms']; ?></span>
+                    <span>📖 <?php echo $hotel['totalBookings']; ?></span>
+                    <span>💰 <?php echo number_format($hotel['totalRevenue']); ?></span>
+                </div>
+
+                <div class="actions">
+                    <a href="?action=detail&id=<?php echo $hotel['id']; ?>">Xem</a>
+                    <a href="?action=edit&id=<?php echo $hotel['id']; ?>">Sửa</a>
+                    <a href="?action=delete&id=<?php echo $hotel['id']; ?>" 
+                       onclick="return confirm('Xóa?')">Xóa</a>
+                </div>
+            </div>
+
         </div>
-        <div class="hotels-card-actions">
-          <button class="hotels-btn-detail">Chi tiết</button>
-          <button class="hotels-btn-edit">✏️</button>
-          <button class="hotels-btn-delete">🗑️</button>
-        </div>
-      </div>
+        <?php endforeach; ?>
     </div>
 
-    <!-- Hotel Card 3 -->
-    <div class="hotels-card">
-      <div class="hotels-card-image">
-        <img src="https://via.placeholder.com/400x200" alt="Sunrise Grand Hotel">
-        <span class="hotels-card-status">Hoạt động</span>
-        <span class="hotels-card-rating">4.5</span>
-      </div>
-      <div class="hotels-card-body">
-        <h3 class="hotels-card-title">Sunrise Grand Hotel</h3>
-        <p class="hotels-card-location">Hà Nội</p>
-        <p class="hotels-card-partner">Sunrise Hotel Group</p>
-        <div class="hotels-card-stats">
-          <span>Phòng: 120</span>
-          <span>Booking: 650</span>
-          <span>Doanh thu: 180M</span>
-        </div>
-        <div class="hotels-card-actions">
-          <button class="hotels-btn-detail">Chi tiết</button>
-          <button class="hotels-btn-edit">✏️</button>
-          <button class="hotels-btn-delete">🗑️</button>
-        </div>
-      </div>
-    </div>
-  </div>
 </div>
