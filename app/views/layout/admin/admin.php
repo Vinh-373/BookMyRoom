@@ -1,3 +1,17 @@
+<?php
+
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Đúng: Ngay đầu file
+
+// Kiểm tra nếu chưa đăng nhập thì đá ra ngoài
+// if (!isset($_SESSION['user_id'])) {
+//     header("Location: login.php");
+//     exit();
+// }
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -27,12 +41,32 @@
       font-family: 'Inter', sans-serif;
       background-color: #f7f9fb;
     }
+    :root {
+  /* Brand Colors - BookMyRoom */
+  --primary: #4F46E5;          /* Indigo 600 - Màu thương hiệu chính */
+  --primary-dim: #4338CA;      /* Indigo 700 - Khi hover */
+  --on-primary: #FFFFFF;       /* Chữ trên nền primary */
+  
+  /* Surface Colors - Dùng cho Background & Cards */
+  --surface: #F8FAFC;           /* Slate 50 - Nền chính */
+  --surface-container-low: #F1F5F9;
+  --surface-container-high: #E2E8F0;
+  --surface-container-highest: #CBD5E1;
+  
+  /* Text Colors */
+  --on-surface: #0F172A;        /* Slate 900 - Chữ tiêu đề */
+  --on-surface-variant: #64748B; /* Slate 500 - Chữ phụ/Placeholder */
+  
+  /* Outline & Utility */
+  --outline-variant: #E2E8F0;
+  --error: #EF4444;
+}
   </style>
     <link rel="stylesheet" href="/BookMyRoom/public/css/admin/admin.css">
 </head>
 <body class="bg-background text-on-background antialiased">
 <?php
-session_start();
+// session_start();
 $partial = isset($_GET['partial']) && $_GET['partial'] == 1;
 if (!$partial) {
     // Sidebar
