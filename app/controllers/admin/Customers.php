@@ -15,33 +15,13 @@ class Customers extends Controller
         // Lấy users có role CUSTOMER
         $customers = $customersModel->join_multi(
             joins: [
-                [
-                    'table' => 'user_roles',
-                    'type'  => 'INNER',
-                    'on'    => 'users.id = user_roles.userId'
-                ],
-                [
-                    'table' => 'roles',
-                    'type'  => 'INNER',
-                    'on'    => 'user_roles.roleId = roles.id'
-                ]
+                
+
             ],
             select: '
-                users.id,
-                users.fullName,
-                users.email,
-                users.phone,
-                users.status,
-                users.address,
-                users.gender,
-                users.birthDate,
-                users.avatarUrl,
-                users.cityId,
-                users.wardId,
-                users.createdAt,
-                users.deletedAt
+                users.*
             ',
-            where: ['roles.name' => 'CUSTOMER'],
+            where: ['users.role' => 'CUSTOMER'],
             orderBy: 'users.id ASC'
         );
 

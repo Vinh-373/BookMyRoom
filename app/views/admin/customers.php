@@ -356,3 +356,8 @@
       </div>
     </div>
   </div>
+
+
+  <script>
+  window.customersData = <?php echo json_encode($customers); ?>;
+</script>

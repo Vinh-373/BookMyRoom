@@ -58,6 +58,7 @@ class Statisticals extends Controller
                 users.fullName,
                 users.email,
                 users.phone,
+                users.role, -- ✅ dùng trực tiếp role ở đây
 
                 hotels.hotelName,
                 hotels.address,
@@ -73,12 +74,6 @@ class Statisticals extends Controller
             protected $table = "users";
         };
         $users = $usersModel->findAll();
-
-        // ===== USER ROLES =====
-        $userRolesModel = new class extends \myModels {
-            protected $table = "user_roles";
-        };
-        $user_roles = $userRolesModel->findAll();
 
         // ===== HOTELS =====
         $hotelsModel = new class extends \myModels {
@@ -103,27 +98,31 @@ class Statisticals extends Controller
             protected $table = "bookings";
         };
         $bookings = $bookingsModel->findAll();
-                // ===== BOOKING DETAILS (THÊM MỚI) =====
-        $bookingdetails = (new class extends \myModels {
+
+        // ===== BOOKING DETAILS =====
+        $bookingdetailsModel = new class extends \myModels {
             protected $table = "bookingdetails";
-        })->findAll();
-        // ===== REVIEWS (THÊM MỚI) =====
-        $reviews = (new class extends \myModels {
+        };
+        $bookingdetails = $bookingdetailsModel->findAll();
+
+        // ===== REVIEWS =====
+        $reviewsModel = new class extends \myModels {
             protected $table = "reviews";
-        })->findAll();
+        };
+        $reviews = $reviewsModel->findAll();
+
         // ===== VIEW =====
         $this->view('layout/admin/admin', [
             'viewFile' => './app/views/admin/statisticals.php',
 
             'payments' => $payments,
             'users' => $users,
-            'user_roles' => $user_roles,
             'hotels' => $hotels,
             'roomconfigurations' => $roomconfigurations,
             'physicalrooms' => $physicalrooms,
             'bookings' => $bookings,
             'reviews' => $reviews,
-            'bookingdetails'=> $bookingdetails
+            'bookingdetails' => $bookingdetails
         ]);
     }
 }

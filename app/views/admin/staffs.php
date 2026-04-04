@@ -355,3 +355,6 @@
       </div>
     </div>
   </div>
+  <script>
+  window.staffsData = <?php echo json_encode($staffs); ?>;
+</script>

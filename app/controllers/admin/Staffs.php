@@ -15,33 +15,12 @@ class Staffs extends Controller
         // Lấy users có role STAFF
         $staffs = $staffsModel->join_multi(
             joins: [
-                [
-                    'table' => 'user_roles',
-                    'type'  => 'INNER',
-                    'on'    => 'users.id = user_roles.userId'
-                ],
-                [
-                    'table' => 'roles',
-                    'type'  => 'INNER',
-                    'on'    => 'user_roles.roleId = roles.id'
-                ]
+
             ],
             select: '
-                users.id,
-                users.fullName,
-                users.email,
-                users.phone,
-                users.status,
-                users.address,
-                users.gender,
-                users.birthDate,
-                users.avatarUrl,
-                users.cityId,
-                users.wardId,
-                users.createdAt,
-                users.deletedAt
+                users.*
             ',
-            where: ['roles.name' => 'STAFF'],
+            where: ['users.role' => 'STAFF'],
             orderBy: 'users.id ASC'
         );
 
@@ -74,7 +53,7 @@ class Staffs extends Controller
             $staff['wardName'] = $wardMap[$staff['wardId']] ?? '';
         }
 
-
+role
         // 4️⃣ Truyền dữ liệu vào view
         $this->view('layout/admin/admin', [
             'viewFile' => './app/views/admin/staffs.php',
@@ -192,7 +171,7 @@ class Staffs extends Controller
 
             // ✅ INSERT ROLE (CHỈ 1 LẦN)
             $userRoleModel = new class extends \myModels {
-                protected $table = "user_roles";
+                protected $table = "users.role";
             };
 
             // Chỉ insert trực tiếp
@@ -201,7 +180,7 @@ class Staffs extends Controller
                 'roleId' => $roleId
             ];
 
-            $userRoleRaw = $userRoleModel->insert('user_roles', $userRoleData);
+            $userRoleRaw = $userRoleModel->insert('users.role', $userRoleData);
             $userRoleResult = json_decode($userRoleRaw, true);
 
             if (!$userRoleResult || $userRoleResult['type'] !== 'success') {
