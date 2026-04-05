@@ -6,12 +6,12 @@ class PartnerController extends Controller1 {
     protected $activeHotelId;
     
     public function __construct() {
-        if (!isset($_SESSION['user_role'])) {
+        if (!isset($_SESSION['user']['id'])) {
             header('Location: ' . URLROOT . '/login');
             exit;
         }
 
-        if ($_SESSION['user_role'] == 'Staff') {
+        if ($_SESSION['user']['role'] == 'Staff') {
             header('Location: ' . URLROOT . '/manage/'.$_SESSION['active_hotel_id']);
             exit;
         }
@@ -35,7 +35,7 @@ class PartnerController extends Controller1 {
     }
 
     public function index() {
-        $partnerId = $_SESSION['user_id'];
+        $partnerId = $_SESSION['user']['id'];
         $portfolioService = $this->service('PortfolioService');
         $data = $portfolioService->getDashboardData($partnerId);
         $data['partnerHotels']= $this->partnerHotels;
@@ -48,7 +48,7 @@ class PartnerController extends Controller1 {
             $portfolioService = $this->service('PortfolioService');
             
             // Lấy ID người dùng từ Session
-            $partnerId = $_SESSION['user_id'];
+            $partnerId = $_SESSION['user']['id'];
             
             $result = $portfolioService->createNewProperty($_POST, $partnerId);
 
@@ -75,7 +75,7 @@ class PartnerController extends Controller1 {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $portfolioService = $this->service('PortfolioService');
             
-            $partnerId = $_SESSION['user_id'];
+            $partnerId = $_SESSION['user']['id'];
             $hotel = $portfolioService->getHotelForEdit($id, $partnerId);
 
             if (!$hotel) {
@@ -129,7 +129,7 @@ class PartnerController extends Controller1 {
     public function updateProfileAjax() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $portfolioService = $this->service('PortfolioService');
-            $userId = $_SESSION['user_id'];
+            $userId = $_SESSION['user']['id'];
             $fileName = null;
 
             // Xử lý upload ảnh vật lý tại Controller
@@ -151,5 +151,10 @@ class PartnerController extends Controller1 {
             echo json_encode($result);
             exit;
         }
+    }
+
+    public function logout(){
+        session_destroy();
+        header('Location: ' . URLROOT . '/auth/login');
     }
 }

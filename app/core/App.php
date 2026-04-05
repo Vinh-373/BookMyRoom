@@ -276,8 +276,6 @@ class App {
 
             if (file_exists("./app/controllers/partner/" . $this->controller . ".php")) {
                 require_once "./app/controllers/partner/" . $this->controller . ".php";
-            }else if (file_exists("./app/controllers/customer/" . $this->controller . ".php")) {
-                require_once "./app/controllers/partner/" . $this->controller . ".php";
             } else {
                 require_once "./app/controllers/" . $this->controller . ".php";
             }
@@ -291,10 +289,6 @@ class App {
                 require_once "./app/controllers/partner/" . $this->controller . ".php";
                 unset($url[0]);
             } elseif (file_exists("./app/controllers/" . $name . ".php")) {
-                $this->controller = $name;
-                require_once "./app/controllers/" . $this->controller . ".php";
-                unset($url[0]);
-            } elseif (file_exists("./app/controllers/customer/" . $name . ".php")) {
                 $this->controller = $name;
                 require_once "./app/controllers/" . $this->controller . ".php";
                 unset($url[0]);

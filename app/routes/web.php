@@ -2,7 +2,7 @@
 return [
     'partner'       => ['PartnerController', 'index'],
     'manage'        => ['PartnerController', 'manage'],
-    'partner/login' => ['Auth', 'handleLogin'],
+    'partner/logout' => ['PartnerController', 'logout'],
     'partner/getWardsAjax' => ['PartnerController', 'getWardsAjax'],
     'partner/addHotel' => ['PartnerController', 'addHotel'],
     'partner/editHotel' => ['PartnerController', 'editHotel'],
