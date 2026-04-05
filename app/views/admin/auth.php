@@ -1,14 +1,16 @@
 <?php
+
 /**
  * File: auth.php
  * Path: app/views/admin/auth.php
  */
 ?>
 <style>
-    .header{
+    .header {
         display: none !important;
     }
-    .sidebar{
+
+    .sidebar {
         display: none !important;
 
     }
@@ -17,7 +19,7 @@
 <main class="min-h-screen w-full flex items-center justify-center bg-[var(--surface)] p-6 font-sans">
     <div class="w-full max-w-md z-10">
         <div class="glass-card rounded-[1.5rem] p-10 border border-[var(--outline-variant)] bg-white shadow-2xl">
-            
+
             <div class="mb-10 text-center">
                 <div class="inline-flex items-center justify-center w-16 h-16 bg-[var(--primary)] text-white rounded-2xl mb-4 shadow-lg shadow-indigo-200">
                     <span class="material-symbols-outlined text-[32px]">hotel_class</span>
@@ -27,20 +29,19 @@
             </div>
 
             <form id="adminLoginForm" class="space-y-6">
-                
+
                 <div class="space-y-2">
                     <label class="block text-[0.75rem] font-bold text-[var(--on-surface-variant)] tracking-wider uppercase px-1">Tài khoản quản trị</label>
                     <div class="relative group">
                         <div class="absolute inset-y-0 left-4 flex items-center text-[var(--on-surface-variant)]/60 group-focus-within:text-[var(--primary)] transition-colors">
                             <span class="material-symbols-outlined text-[20px]">admin_panel_settings</span>
                         </div>
-                        <input 
-                            name="username" 
+                        <input
+                            name="username"
                             required
-                            class="w-full pl-12 pr-4 py-4 bg-[var(--surface-container-low)] border-2 border-transparent rounded-xl text-[var(--on-surface)] placeholder:text-[var(--on-surface-variant)]/40 focus:border-[var(--primary)] focus:bg-white transition-all outline-none" 
-                            placeholder="admin_id hoặc email" 
-                            type="text"
-                        />
+                            class="w-full pl-12 pr-4 py-4 bg-[var(--surface-container-low)] border-2 border-transparent rounded-xl text-[var(--on-surface)] placeholder:text-[var(--on-surface-variant)]/40 focus:border-[var(--primary)] focus:bg-white transition-all outline-none"
+                            placeholder="admin_id hoặc email"
+                            type="text" />
                     </div>
                 </div>
 
@@ -52,19 +53,17 @@
                         <div class="absolute inset-y-0 left-4 flex items-center text-[var(--on-surface-variant)]/60 group-focus-within:text-[var(--primary)] transition-colors">
                             <span class="material-symbols-outlined text-[20px]">lock</span>
                         </div>
-                        <input 
+                        <input
                             name="password"
                             id="password-input"
                             required
-                            class="w-full pl-12 pr-12 py-4 bg-[var(--surface-container-low)] border-2 border-transparent rounded-xl text-[var(--on-surface)] placeholder:text-[var(--on-surface-variant)]/40 focus:border-[var(--primary)] focus:bg-white transition-all outline-none" 
-                            placeholder="••••••••••••" 
-                            type="password"
-                        />
-                        <button 
+                            class="w-full pl-12 pr-12 py-4 bg-[var(--surface-container-low)] border-2 border-transparent rounded-xl text-[var(--on-surface)] placeholder:text-[var(--on-surface-variant)]/40 focus:border-[var(--primary)] focus:bg-white transition-all outline-none"
+                            placeholder="••••••••••••"
+                            type="password" />
+                        <button
                             type="button"
                             onclick="togglePassword()"
-                            class="absolute inset-y-0 right-4 flex items-center text-[var(--on-surface-variant)]/60 hover:text-[var(--primary)] transition-colors"
-                        >
+                            class="absolute inset-y-0 right-4 flex items-center text-[var(--on-surface-variant)]/60 hover:text-[var(--primary)] transition-colors">
                             <span class="material-symbols-outlined text-[20px]" id="eye-icon">visibility</span>
                         </button>
                     </div>
@@ -109,7 +108,7 @@
         const input = document.getElementById('password-input');
         const icon = document.getElementById('eye-icon');
         const isPassword = input.type === 'password';
-        
+
         input.type = isPassword ? 'text' : 'password';
         icon.textContent = isPassword ? 'visibility_off' : 'visibility';
     }
@@ -126,7 +125,7 @@
 
         // Khởi tạo FormData
         const formData = new FormData(loginForm);
-        
+
         // KIỂM TRA DỮ LIỆU (Debug): 
         // Nếu log cái này ra mà thấy dữ liệu thì server mới nhận được
         console.log("Dữ liệu gửi đi:", Object.fromEntries(formData));
@@ -151,16 +150,24 @@
             const result = await response.json();
 
             if (result.success) {
-                
+
                 // Thành công: Chuyển hướng
                 window.location.href = result.redirect || '/BookMyRoom/admin/dashboard';
             } else {
                 // Thất bại: Thông báo lỗi từ server
-                alert(result.message || 'Sai thông tin đăng nhập.');
+                Swal.fire({
+                    title: "Sai thông tin đăng nhập",
+                    text: result.message,
+                    icon: "error"
+                });;
             }
         } catch (error) {
             console.error('Lỗi hệ thống:', error);
-            alert('Lỗi kết nối server hoặc phản hồi không đúng định dạng.');
+            Swal.fire({
+                    title: "Sai thông tin đăng nhập",
+                    text: result.message,
+                    icon: "error"
+                });;
         } finally {
             // Hoàn tác trạng thái UI
             submitBtn.disabled = false;
@@ -168,5 +175,4 @@
             btnSpan.textContent = 'Đăng nhập hệ thống';
         }
     });
-
 </script>

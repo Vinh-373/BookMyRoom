@@ -4,17 +4,15 @@ namespace Controllers\admin;
 
 use Controller;
 
-use Models\MyModels;
+use Models\myModels;
 require_once "./app/models/myModels.php";
 use Models\staffsModel;
 require_once "./app/models/staffsModel.php";
-
 class Staffs extends Controller
 {
     public function index()
     {
-        require_once './app/models/staffsModel.php';
-        require_once './app/models/myModels.php';
+    
         $staffsModel = new staffsModel();
 
         // Lấy users có role STAFF

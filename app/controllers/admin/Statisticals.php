@@ -11,8 +11,7 @@ class Statisticals extends Controller
 {
     public function index()
     {
-        require_once './app/models/myModels.php';
-        require_once './app/models/paymentsModel.php';
+       
 
         $paymentsModel = new paymentsModel();
 

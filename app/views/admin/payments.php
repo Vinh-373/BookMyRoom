@@ -143,9 +143,100 @@
     </div>
   </div>
 
-
-
-
-
+<div id="phantrang_payments"></div>
 
 </div>
+
+<script>
+const paymentRows = Array.from(document.querySelectorAll('.payments-table tbody tr'));
+const itemsPerPage = 10; // số dòng mỗi trang
+let currentPage = 1;
+
+function showPaymentPage(page) {
+    const start = (page - 1) * itemsPerPage;
+    const end = start + itemsPerPage;
+    paymentRows.forEach((row, index) => {
+        row.style.display = (index >= start && index < end) ? '' : 'none';
+    });
+    renderPaymentPagination();
+}
+
+function renderPaymentPagination() {
+    const totalPages = Math.ceil(paymentRows.length / itemsPerPage);
+    const pagination = document.getElementById('phantrang_payments');
+    pagination.innerHTML = '';
+
+    const prevBtn = document.createElement('button');
+    prevBtn.textContent = '<';
+    prevBtn.disabled = currentPage === 1;
+    prevBtn.addEventListener('click', () => {
+        if (currentPage > 1) {
+            currentPage--;
+            showPaymentPage(currentPage);
+        }
+    });
+    pagination.appendChild(prevBtn);
+
+    for (let i = 1; i <= totalPages; i++) {
+        const btn = document.createElement('button');
+        btn.textContent = i;
+        if (i === currentPage) btn.classList.add('active');
+        btn.addEventListener('click', () => {
+            currentPage = i;
+            showPaymentPage(currentPage);
+        });
+        pagination.appendChild(btn);
+    }
+
+    const nextBtn = document.createElement('button');
+    nextBtn.textContent = '>';
+    nextBtn.disabled = currentPage === totalPages;
+    nextBtn.addEventListener('click', () => {
+        if (currentPage < totalPages) {
+            currentPage++;
+            showPaymentPage(currentPage);
+        }
+    });
+    pagination.appendChild(nextBtn);
+}
+
+// Khởi chạy phân trang
+showPaymentPage(currentPage);
+</script>
+
+<style>
+#phantrang_payments {
+    text-align: center;
+    margin-top: 15px;
+}
+
+#phantrang_payments button {
+    margin: 2px;
+    padding: 5px 10px;
+    border: 1px solid #007bff;
+    background-color: white;
+    color: #007bff;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+#phantrang_payments button:hover {
+    background-color: #007bff;
+    color: white;
+}
+
+#phantrang_payments button.active {
+    background-color: #007bff;
+    color: white;
+    cursor: default;
+}
+
+#phantrang_payments button:disabled {
+    background-color: #e0e0e0;
+    color: #888;
+    border-color: #ccc;
+    cursor: not-allowed;
+}
+</style>

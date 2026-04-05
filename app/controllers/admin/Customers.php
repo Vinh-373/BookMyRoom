@@ -11,8 +11,7 @@ class Customers extends Controller
 {
     public function index()
     {
-        require_once './app/models/customersModel.php';
-        require_once './app/models/myModels.php';
+        
         $customersModel = new customersModel();
 
         // Lấy users có role CUSTOMER

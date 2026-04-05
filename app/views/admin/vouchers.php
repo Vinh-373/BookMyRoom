@@ -150,7 +150,106 @@
   </div>
 
 
-
+<div id="phantrang_vouchers"></div>
 
 
 </div>
+
+
+
+<script>
+const voucherRows = Array.from(document.querySelectorAll('.vouchers-table tbody tr'));
+const itemsPerPage = 10; // số dòng mỗi trang
+let currentPage = 1;
+
+function showVoucherPage(page) {
+    const start = (page - 1) * itemsPerPage;
+    const end = start + itemsPerPage;
+    voucherRows.forEach((row, index) => {
+        row.style.display = (index >= start && index < end) ? '' : 'none';
+    });
+    renderVoucherPagination();
+}
+
+function renderVoucherPagination() {
+    const totalPages = Math.ceil(voucherRows.length / itemsPerPage);
+    const pagination = document.getElementById('phantrang_vouchers');
+    pagination.innerHTML = '';
+
+    // Nút "<" lùi trang
+    const prevBtn = document.createElement('button');
+    prevBtn.textContent = '<';
+    prevBtn.disabled = currentPage === 1;
+    prevBtn.addEventListener('click', () => {
+        if (currentPage > 1) {
+            currentPage--;
+            showVoucherPage(currentPage);
+        }
+    });
+    pagination.appendChild(prevBtn);
+
+    // Nút số trang
+    for (let i = 1; i <= totalPages; i++) {
+        const btn = document.createElement('button');
+        btn.textContent = i;
+        if (i === currentPage) btn.classList.add('active');
+        btn.addEventListener('click', () => {
+            currentPage = i;
+            showVoucherPage(currentPage);
+        });
+        pagination.appendChild(btn);
+    }
+
+    // Nút ">" tới trang tiếp
+    const nextBtn = document.createElement('button');
+    nextBtn.textContent = '>';
+    nextBtn.disabled = currentPage === totalPages;
+    nextBtn.addEventListener('click', () => {
+        if (currentPage < totalPages) {
+            currentPage++;
+            showVoucherPage(currentPage);
+        }
+    });
+    pagination.appendChild(nextBtn);
+}
+
+// Khởi chạy phân trang
+showVoucherPage(currentPage);
+</script>
+
+<style>
+#phantrang_vouchers {
+    text-align: center;
+    margin-top: 15px;
+}
+
+#phantrang_vouchers button {
+    margin: 2px;
+    padding: 5px 10px;
+    border: 1px solid #007bff;
+    background-color: white;
+    color: #007bff;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+#phantrang_vouchers button:hover {
+    background-color: #007bff;
+    color: white;
+}
+
+#phantrang_vouchers button.active {
+    background-color: #007bff;
+    color: white;
+    cursor: default;
+}
+
+#phantrang_vouchers button:disabled {
+    background-color: #e0e0e0;
+    color: #888;
+    border-color: #ccc;
+    cursor: not-allowed;
+}
+</style>

@@ -13,9 +13,7 @@ class Reviews extends Controller
 {
     public function index()
     {
-        require_once './app/models/myModels.php';
-        require_once './app/models/reviewsModel.php';
-        require_once './app/models/partnersModel.php';
+        
         $partnersModel = new partnersModel();
         $partners = $partnersModel->findAll();
 

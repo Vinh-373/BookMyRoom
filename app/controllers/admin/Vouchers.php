@@ -11,8 +11,7 @@ class Vouchers extends Controller
 {
     public function index()
     {
-        require_once './app/models/myModels.php';
-        require_once './app/models/vouchersModel.php';
+        
 
         $vouchersModel = new vouchersModel();
 

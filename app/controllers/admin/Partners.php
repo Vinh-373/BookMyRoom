@@ -11,8 +11,7 @@ class Partners extends Controller
 {
     public function index()
     {
-        require_once './app/models/partnersModel.php';
-        require_once './app/models/myModels.php';
+      
         $partnersModel = new PartnersModel();
 
         $partners = $partnersModel->join_multi(
