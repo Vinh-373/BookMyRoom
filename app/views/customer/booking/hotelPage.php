@@ -2241,7 +2241,13 @@ if (!empty($data['filters']['dates'])) {
             const dateInput = document.getElementById('date-picker');
             const dates = dateInput?.value;
             const availableRooms = parseInt(document.getElementById(`available-${roomConfigId}`).innerText);
-            const availablePhysicalRoomIds = document.getElementById(`physical-${roomConfigId}`).innerText;
+                       const raw = document
+  .getElementById(`physical-${roomConfigId}`)
+  .textContent.trim();
+
+const availablePhysicalRoomIds = raw
+  ? raw.split(',').map(id => id.trim())
+  : [];
            
 
             // ✅ 1. Check ngày
