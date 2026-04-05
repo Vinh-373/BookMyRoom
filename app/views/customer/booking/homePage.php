@@ -1,10 +1,10 @@
 <?php
 
-echo "<pre>";
+// echo "<pre>";
 
-print_r($_SESSION ?? 'No role set in session');
-echo "</pre>";
-?>
+// print_r($_SESSION ?? 'No role set in session');
+// echo "</pre>";
+// ?>
 
 <head>
     <link rel="stylesheet" href="<?= BASE_URL ?>public/css/customer/booking/index.css">

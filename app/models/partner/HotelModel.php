@@ -24,7 +24,7 @@ class HotelModel extends Model {
                 LEFT JOIN cities c ON h.cityId = c.id
                 LEFT JOIN wards w ON h.wardId = w.id
                 LEFT JOIN hotelimages img ON h.id = img.hotelId
-                WHERE h.partnerId = :partnerId AND h.deletedAt IS NULL
+                WHERE h.partnerId = :partnerId AND h.deletedAt IS NULL AND img.isPrimary = 1
                 ORDER BY h.createdAt DESC";
         
         return $this->db->fetchAll($sql, [':partnerId' => $partnerId]);

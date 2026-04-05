@@ -11,28 +11,32 @@ class PartnerController extends Controller1 {
             exit;
         }
 
-        if ($_SESSION['user']['role'] == 'Staff') {
-            header('Location: ' . URLROOT . '/manage/'.$_SESSION['active_hotel_id']);
-            exit;
-        }
-        else{
-            $this->partnerHotels = $this->service('PortfolioService')->getHotelsByPartner($_SESSION['active_hotel_id']);
-            $this->activeHotelId = $_SESSION['active_hotel_id'] ?? null;
+        $partnerId = $_SESSION['user']['id'];
+        $this->activeHotelId = $_SESSION['active_hotel_id'] ?? null;
+        if ($_SESSION['user']['role'] !== 'STAFF') {
+            $this->partnerHotels = $this->service('PortfolioService')->getHotelsByPartner($partnerId);
         }
     }
 
     public function manage($id) {
-        $_SESSION['active_hotel_id'] = $id;
+        $found = false;
         foreach ($this->partnerHotels as $hotel) {
             if ($hotel['id'] == $id) {
+                $_SESSION['active_hotel_id'] = $id;
                 $_SESSION['active_hotel_name'] = $hotel['hotelName'];
+                $found = true;
                 break;
             }
         }
-        session_write_close();
+
+        if (!$found && $_SESSION['user']['role'] !== 'STAFF') {
+            die("Bạn không có quyền quản lý khách sạn này.");
+        }
+
         header('Location: ' . URLROOT . '/dashboard');
         exit;
     }
+
 
     public function index() {
         $partnerId = $_SESSION['user']['id'];

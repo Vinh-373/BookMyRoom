@@ -1,3 +1,9 @@
+<?php
+// echo "<pre>";
+// print_r($_SESSION);
+// echo "</pre>";
+
+?>
 <div class="dashboard-wrapper">
     <div class="dashboard-content-header">
         <div class="header-title">

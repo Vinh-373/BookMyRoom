@@ -31,10 +31,10 @@
         <div class="user-dropdown-container" id="userDropdownTrigger">
             <div class="user-profile">
                 <div class="user-info">
-                    <span class="u-name"><?= $_SESSION['user']['name'] ?></span>
+                    <span class="u-name"><?= $_SESSION['user']['fullName'] ?></span>
                     <span class="u-role"><?= $_SESSION['user']['role'] ?></span>
                 </div>
-                <img src="<?= URLROOT ?>/public/images/avatar.jpg" alt="User Avatar" class="avatar">
+                <img src="<?= $_SESSION['user']['avatarUrl'] ?>" alt="User Avatar" class="avatar">
             </div>
 
             <div class="user-menu-dropdown" id="userMenu">

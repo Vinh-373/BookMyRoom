@@ -14,16 +14,23 @@ class RoomModel extends Model {
         }
 
         $sql = "SELECT 
-                    rc.id, 
-                    rt.name, 
-                    rc.basePrice, 
-                    rc.area, 
-                    rc.maxPeople,
-                    (SELECT COUNT(*) FROM physicalRooms pr WHERE pr.roomConfigId = rc.id AND pr.deleted_at is null) as totalInventory
-                FROM roomConfigurations rc
-                INNER JOIN roomTypes rt ON rc.roomTypeId = rt.id
-                $where
-                ORDER BY rc.id DESC";
+            rc.id, 
+            rt.name, 
+            rc.basePrice, 
+            rc.area, 
+            rc.maxPeople,
+            (SELECT imageUrl 
+            FROM roomimages ri 
+            WHERE ri.roomConfigId = rc.id 
+            AND ri.isPrimary = 1) as primaryImage,
+            (SELECT COUNT(*) 
+            FROM physicalRooms pr 
+            WHERE pr.roomConfigId = rc.id 
+            AND pr.deleted_at IS NULL) as totalInventory
+        FROM roomConfigurations rc
+        INNER JOIN roomTypes rt ON rc.roomTypeId = rt.id
+        $where
+        ORDER BY rc.id DESC";
 
         return $this->db->fetchAll($sql, $params);
     }

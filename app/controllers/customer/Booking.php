@@ -290,6 +290,7 @@ class Booking extends Controller
             if (!isset($_SESSION['booking'])) {
                 $_SESSION['booking'] = [];
             }
+          
 
             // Tìm item tồn tại
             $foundIndex = -1;
@@ -333,6 +334,7 @@ class Booking extends Controller
                     }
                 }
             }
+
 
             echo json_encode([
                 'status' => 'success',

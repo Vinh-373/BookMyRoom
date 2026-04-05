@@ -1,3 +1,9 @@
+<?php
+// echo "<pre>";
+// print_r($_SESSION);
+// echo "</pre>";
+
+?>
 <div class="portfolio-wrapper">
     <section class="dashboard-header">
         <div class="welcome-msg">
@@ -12,7 +18,7 @@
             <?php foreach ($hotels as $hotel): ?>
             <div class="hotel-card">
                 <div class="card-thumb">
-                    <img src="<?= URLIMAGE ?>/<?= $hotel['imageUrl'] ?? 'h1.png' ?>" alt="<?= $hotel['hotelName'] ?>">
+                    <img src="<?= $hotel['imageUrl'] ?? 'h1.png' ?>" alt="<?= $hotel['hotelName'] ?>">
                     <?php 
                         $status = $hotel['status'] ?? 'ACTIVE';
                         $badgeClass = '';

@@ -1,7 +1,7 @@
 <?php
-// echo '<pre>';
-// print_r($data);
-// echo '</pre>';
+echo '<pre>';
+print_r($_SESSION);
+echo '</pre>';
 
 ?>
 <?php
@@ -2292,7 +2292,7 @@ if (!empty($data['filters']['dates'])) {
             if (!token) {
                 return handleNotLogin();
             }
-
+// alert('jdhdhdj'+ token)
             // ✅ 5. Check login
             fetch(`${baseUrl}auth/me`, {
                     method: 'GET',
@@ -2308,7 +2308,7 @@ if (!empty($data['filters']['dates'])) {
                     if (data.status !== 'success') {
                         throw new Error("NOT_LOGIN");
                     }
-
+                                                console.log(data)
                     // ✅ 6. Gọi create (lưu session)
                     return fetch(`${baseUrl}booking/create`, {
                         method: 'POST',
@@ -2336,6 +2336,7 @@ if (!empty($data['filters']['dates'])) {
                     if (data.status !== 'success') {
                         throw new Error("CREATE_FAIL");
                     }
+                                                console.log(data)
 
                     // ✅ 7. Redirect sau khi OK
                     window.location.href = `${baseUrl}booking/confirm`;

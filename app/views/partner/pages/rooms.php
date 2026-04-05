@@ -29,7 +29,7 @@
                 <?php foreach ($rooms as $r): ?>
                     <article class="room-card">
                         <div class="room-card__image-wrapper">
-                            <img src="<?= URLROOT ?>/public/images/rooms/ocean-view.jpg" alt="<?= $r['name'] ?>" class="room-card__img">
+                            <img src="<?= $r['primaryImage'] ?>" alt="<?= $r['name'] ?>" class="room-card__img">
                             <span class="badge <?= $r['badge_class'] ?>"><?= $r['badge_text'] ?></span>
                             <button class="btn-delete-icon" onclick="confirmDeleteRoom(<?= $r['id'] ?>, '<?= $r['name'] ?>')">🗑️</button>
                             <div class="room-card__title-overlay">
