@@ -242,7 +242,7 @@ class App {
 
 
         // 👉 Nếu là partner → dùng routing riêng
-        if ($this->role === 'PARTNER') {
+        if ($this->role === 'PARTNER' || $this->role === 'STAFF') {
             $this->runPartner();
         } else {
             $this->runDefault();

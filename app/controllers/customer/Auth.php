@@ -126,6 +126,8 @@ class Auth extends Controller
 
             $_SESSION['user'] = $user; // Lưu thông tin user vào session sau khi đăng nhập thành công
             $_SESSION['role'] = $user['role']; // Lưu role vào session để kiểm tra phân quyền sau này
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['active_hotel_id'] = $user['hotelId'] ?? null;
             echo "User logged in: " . $_SESSION['role']; // Debug: Kiểm tra xem session đã lưu đúng chưa
             die(); // Dừng chương trình để xem kết quả debug
 

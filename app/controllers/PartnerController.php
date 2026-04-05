@@ -6,20 +6,19 @@ class PartnerController extends Controller1 {
     protected $activeHotelId;
     
     public function __construct() {
-        // Kiểm tra quyền truy cập Partner tại đây
-        // if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'Partner') {
-        //     header('Location: ' . URLROOT . '/login');
-        //     exit;
-        // }
+        if (!isset($_SESSION['user_role'])) {
+            header('Location: ' . URLROOT . '/login');
+            exit;
+        }
 
-        // if ($_SESSION['user_role'] == 'Staff') {
-        //     header('Location: ' . URLROOT . '/manage/'.$_SESSION['active_hotel_id']);
-        //     exit;
-        // }
-        // else{
-            $this->partnerHotels = $this->service('PortfolioService')->getHotelsByPartner(2);
+        if ($_SESSION['user_role'] == 'Staff') {
+            header('Location: ' . URLROOT . '/manage/'.$_SESSION['active_hotel_id']);
+            exit;
+        }
+        else{
+            $this->partnerHotels = $this->service('PortfolioService')->getHotelsByPartner($_SESSION['active_hotel_id']);
             $this->activeHotelId = $_SESSION['active_hotel_id'] ?? null;
-        // }
+        }
     }
 
     public function manage($id) {
@@ -36,7 +35,7 @@ class PartnerController extends Controller1 {
     }
 
     public function index() {
-        $partnerId = 2;
+        $partnerId = $_SESSION['user_id'];
         $portfolioService = $this->service('PortfolioService');
         $data = $portfolioService->getDashboardData($partnerId);
         $data['partnerHotels']= $this->partnerHotels;
@@ -49,7 +48,7 @@ class PartnerController extends Controller1 {
             $portfolioService = $this->service('PortfolioService');
             
             // Lấy ID người dùng từ Session
-            $partnerId = 2;//$_SESSION['user_id'];
+            $partnerId = $_SESSION['user_id'];
             
             $result = $portfolioService->createNewProperty($_POST, $partnerId);
 
@@ -76,7 +75,7 @@ class PartnerController extends Controller1 {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $portfolioService = $this->service('PortfolioService');
             
-            $partnerId = 2;//$_SESSION['user_id'];
+            $partnerId = $_SESSION['user_id'];
             $hotel = $portfolioService->getHotelForEdit($id, $partnerId);
 
             if (!$hotel) {
@@ -130,7 +129,7 @@ class PartnerController extends Controller1 {
     public function updateProfileAjax() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $portfolioService = $this->service('PortfolioService');
-            $userId = 2;//$_SESSION['user_id'];
+            $userId = $_SESSION['user_id'];
             $fileName = null;
 
             // Xử lý upload ảnh vật lý tại Controller
