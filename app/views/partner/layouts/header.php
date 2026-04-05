@@ -31,8 +31,8 @@
         <div class="user-dropdown-container" id="userDropdownTrigger">
             <div class="user-profile">
                 <div class="user-info">
-                    <span class="u-name">Mr. Dalat</span> <!--$_SESSION['user_name'] -->
-                    <span class="u-role">Partner</span> <!--$_SESSION['user_role'] -->
+                    <span class="u-name"><?= $_SESSION['user']['name'] ?></span>
+                    <span class="u-role"><?= $_SESSION['user']['role'] ?></span>
                 </div>
                 <img src="<?= URLROOT ?>/public/images/avatar.jpg" alt="User Avatar" class="avatar">
             </div>
@@ -41,7 +41,11 @@
                 <ul>
                     <li><a href="javascript:void(0)" onclick="openProfileModal()">👤 View Profile</a></li>
                     <li class="divider"></li>
-                    <li><a href="<?= URLROOT ?>/logout" class="logout-link">↪️ Sign Out</a></li>
+                    <li>
+                        <a href="<?= URLROOT ?>/partner/logout" class="logout-link" onclick="handleLogout(event)">
+                            ↪️ Sign Out
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -52,5 +56,13 @@ function switchHotel(hotelId) {
     if (hotelId) {
         window.location.href = "<?= URLROOT ?>/manage/" + hotelId;
     }
+}
+function handleLogout(event) {
+    event.preventDefault();
+
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+
+    window.location.href = event.currentTarget.href;
 }
 </script>
