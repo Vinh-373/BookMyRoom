@@ -1,6 +1,8 @@
 <h2 class="booking-title">Quản lý đặt phòng</h2>
 
+<!-- FILTER -->
 <div class="booking-filters">
+
     <input 
         id="bookingSearch" 
         type="text" 
@@ -9,20 +11,18 @@
     >
 
     <div class="booking-select-wrapper">
-    <select id="bookingStatus" class="booking-select">
-        <option value="">Trạng thái</option>
-        <option value="PENDING">PENDING</option>
-        <option value="CONFIRMED">CONFIRMED</option>
-        <option value="COMPLETED">COMPLETED</option>
-        <option value="CANCELLED">CANCELLED</option>
-    </select>
+        <select id="bookingStatus" class="booking-select">
+            <option value="">Trạng thái</option>
+            <option value="PENDING">PENDING</option>
+            <option value="CONFIRMED">CONFIRMED</option>
+            <option value="COMPLETED">COMPLETED</option>
+            <option value="CANCELLED">CANCELLED</option>
+        </select>
+    </div>
+
 </div>
 
-    <button id="bookingSearchBtn" class="booking-btn-search">
-        Tìm kiếm
-    </button>
-</div>
-
+<!-- TABLE -->
 <div class="booking-table-wrapper">
     <table class="booking-table">
         <thead>
@@ -79,51 +79,64 @@
                 </td>
 
                 <td>
-                        <button 
-                            class="booking-btn-detail"
-                            data-id="<?= $b['id'] ?>"
-                            data-name="<?= $b['fullName'] ?>"
-                            data-checkin="<?= $b['checkIn'] ?>"
-                            data-checkout="<?= $b['checkOut'] ?>"
-                            data-total="<?= $b['totalAmount'] ?>"
-                            data-status="<?= $b['status'] ?>"
-                            >
-                            Chi tiết
-                            </button>
+                    <button 
+                        class="booking-btn-detail"
+                        data-id="<?= $b['id'] ?>"
+                        data-name="<?= $b['fullName'] ?>"
+                        data-checkin="<?= $b['checkIn'] ?>"
+                        data-checkout="<?= $b['checkOut'] ?>"
+                        data-total="<?= $b['totalAmount'] ?>"
+                        data-status="<?= $b['status'] ?>"
+                        data-hotel="<?= $b['hotelName'] ?>"
+                        data-room="<?= $b['roomName'] ?>"
+>
+                        Chi tiết
+                    </button>
                 </td>
             </tr>
             <?php endforeach; ?>
         </tbody>
     </table>
-    <div id="booking-modal" class="booking-modal">
-  <div class="booking-modal-content">
-
-    <span id="booking-close" class="booking-close">&times;</span>
-
-    <h3>Chi tiết booking</h3>
-
-    <p><strong>Mã đơn:</strong> <span id="modal-id"></span></p>
-    <p><strong>Khách:</strong> <span id="modal-name"></span></p>
-    <p><strong>Check-in:</strong> <span id="modal-checkin"></span></p>
-    <p><strong>Check-out:</strong> <span id="modal-checkout"></span></p>
-    <p><strong>Tổng tiền:</strong> <span id="modal-total"></span></p>
-
-    <p>
-      <strong>Trạng thái:</strong>
-      <select id="modal-status">
-        <option value="PENDING">PENDING</option>
-        <option value="CONFIRMED">CONFIRMED</option>
-        <option value="COMPLETED">COMPLETED</option>
-        <option value="CANCELLED">CANCELLED</option>
-      </select>
-    </p>
-
-    <button id="booking-update-btn" class="booking-btn-save">
-        Cập nhật
-    </button>
-
-  </div>
 </div>
+
+<!-- MODAL -->
+<div id="booking-modal" class="booking-modal">
+    <div class="booking-modal-content">
+
+        <span id="booking-close" class="booking-close">&times;</span>
+
+        <h3 class="booking-modal-title">Chi tiết booking</h3>
+
+        <div class="booking-modal-body">
+            <p><strong>Mã đơn:</strong> <span id="modal-id"></span></p>
+            <p><strong>Khách hàng:</strong> <span id="modal-name"></span></p>
+            <p><strong>Khách sạn:</strong> 
+            <span id="modal-hotel"></span></p>
+
+            <p><strong>Phòng:</strong> 
+            <span id="modal-room"></span></p>
+            <p><strong>Check-in:</strong> <span id="modal-checkin"></span></p>
+            <p><strong>Check-out:</strong> <span id="modal-checkout"></span></p>
+            <p><strong>Tổng tiền:</strong> <span id="modal-total"></span></p>
+
+            <div class="booking-modal-field">
+                <label>Trạng thái:</label>
+                <select id="modal-status" class="booking-select">
+                    <option value="PENDING">PENDING</option>
+                    <option value="CONFIRMED">CONFIRMED</option>
+                    <option value="COMPLETED">COMPLETED</option>
+                    <option value="CANCELLED">CANCELLED</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="booking-modal-actions">
+            <button id="booking-update-btn" class="booking-btn-save">
+                Cập nhật
+            </button>
+        </div>
+
+    </div>
 </div>
 
 <div id="phantrang_bookings"></div>

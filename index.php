@@ -3,7 +3,7 @@ ob_start();
 
 require_once "./app/server.php";
 require_once "./app/helpers/UrlHelper.php";
-require_once './vendor/autoload.php';       
+ //require_once './vendor/autoload.php';       
 
 // 1. Nạp cấu hình hằng số (Bỏ ../)
 require_once 'app/config/config.php';
