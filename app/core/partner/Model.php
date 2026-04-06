@@ -10,4 +10,5 @@ class Model {
         // Khởi tạo đối tượng Database (đã được nạp ở index.php)
         $this->db = new Database1();
     }
+    
 }

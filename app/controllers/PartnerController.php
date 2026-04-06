@@ -50,23 +50,26 @@ class PartnerController extends Controller1 {
     public function addHotel() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $portfolioService = $this->service('PortfolioService');
-            
-            // Lấy ID người dùng từ Session
             $partnerId = $_SESSION['user']['id'];
             
-            $result = $portfolioService->createNewProperty($_POST, $partnerId);
+            // Lấy dữ liệu cơ bản + dữ liệu ảnh JSON
+            $data = $_POST;
+            $imageData = isset($_POST['image_data']) ? json_decode($_POST['image_data'], true) : [];
+
+            // Gọi service xử lý tạo khách sạn và lưu ảnh
+            $result = $portfolioService->createNewProperty($data, $partnerId, $imageData);
 
             if ($result) {
                 $_SESSION['flash_message'] = [
                     'type'  => 'success',
                     'title' => 'Thành công!',
-                    'text'  => 'Khách sạn mới đã được đăng ký vào hệ thống.'
+                    'text'  => 'Khách sạn mới đã được đăng ký kèm danh sách hình ảnh.'
                 ];
             } else {
                 $_SESSION['flash_message'] = [
                     'type'  => 'error',
                     'title' => 'Thất bại!',
-                    'text'  => 'Có lỗi xảy ra khi tạo khách sạn, vui lòng thử lại.'
+                    'text'  => 'Có lỗi xảy ra, vui lòng kiểm tra lại thông tin.'
                 ];
             }
             
@@ -78,8 +81,9 @@ class PartnerController extends Controller1 {
     public function editHotel($id) {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $portfolioService = $this->service('PortfolioService');
-            
             $partnerId = $_SESSION['user']['id'];
+            
+            // Kiểm tra quyền sở hữu trước khi sửa
             $hotel = $portfolioService->getHotelForEdit($id, $partnerId);
 
             if (!$hotel) {
@@ -89,13 +93,17 @@ class PartnerController extends Controller1 {
                     'text'  => 'Bạn không có quyền chỉnh sửa khách sạn này.'
                 ];
             } else {
-                $result = $portfolioService->updateHotelInfo($id, $_POST);
+                $data = $_POST;
+                $imageData = isset($_POST['image_data']) ? json_decode($_POST['image_data'], true) : [];
+
+                // Truyền ID và dữ liệu ảnh xuống service
+                $result = $portfolioService->updateHotelInfo($id, $data, $imageData);
 
                 if ($result) {
                     $_SESSION['flash_message'] = [
                         'type'  => 'success',
                         'title' => 'Cập nhật thành công',
-                        'text'  => 'Thông tin khách sạn đã được lưu lại.'
+                        'text'  => 'Thông tin và hình ảnh khách sạn đã được lưu lại.'
                     ];
                 } else {
                     $_SESSION['flash_message'] = [

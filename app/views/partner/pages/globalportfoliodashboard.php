@@ -152,6 +152,19 @@
                         <label>Địa chỉ chi tiết</label>
                         <input type="text" name="address" id="inputAddr" placeholder="Số nhà, tên đường..." required>
                     </div>
+                    <hr>
+                    <div class="form-row">
+                        <label>🖼️ Quản lý hình ảnh (Dùng URL ảnh mạng)</label>
+                        <div class="input-group-url" style="display: flex; gap: 10px; margin-bottom: 10px;">
+                            <input type="text" id="image_url_input" placeholder="Dán link ảnh vào đây..." style="flex: 1;">
+                            <button type="button" class="btn-add-url" onclick="addImageUrl()" style="padding: 0 15px; background: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer;">+ Thêm</button>
+                        </div>
+                        
+                        <div id="url-image-container" class="image-management-grid">
+                            </div>
+                        
+                        <input type="hidden" name="image_data" id="image_data_json">
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn-cancel" onclick="closeHotelModal()">Hủy</button>
@@ -163,6 +176,7 @@
 </div>
 
 <script>
+let hotelImages = [];
 <?php if (isset($_SESSION['flash_message'])): ?>
         Swal.fire({
             icon: '<?= $_SESSION['flash_message']['type'] ?>',
@@ -201,6 +215,9 @@ function openEditHotelModal(hotel) {
     document.getElementById('inputAddr').value = hotel.address;
 
     loadWards(hotel.cityId, hotel.wardId);
+
+    hotelImages = hotel.images || []; 
+    renderUrlImages();
 
     document.getElementById('hotelModal').style.display = 'flex';
 }
@@ -254,5 +271,57 @@ function confirmRequestStop(id, name) {
             window.location.href = `<?= URLROOT ?>/partner/requestStop/${id}`;
         }
     });
+}
+
+function addImageUrl() {
+    const input = document.getElementById('image_url_input');
+    const url = input.value.trim();
+
+    if (url === "") return;
+    
+    // Nếu là ảnh đầu tiên, mặc định là ảnh chính
+    const isPrimary = hotelImages.length === 0 ? 1 : 0;
+    
+    hotelImages.push({ url: url, isPrimary: isPrimary });
+    input.value = ""; // Xóa input
+    renderUrlImages();
+}
+
+function renderUrlImages() {
+    const container = document.getElementById('url-image-container');
+    container.innerHTML = "";
+
+    hotelImages.forEach((img, index) => {
+        const div = document.createElement('div');
+        div.className = `url-preview-item ${img.isPrimary ? 'is-primary' : ''}`;
+        div.innerHTML = `
+            ${img.isPrimary ? '<div class="primary-label">Ảnh chính</div>' : ''}
+            <img src="${img.url}" onerror="this.src='https://placehold.co/100x100?text=Lỗi+ảnh'">
+            <button type="button" class="btn-remove-url" onclick="removeImage(${index})">✕</button>
+            <button type="button" class="btn-set-primary" onclick="setPrimary(${index})">
+                ${img.isPrimary ? '✅ Đang là ảnh chính' : 'Lấy làm ảnh chính'}
+            </button>
+        `;
+        container.appendChild(div);
+    });
+
+    // Cập nhật vào input ẩn để gửi đi
+    document.getElementById('image_data_json').value = JSON.stringify(hotelImages);
+}
+
+function setPrimary(index) {
+    hotelImages.forEach((img, i) => img.isPrimary = (i === index ? 1 : 0));
+    renderUrlImages();
+}
+
+function removeImage(index) {
+    const wasPrimary = hotelImages[index].isPrimary;
+    hotelImages.splice(index, 1);
+    
+    // Nếu xóa mất ảnh chính, set ảnh đầu tiên còn lại làm chính
+    if (wasPrimary && hotelImages.length > 0) {
+        hotelImages[0].isPrimary = 1;
+    }
+    renderUrlImages();
 }
 </script>

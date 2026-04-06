@@ -43,4 +43,10 @@ class Database1 {
     public function fetch($sql, $params = []) {
         return $this->query($sql, $params)->fetch();
     }
+
+
+    public function lastInsertId() {
+        // Gọi hàm của PDO gốc
+        return $this->dbh->lastInsertId();
+    }
 }

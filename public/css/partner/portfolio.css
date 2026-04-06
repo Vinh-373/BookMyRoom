@@ -342,3 +342,161 @@
     filter: grayscale(100%);
     opacity: 0.7;
 }
+
+/* --- PHOTO MANAGEMENT STYLING (NEW) --- */
+
+/* Container bọc phần nhập URL */
+.portfolio-wrapper .input-group-url {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+    background: #f8fafc;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px dashed #cbd5e0;
+}
+
+.portfolio-wrapper .input-group-url input {
+    flex: 1;
+    border: 1px solid #e2e8f0;
+    padding: 10px 14px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    outline: none;
+}
+
+.portfolio-wrapper .input-group-url input:focus {
+    border-color: #2261E0;
+    box-shadow: 0 0 0 2px rgba(34, 97, 224, 0.1);
+}
+
+.portfolio-wrapper .btn-add-url {
+    background: #12b76a;
+    color: white;
+    border: none;
+    padding: 0 18px;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+    white-space: nowrap;
+}
+
+.portfolio-wrapper .btn-add-url:hover {
+    background: #0e9657;
+}
+
+/* Lưới hiển thị danh sách ảnh */
+.portfolio-wrapper .image-management-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 15px;
+    margin-top: 15px;
+    max-height: 300px;
+    overflow-y: auto;
+    padding: 5px;
+}
+
+/* Item từng ảnh */
+.portfolio-wrapper .url-preview-item {
+    position: relative;
+    border: 2px solid #edf2f7;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #fff;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Hiệu ứng khi là ảnh chính */
+.portfolio-wrapper .url-preview-item.is-primary {
+    border-color: #2261E0;
+    box-shadow: 0 4px 12px rgba(34, 97, 224, 0.2);
+    transform: translateY(-2px);
+}
+
+.portfolio-wrapper .url-preview-item img {
+    width: 100%;
+    height: 90px;
+    object-fit: cover;
+    background: #f1f5f9;
+}
+
+/* Label Ảnh chính */
+.portfolio-wrapper .primary-label {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: #2261E0;
+    color: white;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-align: center;
+    padding: 3px 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Nút xóa ảnh */
+.portfolio-wrapper .btn-remove-url {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: rgba(240, 68, 56, 0.9);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    cursor: pointer;
+    transition: 0.2s;
+    z-index: 5;
+}
+
+.portfolio-wrapper .btn-remove-url:hover {
+    background: #d92d20;
+    transform: scale(1.1);
+}
+
+.portfolio-wrapper .btn-set-primary {
+    width: 100%;
+    border: none;
+    background: #f8fafc;
+    color: #64748b;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 8px 0;
+    cursor: pointer;
+    border-top: 1px solid #edf2f7;
+    transition: 0.2s;
+}
+
+.portfolio-wrapper .btn-set-primary:hover {
+    background: #f1f5f9;
+    color: #2261E0;
+}
+
+.portfolio-wrapper .url-preview-item.is-primary .btn-set-primary {
+    background: #e0eaff;
+    color: #2261E0;
+    cursor: default;
+}
+
+.portfolio-wrapper .image-management-grid::-webkit-scrollbar {
+    width: 6px;
+}
+
+.portfolio-wrapper .image-management-grid::-webkit-scrollbar-track {
+    background: #f1f5f9;
+}
+
+.portfolio-wrapper .image-management-grid::-webkit-scrollbar-thumb {
+    background: #cbd5e0;
+    border-radius: 10px;
+}

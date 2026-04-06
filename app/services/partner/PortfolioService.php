@@ -60,20 +60,39 @@ class PortfolioService extends Service {
         return $this->hotelModel->getHotelsByPartner($partnerId);
     }
 
-    public function createNewProperty($formData, $partnerId) {
+    public function createNewProperty($formData, $partnerId, $imageData = []) {
         $hotelModel = $this->model('HotelModel');
 
-        // Làm sạch và chuẩn bị dữ liệu
+        // 1. Làm sạch và chuẩn bị dữ liệu văn bản
         $data = [
             'partnerId'   => $partnerId,
             'hotelName'   => htmlspecialchars(trim($formData['hotelName'])),
             'description' => htmlspecialchars(trim($formData['description'] ?? '')),
             'cityId'      => (int)$formData['cityId'],
             'wardId'      => (int)$formData['wardId'],
-            'address'     => htmlspecialchars(trim($formData['address']))
+            'address'     => htmlspecialchars(trim($formData['address'])),
+            'status'      => 'ACTIVE', // Mặc định khách sạn mới sẽ ở trạng thái hoạt động
+            'createdAt'   => date('Y-m-d H:i:s')
         ];
 
-        return $hotelModel->insert($data);
+        // 2. Chèn thông tin khách sạn và lấy ID vừa tạo
+        $hotelId = $hotelModel->insert($data);
+
+        // 3. Nếu chèn khách sạn thành công và có dữ liệu ảnh
+        if ($hotelId && !empty($imageData)) {
+            foreach ($imageData as $img) {
+                // Đảm bảo URL không trống trước khi lưu
+                if (!empty($img['url'])) {
+                    $hotelModel->addHotelImage(
+                        $hotelId, 
+                        trim($img['url']), 
+                        (int)$img['isPrimary']
+                    );
+                }
+            }
+        }
+
+        return $hotelId; // Trả về ID khách sạn để Controller biết đã thành công
     }
 
     public function getLocations() {
@@ -110,8 +129,8 @@ class PortfolioService extends Service {
         return $hotel;
     }
 
-    public function updateHotelInfo($id, $formData) {
-        // Chuẩn hóa dữ liệu tương tự như khi thêm mới
+    public function updateHotelInfo($id, $formData, $imageData = []) {
+        // 1. Chuẩn hóa dữ liệu văn bản
         $cleanData = [
             'hotelName'   => htmlspecialchars(trim($formData['hotelName'])),
             'description' => htmlspecialchars(trim($formData['description'] ?? '')),
@@ -120,7 +139,22 @@ class PortfolioService extends Service {
             'address'     => htmlspecialchars(trim($formData['address']))
         ];
 
-        return $this->model('HotelModel')->update($id, $cleanData);
+        $hotelModel = $this->model('HotelModel');
+
+        // 2. Cập nhật thông tin cơ bản của khách sạn
+        $isUpdated = $hotelModel->update($id, $cleanData);
+
+        // 3. Xử lý cập nhật hình ảnh (Ảnh mạng)
+        // Chiến thuật: Xóa hết ảnh cũ của khách sạn này và chèn bộ ảnh mới từ Modal
+        if (!empty($imageData)) {
+            $hotelModel->deleteImagesByHotel($id); // Hàm xóa ảnh cũ trong model
+            foreach ($imageData as $img) {
+                $hotelModel->addHotelImage($id, $img['url'], $img['isPrimary']);
+            }
+            $isUpdated = true; // Đánh dấu có thay đổi nếu chỉ thay đổi ảnh
+        }
+
+        return $isUpdated;
     }
 
     public function updatePartnerProfile($userId, $data, $fileName) {

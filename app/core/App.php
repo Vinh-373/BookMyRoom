@@ -346,8 +346,8 @@ class App {
             }
         } else {
             $default = [
-                'customer' => 'booking',
-                'admin' => 'dashboard'
+                'CUSTOMER' => 'booking',
+                'ADMIN' => 'dashboard'
             ];
             $this->controller = $default[$this->role];
         }
