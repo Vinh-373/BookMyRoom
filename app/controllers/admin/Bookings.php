@@ -11,9 +11,9 @@ class Bookings extends Controller
 
 public function index()
 {
-    require_once './app/models/myModels.php';
+    require_once './app/models/bookingsModel.php';
 
-    $bookingsModel = new class extends myModels {
+    $bookingsModel = new class extends BookingsModel {
         protected $table = "bookings";
     };
 
