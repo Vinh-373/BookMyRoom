@@ -13,7 +13,7 @@ class PartnerController extends Controller1 {
 
         $partnerId = $_SESSION['user']['id'];
         $this->activeHotelId = $_SESSION['active_hotel_id'] ?? null;
-        if ($_SESSION['user']['role'] !== 'STAFF') {
+        if ($_SESSION['user']['role'] !== 'staff') {
             $this->partnerHotels = $this->service('PortfolioService')->getHotelsByPartner($partnerId);
         }
     }
@@ -29,7 +29,7 @@ class PartnerController extends Controller1 {
             }
         }
 
-        if (!$found && $_SESSION['user']['role'] !== 'STAFF') {
+        if (!$found && $_SESSION['user']['role'] !== 'staff') {
             die("Bạn không có quyền quản lý khách sạn này.");
         }
 

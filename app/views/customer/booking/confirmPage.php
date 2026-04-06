@@ -1,8 +1,11 @@
 <?php
-// echo '<pre>';
-// print_r($data);
+echo '<pre>';
+print_r($data);
 // print_r($_SESSION['booking']);
-// echo '</pre>';
+echo '</pre>';
+
+
+
 ?>
 
 <head>
@@ -338,6 +341,15 @@
                     </div>
                     <div class="p-8 space-y-4">
                         <div class="space-y-3">
+                            <?php
+
+
+                            // Đảm bảo các biến luôn tồn tại
+                            $bookingData = $bookingData ?? [];
+                            $totalAll = $data['totalAll'] ?? 0;
+                            $vat = $totalAll * 0.01;
+                            $grandTotal = $totalAll + $vat;
+                            ?>
                             <?php foreach ($bookingData as $room): ?>
                                 <div class="flex justify-between text-sm text-white/70">
                                     <span><?php echo htmlspecialchars($room['roomConfig']['hotelName'] . ' - ' .   $room['roomConfig']['roomTypeName']); ?> (<?php echo $room['nights']; ?> đêm)</span>
@@ -346,7 +358,7 @@
                             <?php endforeach; ?>
                             <div class="flex justify-between text-sm text-white/70">
                                 <span>Thuế VAT (1%)</span>
-                                <span><?= number_format($data['totalAll'] * 0.01, 0, ',', '.') ?> VND</span>
+                                <span><?= number_format(((float)($data['totalAll'] ?? 0)) * 0.01, 0, ',', '.') ?> VND</span>
                             </div>
                             <div onclick="openVoucherModal()" class="flex justify-between items-center p-3 bg-white/10 rounded-xl cursor-pointer hover:bg-white/20 transition-all border border-dashed border-white/30 mt-2">
                                 <div class="flex items-center gap-2">
@@ -362,13 +374,41 @@
                         </div>
                         <div class="pt-4 border-t border-white/10 flex justify-between items-center">
                             <span class="text-sm font-medium text-white/80">Tổng cộng</span>
-                            <span class="text-lg font-bold"><?= number_format($data['totalAll'] + $data['totalAll'] * 0.01, 0, ',', '.') ?> VND</span>
+                            <span class="text-lg font-bold">
+                                <?php
+                                $totalBase = (float)($data['totalAll'] ?? 0);
+                                $grandTotal = $totalBase + ($totalBase * 0.01);
+                                echo number_format($grandTotal, 0, ',', '.') . ' VND';
+                                ?>
+                            </span>
                         </div>
                         <!-- Highlighted Deposit Section -->
                         <div class="mt-8 p-6 bg-white/10 rounded-xl border border-white/10 text-center">
                             <p class="text-xs uppercase tracking-widest text-white/70 mb-2 font-bold">Tiền đặt cọc cần trả (30%)</p>
-                            <div class="text-3xl font-headline font-extrabold text-tertiary-fixed-dim"><?= number_format(($data['totalAll'] + $data['totalAll'] * 0.01) * 0.3, 0, ',', '.') ?> VND</div>
-                            <p class="text-[11px] text-white/50 mt-2">Còn lại <?= number_format(($data['totalAll'] + $data['totalAll'] * 0.01) * 0.7, 0, ',', '.') ?> VND trả tại khách sạn</p>
+                            <div class="text-3xl font-headline font-extrabold text-tertiary-fixed-dim">
+                                <?php
+                                // Lấy totalAll, nếu không có thì mặc định là 0
+                                $totalBase = (float)($data['totalAll'] ?? 0);
+                                // Tính tổng sau thuế (1%) và nhân 30% tiền cọc
+                                $depositAmount = ($totalBase + ($totalBase * 0.01)) * 0.3;
+
+                                echo number_format($depositAmount, 0, ',', '.') . ' VND';
+                                ?>
+                            </div>
+                            <p class="text-[11px] text-white/50 mt-2">
+                                <?php
+                                // 1. Lấy giá trị gốc an toàn (ép kiểu float)
+                                $totalBase = (float)($data['totalAll'] ?? 0);
+
+                                // 2. Tính tổng sau thuế (101% tổng gốc)
+                                $totalWithVat = $totalBase * 1.01;
+
+                                // 3. Tính 70% còn lại
+                                $remainingAmount = $totalWithVat * 0.7;
+
+                                echo "Còn lại " . number_format($remainingAmount, 0, ',', '.') . " VND trả tại khách sạn";
+                                ?>
+                                </p>
                         </div>
                         <div class="bg-white/5 p-8 border-t border-white/10 space-y-6">
 
@@ -416,9 +456,23 @@
 
                         </div>
                         <!-- CTA Button -->
-                        <button onclick="submitBooking()" class="w-full bg-tertiary-fixed-dim hover:bg-tertiary-fixed text-on-tertiary-fixed font-bold py-4 rounded-xl shadow-lg transition-all active:scale-95 text-lg mt-6">
-                            Tiến hành thanh toán
-                        </button>
+                        <?php 
+    // Đảm bảo biến này đã được định nghĩa ở đầu file View của Vinh
+    $totalBase = (float)($data['totalAll'] ?? 0);
+    $isBookingEmpty = ($totalBase <= 0);
+?>
+
+<button 
+    onclick="<?= $isBookingEmpty ? 'return false;' : 'submitBooking()' ?>" 
+    class="w-full font-bold py-4 rounded-xl shadow-lg transition-all text-lg mt-6 
+        <?= $isBookingEmpty 
+            ? 'bg-gray-500/50 text-white/50 cursor-not-allowed opacity-50' 
+            : 'bg-tertiary-fixed-dim hover:bg-tertiary-fixed text-on-tertiary-fixed active:scale-95' 
+        ?>"
+    <?= $isBookingEmpty ? 'disabled' : '' ?>
+>
+    Tiến hành thanh toán
+</button>
                         <button onclick="cancelBooking()" class="w-full bg-transparent text-white/50 hover:bg-tertiary-fixed hover:text-black text-on-tertiary-fixed font-bold py-4 rounded-xl shadow-lg transition-all active:scale-95 text-lg mt-6">
                             Hủy đặt, chọn lại phòng
                         </button>
@@ -534,23 +588,40 @@
             </footer>
         </section>
     </div>
+    <script>document.addEventListener('DOMContentLoaded', function () {
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    const customerNameElements = document.querySelector(".customerName");
+    const customerEmailElements = document.querySelector(".customerEmail");
+    const customerPhoneElements = document.querySelector(".customerPhone");
+
+    if (user?.fullName && customerNameElements) 
+        customerNameElements.textContent = user.fullName;
+    if (user?.email && customerEmailElements) 
+        customerEmailElements.textContent = user.email;
+    if (user?.phone && customerPhoneElements) 
+        customerPhoneElements.textContent = user.phone;
+});</script>
+    
 </body>
 <script src="<?= BASE_URL ?>public/js/customer/booking/confirm.js"></script>
 <script>
+    document.addEventListener('DOMContentLoaded', function () {
     const user = JSON.parse(localStorage.getItem("user"));
-    const customerNameElements = document.querySelectorAll(".customerName");
-    const customerEmailElements = document.querySelectorAll(".customerEmail");
-    const customerPhoneElements = document.querySelectorAll(".customerPhone");
+    console.log('kdhd');
+    alert('sh')
 
-    if (user && user.fullName) {
-        customerNameElements.forEach(el => el.textContent = user.fullName);
-    }
-    if (user && user.email) {
-        customerEmailElements.forEach(el => el.textContent = user.email);
-    }
-    if (user && user.phone) {
-        customerPhoneElements.forEach(el => el.textContent = user.phone);
-    }
+    const customerNameElements = document.querySelector(".customerName");
+    const customerEmailElements = document.querySelector(".customerEmail");
+    const customerPhoneElements = document.querySelector(".customerPhone");
+
+    if (user?.fullName && customerNameElements) 
+        customerNameElements.textContent = user.fullName;
+    if (user?.email && customerEmailElements) 
+        customerEmailElements.textContent = user.email;
+    if (user?.phone && customerPhoneElements) 
+        customerPhoneElements.textContent = user.phone;
+});
     async function changeQty(roomConfigId, delta, availableRooms, checkIn, checkOut, uniqueId) {
         // alert(`Change qty for roomConfigId: ${roomConfigId}, delta: ${delta}, availableRooms: ${availableRooms}, checkIn: ${checkIn}, checkOut: ${checkOut}`);
         const action = delta > 0 ? 'add' : 'minus';
@@ -702,10 +773,11 @@
         const specialNote = document.getElementById("special-note")?.value.trim() || "";
 
         // Lấy dữ liệu booking từ PHP
-        const bookingData = <?= json_encode($bookingData) ?>;
+        // Nếu $bookingData rỗng, json_encode sẽ trả về "[]" (mảng rỗng trong JS)
+        const bookingData = <?= json_encode($bookingData ?? []) ?>;
 
-        // Lấy tổng tiền từ PHP (chưa bao gồm thuế và voucher)
-        const totalAll = <?= $data['totalAll'] ?>;
+        // Ép kiểu (int) để đảm bảo JS nhận được một con số, nếu null/không có thì là 0
+        const totalAll = <?= (int)($data['totalAll'] ?? 0) ?>;
 
         // ========== 2. TÍNH TOÁN TIỀN ==========
 
@@ -1000,6 +1072,8 @@
             const result = await response.json();
 
             if (result.status === 'success') {
+                console.log(result.bookingId, formData.deposit, formData.payment, formData.voucherCode, formData.discountAmount)
+
                 const paymentRes = await fetch('<?= BASE_URL ?>payment/createPayment', {
                     method: 'POST',
                     headers: {
@@ -1015,6 +1089,7 @@
                 });
 
                 const paymentData = await paymentRes.json();
+                console.log(paymentData)
                 Swal.close();
 
                 if (paymentData.payUrl) {

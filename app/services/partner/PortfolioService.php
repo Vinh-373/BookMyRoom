@@ -1,10 +1,12 @@
 <?php
 // require_once __DIR__ . '/../../core/Service.php';
 
-class PortfolioService extends Service {
+class PortfolioService extends Service
+{
     private $hotelModel;
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         // Nạp Model thông qua hàm model() của Base Service (nếu bạn đã viết) 
         // hoặc require thủ công như bạn đang làm.
@@ -15,32 +17,47 @@ class PortfolioService extends Service {
     /**
      * Lấy dữ liệu tổng hợp cho trang Global Portfolio Dashboard
      */
-    public function getDashboardData($partnerId) {
-        // 1. Lấy danh sách khách sạn kèm số lượng phòng (Sử dụng model đã update)
+    public function getDashboardData($partnerId)
+    {
+        // 1. Lấy danh sách khách sạn kèm số lượng phòng & ảnh
         $hotels = $this->hotelModel->getHotelsByPartner($partnerId);
 
-        // 2. Lấy thông số tổng quát cho toàn chuỗi (MTD - Month to Date)
+        // 2. Lấy thông số tổng quát cho toàn chuỗi (MTD)
         $rawRevenue = $this->hotelModel->getChainTotalRevenue($partnerId);
         $totalBookings = $this->hotelModel->getChainTotalBookings($partnerId);
 
-        // 3. Tính toán Portfolio Health (Sức khỏe danh mục)
-        // Thay vì để 82% tĩnh, chúng ta tính dựa trên rating trung bình của tất cả hotel
+        // 3. Tính toán Portfolio Health
         $portfolioHealth = $this->calculatePortfolioHealth($hotels);
+
+        // 4. Lấy dữ liệu địa giới (Cities)
         $cities = $this->hotelModel->getCities();
+
+        // 5. Xử lý lấy danh sách Wards (Phường/Xã)
+        // Nếu có danh sách khách sạn, lấy Wards của City thuộc khách sạn đầu tiên để load sẵn Modal Edit
+        // Nếu chưa có khách sạn, lấy Wards của City đầu tiên trong danh sách Cities
+        $wards = [];
+        if (!empty($hotels)) {
+            $firstCityId = $hotels[0]['cityId'];
+            $wards = $this->hotelModel->getWardsByCity($firstCityId);
+        } elseif (!empty($cities)) {
+            $firstCityId = $cities[0]['id'];
+            $wards = $this->hotelModel->getWardsByCity($firstCityId);
+        }
 
         return [
             'hotels'           => $hotels,
-            'chain_revenue'    => number_format($rawRevenue), // VD: 1,482,900
+            'chain_revenue'    => number_format($rawRevenue),
             'total_bookings'   => number_format($totalBookings),
             'portfolio_health' => $portfolioHealth,
-            'cities'           => $cities
+            'cities'           => $cities,
+            'wards'            => $wards // Trả về danh sách wards ban đầu
         ];
     }
-
     /**
      * Logic tính toán sức khỏe danh mục dựa trên Rating hoặc Occupancy
      */
-    private function calculatePortfolioHealth($hotels) {
+    private function calculatePortfolioHealth($hotels)
+    {
         if (empty($hotels)) return 0;
 
         $totalRating = 0;
@@ -56,11 +73,13 @@ class PortfolioService extends Service {
         return round(($averageRating / 5) * 100);
     }
 
-    public function getHotelsByPartner($partnerId){
+    public function getHotelsByPartner($partnerId)
+    {
         return $this->hotelModel->getHotelsByPartner($partnerId);
     }
 
-    public function createNewProperty($formData, $partnerId, $imageData = []) {
+    public function createNewProperty($formData, $partnerId, $imageData = [])
+    {
         $hotelModel = $this->model('HotelModel');
 
         // 1. Làm sạch và chuẩn bị dữ liệu văn bản
@@ -84,8 +103,8 @@ class PortfolioService extends Service {
                 // Đảm bảo URL không trống trước khi lưu
                 if (!empty($img['url'])) {
                     $hotelModel->addHotelImage(
-                        $hotelId, 
-                        trim($img['url']), 
+                        $hotelId,
+                        trim($img['url']),
                         (int)$img['isPrimary']
                     );
                 }
@@ -95,11 +114,13 @@ class PortfolioService extends Service {
         return $hotelId; // Trả về ID khách sạn để Controller biết đã thành công
     }
 
-    public function getLocations() {
+    public function getLocations()
+    {
         return $this->model('HotelModel')->getCities();
     }
 
-    public function requestToStop($hotelId) {
+    public function requestToStop($hotelId)
+    {
         $hotelModel = $this->model('HotelModel');
 
         // 1. Kiểm tra đơn hàng tồn đọng
@@ -112,16 +133,17 @@ class PortfolioService extends Service {
 
         // 2. Chuyển trạng thái sang Chờ xét duyệt
         $result = $hotelModel->updateStatus($hotelId, 'PENDING_STOP');
-        
+
         return [
             'success' => $result,
             'message' => $result ? 'Yêu cầu đã được gửi, vui lòng chờ Admin duyệt.' : 'Lỗi hệ thống.'
         ];
     }
 
-    public function getHotelForEdit($id, $partnerId) {
+    public function getHotelForEdit($id, $partnerId)
+    {
         $hotel = $this->model('HotelModel')->getById($id);
-        
+
         // Kiểm tra khách sạn có tồn tại và thuộc về Partner này không
         if (!$hotel || $hotel['partnerId'] != $partnerId) {
             return null;
@@ -129,7 +151,8 @@ class PortfolioService extends Service {
         return $hotel;
     }
 
-    public function updateHotelInfo($id, $formData, $imageData = []) {
+    public function updateHotelInfo($id, $formData, $imageData = [])
+    {
         // 1. Chuẩn hóa dữ liệu văn bản
         $cleanData = [
             'hotelName'   => htmlspecialchars(trim($formData['hotelName'])),
@@ -157,9 +180,10 @@ class PortfolioService extends Service {
         return $isUpdated;
     }
 
-    public function updatePartnerProfile($userId, $data, $fileName) {
+    public function updatePartnerProfile($userId, $data, $fileName)
+    {
         $userModel = $this->model('UserModel');
-        
+
         $phone = htmlspecialchars(trim($data['phone']));
         $fullName = htmlspecialchars(trim($data['fullName']));
 

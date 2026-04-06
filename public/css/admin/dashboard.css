@@ -5,6 +5,24 @@
   margin: auto;
 }
 
+#home-button-download{
+    background-color:#007bff;
+    color:#ffffff;
+}
+#home-button-reload{
+    background-color:#007bff;
+    color:#ffffff;
+}
+#home-h1{
+  color:#007bff;
+}
+#home-grid-content div{
+  background-color:#007bff;
+  color:#ffffff;
+}
+#home-grid-content h3{
+  color:#c3c3c3;
+}
 .dashboard-title {
   font-size: 28px;
   font-weight: bold;

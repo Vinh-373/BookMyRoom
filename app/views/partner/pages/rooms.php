@@ -295,7 +295,7 @@
                         <td style="padding:10px; border-bottom:1px solid #eee;"><strong>${unit.roomNumber}</strong></td>
                         <td style="padding:10px; border-bottom:1px solid #eee;">
                             <span class="badge ${unit.status}">
-                                ${unit.status === 'AVAILABLE' ? 'TRỐNG' : unit.status}
+                                ${unit.status === 'AVAILABLE' ? 'SẴN SÀNG' : unit.status}
                             </span>
                         </td>
                         <td style="padding:10px; border-bottom:1px solid #eee; text-align:right;">
@@ -427,7 +427,7 @@
             title = `Hoàn tất bảo trì phòng ${roomNumber}?`;
             text = "Xác nhận phòng đã sửa xong và chuyển sang trạng thái chờ dọn dẹp.";
             confirmButtonText = "Xác nhận hoàn tất";
-        } else if (status === 'AVAILABLE' || status === 'CLEANING') {
+        } else if (status === 'AVAILABLE') {
             title = `Đưa phòng ${roomNumber} vào bảo trì?`;
             text = "Phòng sẽ bị khóa và không thể nhận khách đặt mới cho đến khi sửa xong.";
             confirmButtonText = "Bắt đầu bảo trì";
@@ -439,6 +439,10 @@
                 confirmButtonColor: '#2261E0'
             });
             return;
+        } else if ( status === 'CLEANING') {
+            title = `Đưa phòng ${roomNumber} vào bảo trì?`;
+            text = "Phòng sẵn sàng phục vụ.";
+            confirmButtonText = "Bắt đầu bảo trì";
         } else {
             return; // Các trạng thái khác không xử lý
         }

@@ -144,7 +144,9 @@
                         <div class="form-row">
                             <label>Phường / Xã</label>
                             <select name="wardId" id="wardSelect" required>
-                                <option value="">-- Chọn Phường --</option>
+                                <?php foreach($wards as $ward): ?>
+                                    <option value="<?= $ward['id'] ?>"><?= $ward['name'] ?></option>
+                                <?php endforeach; ?>
                             </select>
                         </div>
                     </div>

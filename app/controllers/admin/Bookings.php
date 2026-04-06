@@ -5,34 +5,41 @@ namespace Controllers\admin;
 use Controller;
 use Models\myModels;
 use Models\BookingsModel;
+
 require_once "./app/models/bookingsModel.php";
 class Bookings extends Controller
 {
 
-public function index()
-{
-    require_once './app/models/bookingsModel.php';
 
-    $bookingsModel = new class extends BookingsModel {
-        protected $table = "bookings";
-    };
+    public function index()
+    {
+        if (empty($_SESSION["admin_id"]) || empty($_SESSION["admin_name"])) {
+            // Chuyển hướng về trang auth (đăng nhập)
+            header("Location: /BookMyRoom/admin/auth");
+            exit(); // Luôn phải có exit để dừng thực thi code phía dưới
+        }
+        require_once './app/models/bookingsModel.php';
 
-    $bookings = $bookingsModel->join_multi(
+        $bookingsModel = new class extends BookingsModel {
+            protected $table = "bookings";
+        };
 
-        joins: [
-            [
-                'table' => 'users',
-                'type'  => 'LEFT',
-                'on'    => 'bookings.userId = users.id'
+        $bookings = $bookingsModel->join_multi(
+
+            joins: [
+                [
+                    'table' => 'users',
+                    'type'  => 'LEFT',
+                    'on'    => 'bookings.userId = users.id'
+                ],
+                [
+                    'table' => 'payments',
+                    'type'  => 'LEFT',
+                    'on'    => 'payments.bookingId = bookings.id'
+                ]
             ],
-            [
-                'table' => 'payments',
-                'type'  => 'LEFT',
-                'on'    => 'payments.bookingId = bookings.id'
-            ]
-        ],
 
-        select: "
+            select: "
             bookings.id,
             bookings.status,
             bookings.totalAmount,
@@ -77,45 +84,44 @@ public function index()
             ) AS roomName
         ",
 
-        orderBy: 'bookings.id DESC'
-    );
+            orderBy: 'bookings.id DESC'
+        );
 
-    $this->view('layout/admin/admin', [
-        'viewFile' => './app/views/admin/bookings.php',
-        'bookings' => $bookings
-    ]);
-}
+        $this->view('layout/admin/admin', [
+            'viewFile' => './app/views/admin/bookings.php',
+            'bookings' => $bookings
+        ]);
+    }
 
-public function update_status()
-{
-header('Content-Type: application/json');
+    public function update_status()
+    {
+        header('Content-Type: application/json');
 
-$input = json_decode(file_get_contents("php://input"), true);
+        $input = json_decode(file_get_contents("php://input"), true);
 
-if(!$input){
-echo json_encode(['success'=>false]);
-exit;
-}
+        if (!$input) {
+            echo json_encode(['success' => false]);
+            exit;
+        }
 
-require_once './app/models/myModels.php';
+        require_once './app/models/myModels.php';
 
-$model = new class extends myModels {
-protected $table = "bookings";
-};
+        $model = new class extends myModels {
+            protected $table = "bookings";
+        };
 
-$result = json_decode(
-$model->update(
-['status'=>$input['status']],
-['id'=>(int)$input['id']]
-),
-true
-);
+        $result = json_decode(
+            $model->update(
+                ['status' => $input['status']],
+                ['id' => (int)$input['id']]
+            ),
+            true
+        );
 
-echo json_encode([
-'success'=> in_array($result['type'],['success','warning'])
-]);
+        echo json_encode([
+            'success' => in_array($result['type'], ['success', 'warning'])
+        ]);
 
-exit;
-}
-
+        exit;
+    }
 }

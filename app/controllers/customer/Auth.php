@@ -113,7 +113,9 @@ class Auth extends Controller
                 'id'       => $user['id'],
                 'email'    => $user['email'],
                 'role'     => $user['role'],
-                'fullName' => $user['fullName']
+                'fullName' => $user['fullName'],
+                'phone' => $user['phone'],
+                'avatarUrl' => $user['avatarUrl']
             ], $remember);
 
             $this->jsonResponse([

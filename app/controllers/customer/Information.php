@@ -1,5 +1,7 @@
 <?php
+
 namespace Controllers\customer;
+
 use Controller;
 use Middleware\AuthMiddleware;
 use Services\InformationService;
@@ -18,7 +20,7 @@ class Information extends Controller
     }
     public function index()
     {
-         $userId = isset($_SESSION['user']['id']) ? $_SESSION['user']['id'] : null; // Lấy userId từ session
+        $userId = isset($_SESSION['user']['id']) ? $_SESSION['user']['id'] : null; // Lấy userId từ session
         $information = $this->service->getInformationUser($userId); // Thay 11 bằng userId thực tế từ session hoặc tham số
         $viewFile = './app/views/customer/informationPage.php';
         $this->view('layout/customer/client', [
@@ -54,7 +56,7 @@ class Information extends Controller
 
     public function updateFullName()
     {
-        
+
         header('Content-Type: application/json');
 
         $fullName = $_POST['fullName'] ?? '';
@@ -76,7 +78,7 @@ class Information extends Controller
 
     public function updateBirthDate()
     {
-        
+
         header('Content-Type: application/json');
 
         $birthDate = $_POST['birthDate'] ?? '';
@@ -98,7 +100,7 @@ class Information extends Controller
 
     public function updateGender()
     {
-        
+
         header('Content-Type: application/json');
 
         $gender = $_POST['gender'] ?? '';
@@ -120,7 +122,7 @@ class Information extends Controller
 
     public function updateEmail()
     {
-        
+
         header('Content-Type: application/json');
 
         $email = $_POST['email'] ?? '';
@@ -148,7 +150,7 @@ class Information extends Controller
         }
 
         // Update
-        $result = $this->service->updateEmail( $email, $userId);
+        $result = $this->service->updateEmail($email, $userId);
 
         echo json_encode([
             "success" => $result,
@@ -158,11 +160,11 @@ class Information extends Controller
 
     public function updatePhoneNumber()
     {
-        
+
         header('Content-Type: application/json');
 
         $phone = $_POST['phone'] ?? '';
-         $userId = isset($_SESSION['user']['id']) ? $_SESSION['user']['id'] : null; // Lấy userId từ session
+        $userId = isset($_SESSION['user']['id']) ? $_SESSION['user']['id'] : null; // Lấy userId từ session
 
         // Lấy số điện thoại hiện tại
         $currentPhone = $this->service->getPhoneByUserId($userId);
@@ -186,7 +188,7 @@ class Information extends Controller
         }
 
         // Update
-        $result = $this->service->updatePhoneNumber( $phone, $userId);
+        $result = $this->service->updatePhoneNumber($phone, $userId);
 
         echo json_encode([
             "success" => $result,
@@ -196,7 +198,7 @@ class Information extends Controller
 
     public function updateAddress()
     {
-        
+
         header('Content-Type: application/json');
 
         $address = $_POST['address'] ?? '';
@@ -217,5 +219,21 @@ class Information extends Controller
             "message" => $result ? "Cập nhật thành công" : "Cập nhật thất bại"
         ]);
     }
+    function updateAvt()
+    {
+        $input = json_decode(file_get_contents('php://input'), true);
+        $base64Image = $input['image'] ?? '';
+
+        if (empty($base64Image)) {
+            echo json_encode(['success' => false, 'message' => 'Không có dữ liệu ảnh']);
+            return;
+        }
+        $userId = isset($_SESSION['user']['id']) ? $_SESSION['user']['id'] : null; // Lấy userId từ session
+
+        $result = $this->service->updateAvt($base64Image, $userId);
+        echo json_encode([
+            "success" => $result,
+            "message" => $result ? "Cập nhật thành công" : "Cập nhật thất bại"
+        ]);
+    }
 }
-?>

@@ -242,7 +242,7 @@ class App {
 
 
         // 👉 Nếu là partner → dùng routing riêng
-        if ($this->role === 'PARTNER' || $this->role === 'STAFF') {
+        if ($this->role === 'partner' || $this->role === 'staff') {
             $this->runPartner();
         } else {
             $this->runDefault();
@@ -346,8 +346,8 @@ class App {
             }
         } else {
             $default = [
-                'CUSTOMER' => 'booking',
-                'ADMIN' => 'dashboard'
+                'customer' => 'booking',
+                'admin' => 'dashboard'
             ];
             $this->controller = $default[$this->role];
         }
@@ -382,9 +382,10 @@ class App {
 
     /* ================= COMMON ================= */
     private function getRole()
-    {
-        return $_SESSION['user']['role'] ?? 'customer';
-    }
+{
+    $role = $_SESSION['user']['role'] ?? 'customer';
+    return strtolower($role); // 'ADMIN' → 'admin', 'CUSTOMER' → 'customer'
+}
 
     private function checkPermission()
     {

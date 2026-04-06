@@ -84,5 +84,9 @@ class InformationService
     {
         return $this->model->updateAddress( $address, $wardId, $cityId,$userId);
     }
+    public function updateAvt($image,$userId)
+    {
+        return $this->model->updateAvt($image,$$userId);
+    }
 }
 ?>

@@ -175,7 +175,10 @@ class Booking extends Controller
 
         // ❌ nếu không có booking
         if (empty($_SESSION['booking'])) {
-            header("Location: " . BASE_URL);
+            $this->view('layout/customer/client', [
+            'viewFile' => './app/views/customer/booking/confirmPage.php',
+            
+        ]);
             exit;
         }
 

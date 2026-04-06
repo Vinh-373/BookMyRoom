@@ -25,10 +25,12 @@
                 <p>Cập nhật thông tin của bạn và tìm hiểu các thông tin này được sử dụng ra sao.</p>
             </div>
             <div class="avatar-container">
-                <div class="avatar">N</div>
-                <div class="camera-icon">
+                <div class="avatar" id="avatar-display"><img src="" alt=""></div>
+                <div class="camera-icon" onclick="document.getElementById('avatar-input').click()">
                     <i data-lucide="camera" size="16"></i>
                 </div>
+                <!-- Input file ẩn -->
+                <input type="file" id="avatar-input" accept="image/*" style="display:none" onchange="uploadAvatar(this)">
             </div>
         </div>
 
@@ -104,8 +106,8 @@
                     <div class="row-main">
                         <span class="label">Địa chỉ</span>
                         <span class="value placeholder"><?= ($information[0]['address'] ?? '') . ', ' .
-                            ($information[0]['wardName'] ?? '') . ', ' .
-                            ($information[0]['cityName'] ?? 'Chưa cập nhật') ?></span>
+                                                            ($information[0]['wardName'] ?? '') . ', ' .
+                                                            ($information[0]['cityName'] ?? 'Chưa cập nhật') ?></span>
                     </div>
                 </div>
                 <button class="btn-edit" onclick="toggleEditAddress(true)">Chỉnh sửa</button>
@@ -424,9 +426,9 @@
                 loadCitiesAndInit();
 
                 // TH2: khi đổi city
-                document.getElementById('input-city').addEventListener('change', function () {
-                    cityIdupdate = this.value;   
-                    loadWards(cityIdupdate);     // load ward theo city mới
+                document.getElementById('input-city').addEventListener('change', function() {
+                    cityIdupdate = this.value;
+                    loadWards(cityIdupdate); // load ward theo city mới
                 });
 
             } else {
@@ -594,14 +596,14 @@
                 return;
             }
             fetch('<?= URLROOT ?>/information/updateFullName', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: new URLSearchParams({
-                    fullName: value
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: new URLSearchParams({
+                        fullName: value
+                    })
                 })
-            })
                 .then(res => res.json())
                 .then(data => {
                     console.log("Response từ server:", data);
@@ -628,14 +630,14 @@
             }
 
             fetch('<?= URLROOT ?>/information/updatePhoneNumber', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: new URLSearchParams({
-                    phone: value
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: new URLSearchParams({
+                        phone: value
+                    })
                 })
-            })
                 .then(res => res.json())
                 .then(data => {
                     console.log("Response từ server:", data);
@@ -655,14 +657,14 @@
         function saveBirthDate() {
             birthDate = document.getElementById('input-birthdate').value;
             fetch('<?= URLROOT ?>/information/updateBirthDate', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: new URLSearchParams({
-                    birthDate: birthDate
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: new URLSearchParams({
+                        birthDate: birthDate
+                    })
                 })
-            })
                 .then(res => res.json())
                 .then(data => {
                     console.log("Response từ server:", data);
@@ -687,14 +689,14 @@
             }
 
             fetch('<?= URLROOT ?>/information/updateGender', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: new URLSearchParams({
-                    gender: value
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: new URLSearchParams({
+                        gender: value
+                    })
                 })
-            })
                 .then(res => res.json())
                 .then(data => {
                     console.log("Response từ server:", data);
@@ -721,14 +723,14 @@
             }
 
             fetch('<?= URLROOT ?>/information/updateEmail', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: new URLSearchParams({
-                    email: value
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: new URLSearchParams({
+                        email: value
+                    })
                 })
-            })
                 .then(res => res.json())
                 .then(data => {
                     console.log(data);
@@ -777,16 +779,16 @@
             }
 
             fetch('<?= URLROOT ?>/information/updateAddress', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: new URLSearchParams({
-                    address: value,
-                    cityId: citySelect,
-                    wardId: wardSelect
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: new URLSearchParams({
+                        address: value,
+                        cityId: citySelect,
+                        wardId: wardSelect
+                    })
                 })
-            })
                 .then(res => res.json())
                 .then(data => {
                     console.log("Response từ server:", data);
@@ -808,6 +810,44 @@
                 });
         }
 
+        function uploadAvatar(input) {
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    const base64Image = e.target.result;
+
+                    // Hiển thị ảnh preview ngay lập tức
+                    const avatarDisplay = document.getElementById('avatar-display');
+                    avatarDisplay.innerHTML = `<img src="${base64Image}" class="w-full h-full object-cover rounded-full">`;
+
+                    // Gọi API gửi lên Server
+                    fetch('<?= URLROOT ?>/information/updateAvt', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                image: base64Image // Chuỗi base64 đã bao gồm prefix data:image/...
+                            })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                console.log("Cập nhật Avatar thành công!");
+                            } else {
+                                alert("Lỗi: " + data.message);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                        });
+                };
+
+                reader.readAsDataURL(file);
+            }
+        }
     </script>
 </body>
 

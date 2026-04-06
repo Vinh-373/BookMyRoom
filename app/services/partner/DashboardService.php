@@ -4,7 +4,7 @@ class DashboardService extends Service {
     public function getHotelDashboardFullData($hotelId) {
         $hotelModel = $this->model('HotelModel');
         
-        $hotel = $hotelModel->getHotelById($hotelId);
+        $hotel = $hotelModel->getById($hotelId);
         $revenueTrends = $hotelModel->getDailyRevenueLast30Days($hotelId);
         $sources = $hotelModel->getBookingSources($hotelId);
         $activities = $hotelModel->getRecentActivity($hotelId);

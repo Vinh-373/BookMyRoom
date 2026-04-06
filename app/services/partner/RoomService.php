@@ -136,8 +136,10 @@ class RoomService extends Service {
         if ($currentStatus === 'MAINTENANCE') {
             // Hoàn tất bảo trì -> Chuyển sang chờ dọn dẹp
             return $roomModel->updateMaintenanceStatus($roomId, 'CLEANING');
-        } else {
-            // Nếu phòng đang có khách (OCCUPIED), không nên cho bảo trì ngay
+        } else if($currentStatus === 'CLEANING') {
+            return $roomModel->updateMaintenanceStatus($roomId, 'AVAILABLE');
+        }
+        else {
             if ($currentStatus === 'OCCUPIED') {
                 return false;
             }
@@ -145,4 +147,5 @@ class RoomService extends Service {
             return $roomModel->updateMaintenanceStatus($roomId, 'MAINTENANCE');
         }
     }
+
 }

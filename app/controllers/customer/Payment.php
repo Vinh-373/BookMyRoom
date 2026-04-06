@@ -4,6 +4,7 @@ namespace Controllers\customer;
 
 use Controller;
 use Services\BookingService;
+
 use Services\PaymentService;
 
 require_once "./app/services/bookingService.php";
@@ -13,6 +14,7 @@ class Payment extends Controller
 {
     private $bookingService;
     private $paymentService;
+    private $paymentDetailService;
 
     private $momoConfig = [
         'endpoint'     => 'https://test-payment.momo.vn/v2/gateway/api/create',
@@ -34,6 +36,7 @@ class Payment extends Controller
     {
         $this->bookingService = new BookingService();
         $this->paymentService = new PaymentService();
+
 
         // if (session_status() === PHP_SESSION_NONE) {
         //     session_start();
@@ -154,6 +157,9 @@ class Payment extends Controller
                 ]);
 
                
+            }else if ($resultCode == 1006) {
+                $this->paymentService->deletePaymentByBooking($bookingId);
+                $this->bookingService->deleteBookingDetails($bookingId);
             }
 
             // ===== FAILED =====
@@ -296,7 +302,12 @@ class Payment extends Controller
                 'status' => 'CONFIRMED'
             ]);
            
-        }
+        }else if ($resultCode == '24') {
+        
+                $this->paymentService->deletePaymentByBooking($bookingId);
+                $this->bookingService->deleteBookingDetails($bookingId);
+            
+         }
         // ===== FAILED =====
         else {
 

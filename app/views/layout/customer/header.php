@@ -22,7 +22,7 @@
 <body>
 
 <header class="navbar">
-    <div class="logo"><strong>BookMyRoom.com</strong></div>
+    <div class="logo"><a href="<?= BASE_URL ?>"><strong>BookMyRoom.com</strong></a></div>
 
     <div class="nav-actions" id="nav-actions">
         <!-- Mặc định chưa login -->
@@ -81,7 +81,7 @@
             <i class="fa-regular fa-question-circle"></i>
 
             <div class="user-info" style="display:flex; align-items:center; gap:10px;">
-                <span>${user.fullName}</span>
+                <span ><a href="${BASE_URL}information">${user.fullName}</a></span>
                 <i class="fa-solid fa-user"></i>
                 <button onclick="logout()" style="margin-left:10px; font-size:12px;">Logout</button>
             </div>

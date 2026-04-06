@@ -1,0 +1,190 @@
+/* ===== GLOBAL ===== */
+.statisticals-content {
+    padding: 30px;
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #eef2ff, #f8fafc);
+    min-height: 100vh;
+}
+
+/* ===== TITLE ===== */
+.statisticals-title {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 25px;
+    color: #1e293b;
+}
+
+/* ===== SECTION ===== */
+.statisticals-section {
+    margin-bottom: 30px;
+}
+
+.statisticals-section-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: #334155;
+}
+
+/* ===== SUMMARY GRID ===== */
+.statisticals-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 15px;
+}
+
+/* ===== CARD ===== */
+.statisticals-card {
+    background: white;
+    padding: 18px;
+    border-radius: 14px;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.06);
+    transition: all 0.25s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.statisticals-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 22px rgba(0,0,0,0.1);
+}
+
+.statisticals-card h3 {
+    font-size: 14px;
+    color: #64748b;
+    margin-bottom: 8px;
+}
+
+.statisticals-card p {
+    font-size: 20px;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+/* ===== COLOR ACCENTS ===== */
+.statisticals-card:nth-child(1) { border-left: 5px solid #6366f1; }
+.statisticals-card:nth-child(2) { border-left: 5px solid #22c55e; }
+.statisticals-card:nth-child(3) { border-left: 5px solid #f59e0b; }
+.statisticals-card:nth-child(4) { border-left: 5px solid #ef4444; }
+.statisticals-card:nth-child(5) { border-left: 5px solid #0ea5e9; }
+
+/* ===== FILTER ===== */
+.statisticals-filter {
+    display: flex;
+    gap: 10px;
+    margin: 25px 0;
+    flex-wrap: wrap;
+}
+
+.statisticals-filter input {
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid #cbd5f5;
+    background: white;
+}
+
+.statisticals-filter button {
+    padding: 8px 16px;
+    background: #6366f1;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.statisticals-filter button:hover {
+    background: #4f46e5;
+}
+
+/* ===== METHODS (TOP HOTEL, REVENUE...) ===== */
+.statisticals-methods {
+    margin-top: 30px;
+}
+
+.statisticals-methods h2 {
+    margin-bottom: 12px;
+    color: #1e293b;
+}
+
+.statisticals-method-item {
+    background: white;
+    padding: 12px 16px;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+    display: flex;
+    justify-content: space-between;
+    transition: 0.2s;
+}
+
+.statisticals-method-item:hover {
+    background: #f1f5f9;
+}
+
+/* ===== TABLE ===== */
+.statisticals-table {
+    margin-top: 30px;
+}
+
+.statisticals-table h2 {
+    margin-bottom: 10px;
+}
+
+.statisticals-table table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 5px 18px rgba(0,0,0,0.06);
+}
+
+.statisticals-table th {
+    background: #6366f1;
+    color: white;
+    padding: 12px;
+    font-size: 14px;
+}
+
+.statisticals-table td {
+    padding: 12px;
+    border-bottom: 1px solid #e5e7eb;
+    font-size: 14px;
+}
+
+.statisticals-table tr:hover {
+    background: #f9fafb;
+}
+
+/* ===== STATUS COLORS ===== */
+.status-paid {
+    color: #22c55e;
+    font-weight: 600;
+}
+
+.status-pending {
+    color: #f59e0b;
+    font-weight: 600;
+}
+
+.status-failed {
+    color: #ef4444;
+    font-weight: 600;
+}
+
+.status-refunded {
+    color: #0ea5e9;
+    font-weight: 600;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .statisticals-summary {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .statisticals-filter {
+        flex-direction: column;
+    }
+}

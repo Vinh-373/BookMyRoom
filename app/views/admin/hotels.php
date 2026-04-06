@@ -1,3 +1,4 @@
+
 <div class="hotels-content">
 
     <!-- HEADER -->

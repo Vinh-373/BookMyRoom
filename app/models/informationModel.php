@@ -309,5 +309,27 @@ class InformationModel extends MyModels
 
         return $stmt->affected_rows >= 0;
     }
+     public function updateAvt($avt, $userId)
+    {
+        $sql = "UPDATE users 
+            SET avatarUrl = ?
+            WHERE id = ?
+            ";
+
+        $stmt = $this->conn->prepare($sql);
+
+        if (!$stmt) {
+            die("Prepare failed: " . $this->conn->error);
+        }
+
+        // s = string, i = integer
+        $stmt->bind_param("si", $avt, $userId);
+
+        if (!$stmt->execute()) {
+            die("Execute failed: " . $stmt->error);
+        }
+
+        return $stmt->affected_rows >= 0;
+    }
 
 }
