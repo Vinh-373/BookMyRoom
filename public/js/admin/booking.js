@@ -45,30 +45,37 @@ document.addEventListener("DOMContentLoaded", function () {
   const statusEl = document.getElementById("modal-status");
 
   const updateBtn = document.getElementById("booking-update-btn");
+  const hotelEl = document.getElementById("modal-hotel");
+const roomEl = document.getElementById("modal-room");
 
   let currentId = null;
   let currentRow = null;
 
   // ===== OPEN MODAL =====
   document.querySelectorAll(".booking-btn-detail").forEach(btn => {
-    btn.addEventListener("click", function () {
+  btn.addEventListener("click", function () {
 
-      currentId = this.dataset.id;
-      currentRow = this.closest("tr");
+    currentId = this.dataset.id;
+    currentRow = this.closest("tr");
 
-      if (!currentId) return;
+    if (!currentId) return;
 
-      // set data
-      idEl.textContent = "#" + currentId;
-      nameEl.textContent = this.dataset.name || "---";
-      checkinEl.textContent = this.dataset.checkin || "---";
-      checkoutEl.textContent = this.dataset.checkout || "---";
-      totalEl.textContent = Number(this.dataset.total || 0).toLocaleString() + "đ";
-      statusEl.value = this.dataset.status || "PENDING";
+    idEl.textContent = "#" + currentId;
+    nameEl.textContent = this.dataset.name || "---";
+    checkinEl.textContent = this.dataset.checkin || "---";
+    checkoutEl.textContent = this.dataset.checkout || "---";
 
-      modal.style.display = "flex";
-    });
+    totalEl.textContent =
+      Number(this.dataset.total || 0).toLocaleString() + "đ";
+
+    hotelEl.textContent = this.dataset.hotel || "---";
+    roomEl.textContent = this.dataset.room || "---";
+
+    statusEl.value = this.dataset.status || "PENDING";
+
+    modal.style.display = "flex";
   });
+});
 
   // ===== CLOSE MODAL =====
   if (closeBtn) {
